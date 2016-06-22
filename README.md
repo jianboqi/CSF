@@ -15,6 +15,6 @@ For binary release version, it can be downloaded at: http://ramm.bnu.edu.cn/proj
 
 Note: This code has been changed a lot since the publication of the corresponding paper. A lot of optimizations have been made. We are still working on it, and wish it could be better.
 
-At last, if you are interested in Cloudcompare, there is a good news. our method has been implemented as a Cloudcompare pulgin, you can refer to : https://github.com/cloudcompare/trunk
+At last, if you are interested in Cloudcompare, there is a good news. our method has been implemented as a Cloudcompare plugin, you can refer to : https://github.com/cloudcompare/trunk
 
 
