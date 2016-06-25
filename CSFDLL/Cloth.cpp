@@ -54,7 +54,7 @@ origin_pos1(origin_pos1), smoothThreshold(smoothThreshold), heightThreshold(heig
 double Cloth::timeStep()
 {
 
-	int particleCount = static_cast<int>(particles.size());
+int particleCount = static_cast<int>(particles.size());
 
 #pragma omp parallel for
 	for (int i = 0; i < particleCount; i++)
@@ -62,16 +62,11 @@ double Cloth::timeStep()
 		particles[i].timeStep();
 	}
 
-	std::vector<Constraint>::iterator constraint;
-
-	for (int i = 0; i<constraint_iterations; i++) // iterate over all constraints several times
-	{
 #pragma omp parallel for
 		for (int j = 0; j < constraints.size(); j++)
 		{
-			constraints[j].satisfyConstraint();
-		}
-	}		
+			constraints[j].satisfyConstraint(constraint_iterations);
+		}	
 
 	double maxDiff = 0;
 #pragma omp parallel for
@@ -90,10 +85,9 @@ double Cloth::timeStep()
 
 void Cloth::addForce(const Vec3 direction)
 {
-	std::vector<Particle>::iterator particle;
-	for (particle = particles.begin(); particle != particles.end(); particle++)
+	for (int i = 0; i < particles.size(); i++)
 	{
-		(*particle).addForce(direction); // add the forces to each particle
+		particles[i].addForce(direction);
 	}
 
 }
@@ -106,7 +100,7 @@ void Cloth::terrCollision(vector<double> &heightvals,Terrian * terr)
 	for (int i = 0; i < particles.size(); i++)
 	{
 		Vec3 v = particles[i].getPos();
-		if (v.f[1] < heightvals[i]) // if the particle is inside the ball
+		if (v.f[1] < heightvals[i]) 
 		{
 			particles[i].offsetPos(Vec3(0, heightvals[i] - v.f[1], 0)); // 
 			particles[i].makeUnmovable();
