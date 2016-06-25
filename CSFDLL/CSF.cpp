@@ -78,14 +78,13 @@ vector<int> CSF::do_filtering()
 
 	double time_step2 = params.time_step*params.time_step;
 	double gravity = 0.2;
-	bool flag = false;
 	cout<<"Starting simulation..."<<endl;
 //	boost::progress_display pd(params.interations);
 	for (int i = 0; i < params.interations; i++)
 	{
 		cloth1.addForce(Vec3(0, -gravity, 0)*time_step2);
 		double maxDiff = cloth1.timeStep();
-		cloth1.terrCollision(heightvals, &terr, flag);
+		cloth1.terrCollision(heightvals, &terr);
 
 		if (maxDiff != 0 && maxDiff < params.class_threshold / 100)
 		{

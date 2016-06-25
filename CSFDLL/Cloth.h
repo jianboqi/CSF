@@ -122,7 +122,7 @@ public:
 
 
 	//检测布料是否与地形碰撞
-	void terrCollision(vector<double> &heightvals,Terrian * terr,bool &flag);
+	void terrCollision(vector<double> &heightvals,Terrian * terr);
 
 	//对可移动的点进行边坡处理
 	void movableFilter();

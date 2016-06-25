@@ -66,7 +66,6 @@ double Cloth::timeStep()
 
 	for (int i = 0; i<constraint_iterations; i++) // iterate over all constraints several times
 	{
-
 #pragma omp parallel for
 		for (int j = 0; j < constraints.size(); j++)
 		{
@@ -101,7 +100,7 @@ void Cloth::addForce(const Vec3 direction)
 
 
 //检测布料是否与地形碰撞
-void Cloth::terrCollision(vector<double> &heightvals,Terrian * terr,bool &flag)
+void Cloth::terrCollision(vector<double> &heightvals,Terrian * terr)
 {
 #pragma omp parallel for
 	for (int i = 0; i < particles.size(); i++)
@@ -111,10 +110,6 @@ void Cloth::terrCollision(vector<double> &heightvals,Terrian * terr,bool &flag)
 		{
 			particles[i].offsetPos(Vec3(0, heightvals[i] - v.f[1], 0)); // 
 			particles[i].makeUnmovable();
-		}
-		if (v.f[1] <= terr->cube[2])
-		{
-			flag = true;
 		}
 	}
 }
