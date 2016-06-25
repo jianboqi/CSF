@@ -6,6 +6,7 @@
 #pragma comment(lib, "../Release/CSFDLL.lib")
 #include <process.h>
 #include <locale.h>
+#include <time.h>
 using namespace std;
 
 int main()
@@ -52,6 +53,9 @@ int main()
 	//step 1 输入点云
 	csf.readPointsFromFile(terr_pointClouds_filepath);
 
+	clock_t start, end;
+	start = clock();
+
 	//备注：在实际使用过程中，点云数据由主程序提供，调用函数为
 	//csf.setPointCloud(pc);//pc为PointCloud类
 
@@ -67,6 +71,9 @@ int main()
 	//step3 执行滤波,result中储存的是地面点的索引 
 	vector<int> result = csf.do_filtering();
 
+	end = clock();
+	double dur = (double)(end - start);
+	printf("Use Time:%f\n", (dur / CLOCKS_PER_SEC));
 
 	csf.saveGroundPoints(result);
 

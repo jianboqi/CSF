@@ -68,7 +68,7 @@ vector<int> CSF::do_filtering()
 	int width_num = (terr.cube[1] - terr.cube[0] + clothbuffer_d * 2) / params.cloth_resolution;
 	int height_num = (terr.cube[5] - terr.cube[4] + clothbuffer_d * 2) /params.cloth_resolution;
 	cout<<"Configuring cloth..."<<endl;
-	Cloth cloth1(terr.cube[1] - terr.cube[0] + clothbuffer_d * 2, terr.cube[5] - terr.cube[4] + clothbuffer_d * 2, width_num, height_num, origin_pos1,0.3, 9999,params.rigidness,params.time_step); // one Cloth object of the Cloth class
+	Cloth cloth1(terr.cube[1] - terr.cube[0] + clothbuffer_d * 2, terr.cube[5] - terr.cube[4] + clothbuffer_d * 2, width_num, height_num, origin_pos1, 0.3, 9999, params.rigidness, params.time_step, params.cloth_resolution); // one Cloth object of the Cloth class
 	//
 	Rasterlization raster(params.k_nearest_points);
 	vector<double> heightvals;
@@ -84,8 +84,15 @@ vector<int> CSF::do_filtering()
 	for (int i = 0; i < params.interations; i++)
 	{
 		cloth1.addForce(Vec3(0, -gravity, 0)*time_step2);
-		cloth1.timeStep();
+		double maxDiff = cloth1.timeStep();
 		cloth1.terrCollision(heightvals, &terr, flag);
+
+		if (maxDiff != 0 && maxDiff < params.class_threshold / 100)
+		{
+			//early stop
+			break;
+		}
+
 //		pd++;
 	}
 	//±ßÆÂºó´¦Àí

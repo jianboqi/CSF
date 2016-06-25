@@ -69,11 +69,9 @@ private:
 	int rigidness;
 	double time_step;
 
+	//所有布料节点
 	std::vector<Particle> particles; // all particles that are part of this cloth
 	std::vector<Constraint> constraints; // alle constraints between particles as part of this cloth
-
-	//初始平面位置
-	Vec3 origin_pos1; //左上角顶点  平面均为水平
 
 	//滤波边坡处理参数
 	double smoothThreshold;
@@ -81,6 +79,13 @@ private:
 
 	//heightvalues
 	vector<double> heightvals;
+	
+
+public:
+	//初始平面位置
+	Vec3 origin_pos1; //左上角顶点  平面均为水平
+	double cloth_resolution;//布料网格分辨率
+
 
 	Particle* getParticle(int x, int y) { return &particles[y*num_particles_width + x]; }
 	void makeConstraint(Particle *p1, Particle *p2) { constraints.push_back(Constraint(p1, p2)); }
@@ -90,13 +95,17 @@ public:
 	{
 		return num_particles_width*num_particles_height;
 	}
+
+	size_t get1DIndex(int x, int y){ return y*num_particles_width + x; }
+
+
 	//获取第index个particle
 	Particle* getParticle1d(int index) { return &particles[index]; }
 
 public:
 
 	/* This is a important constructor for the entire system of particles and constraints*/
-	Cloth(double width, double height, int num_particles_width, int num_particles_height, Vec3 origin_pos1, double smoothThreshold, double heightThreshold,int rigidness,double time_step);
+	Cloth(double width, double height, int num_particles_width, int num_particles_height, Vec3 origin_pos1, double smoothThreshold, double heightThreshold, int rigidness, double time_step, double cloth_resolution);
 
 	void setheightvals(vector<double> heightvals)
 	{
@@ -106,7 +115,7 @@ public:
 	/* this is an important methods where the time is progressed one time step for the entire cloth.
 	This includes calling satisfyConstraint() for every constraint, and calling timeStep() for all particles
 	*/
-	void timeStep();
+	double timeStep();
 
 	/* used to add gravity (or any other arbitrary vector) to all particles*/
 	void addForce(const Vec3 direction);

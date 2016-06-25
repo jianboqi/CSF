@@ -11,19 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{55D46D1E-C81B-413D-8F15-E7CFDC48EFB6}</ProjectGuid>
+    <ProjectGuid>{6E65732B-9303-4774-B1E8-61229F4AC978}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CSFDLL</RootNamespace>
+    <RootNamespace>testMaxLeaf</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -69,7 +69,6 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -79,28 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="c2cdist.h" />
-    <ClInclude Include="Cloth.h" />
-    <ClInclude Include="Constraint.h" />
-    <ClInclude Include="CSF.h" />
-    <ClInclude Include="KNN.h" />
-    <ClInclude Include="nanoflann.hpp" />
-    <ClInclude Include="Particle.h" />
-    <ClInclude Include="point_cloud.h" />
-    <ClInclude Include="point_types.h" />
-    <ClInclude Include="Terrian.h" />
-    <ClInclude Include="Vec3.h" />
-    <ClInclude Include="XYZReader.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="c2cdist.cpp" />
-    <ClCompile Include="Cloth.cpp" />
-    <ClCompile Include="Constraint.cpp" />
-    <ClCompile Include="CSF.cpp" />
-    <ClCompile Include="KNN.cpp" />
-    <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="Terrian.cpp" />
-    <ClCompile Include="XYZReader.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

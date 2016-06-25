@@ -1,8 +1,8 @@
 #include "Cloth.h"
 
 
-Cloth::Cloth(double width, double height, int num_particles_width, int num_particles_height, Vec3 origin_pos1, double smoothThreshold, double heightThreshold,int rigidness,double time_step) : num_particles_width(num_particles_width), num_particles_height(num_particles_height),
-	origin_pos1(origin_pos1), smoothThreshold(smoothThreshold), heightThreshold(heightThreshold),rigidness(rigidness),time_step(time_step)
+Cloth::Cloth(double width, double height, int num_particles_width, int num_particles_height, Vec3 origin_pos1, double smoothThreshold, double heightThreshold, int rigidness, double time_step, double cloth_resolution) : num_particles_width(num_particles_width), num_particles_height(num_particles_height),
+origin_pos1(origin_pos1), smoothThreshold(smoothThreshold), heightThreshold(heightThreshold), rigidness(rigidness), time_step(time_step), cloth_resolution(cloth_resolution)
 {
 	constraint_iterations = rigidness;
 	particles.resize(num_particles_width*num_particles_height); //I am essentially using this vector as an array with room for num_particles_width*num_particles_height particles
@@ -51,10 +51,13 @@ Cloth::Cloth(double width, double height, int num_particles_width, int num_parti
 	}
 }
 
-void Cloth::timeStep()
+double Cloth::timeStep()
 {
+
+	int particleCount = static_cast<int>(particles.size());
+
 #pragma omp parallel for
-	for (int i = 0; i < particles.size(); i++)
+	for (int i = 0; i < particleCount; i++)
 	{
 		particles[i].timeStep();
 	}
@@ -70,6 +73,19 @@ void Cloth::timeStep()
 			constraints[j].satisfyConstraint();
 		}
 	}		
+
+	double maxDiff = 0;
+#pragma omp parallel for
+	for (int i = 0; i < particleCount; i++)
+	{
+		if (particles[i].isMovable())
+		{
+			double diff = fabs(particles[i].old_pos.f[1] - particles[i].pos.f[1]);
+			if (diff > maxDiff)
+				maxDiff = diff;
+		}
+	}
+	return maxDiff;
 }
 
 

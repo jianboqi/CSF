@@ -2,7 +2,7 @@
 #define _PARTICLE_H_
 
 #include "Vec3.h"
-
+#include <vector>
 /* Some physics constants */
 #define DAMPING 0.01 // how much to damp the cloth simulation each frame
 
@@ -13,18 +13,26 @@ private:
 	bool movable; // can the particle move or not ? used to pin parts of the cloth
 
 	double mass; // the mass of the particle (is always 1 in this example)
-	Vec3 old_pos; // the position of the particle in the previous time step, used as part of the verlet numerical integration scheme
+	
 	Vec3 acceleration; // a vector representing the current acceleration of the particle
 	Vec3 accumulated_normal; // an accumulated normal (i.e. non normalized), used for OpenGL soft shading
 	double time_step2;
 public:
 	//this two memeber is used in the process of edge smoothing after the cloth simulation step.
 	Vec3 pos; // the current position of the particle in 3D space
+	Vec3 old_pos; // the position of the particle in the previous time step, used as part of the verlet numerical integration scheme
 	bool isVisited;  
 	int neibor_count;
 	int pos_x; //position in the cloth grid
 	int pos_y;
 	int c_pos;//在联通分量中的位置
+
+	//用于rasterlization计算
+	std::vector<int> correspondingLidarPointList;//每个布料节点对应的Lidar点的列表
+	size_t nearestPointIndex;//对应的lidar点最临近点的索引
+	double nearestPointHeight;//该点的y轴值
+	double tmpDist;//临时变量，用于计算lidar点再水平面上距离布料点直接的距离
+
 	
 public:
 	Particle(Vec3 pos, double time_step) : pos(pos), old_pos(pos), acceleration(Vec3(0, 0, 0)), mass(1), movable(true), accumulated_normal(Vec3(0, 0, 0)), time_step2(time_step)
@@ -34,6 +42,8 @@ public:
 		pos_x = 0;
 		pos_y = 0;
 		c_pos = 0;
+		nearestPointHeight = -99999999;
+		tmpDist = 99999999999999;
 	}
 
 	Particle(){}
