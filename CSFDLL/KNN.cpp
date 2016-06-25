@@ -6,7 +6,6 @@ void Rasterlization::RasterTerrian(Cloth &cloth, PointCloud &pc, vector<double> 
 {
 	//首先对每个lidar点找到在布料网格中对应的节点，并记录下来
 	double tmp;
-//#pragma omp parallel for
 	for (int i = 0; i < pc.size(); i++)
 	{
 		double pc_x = pc[i].x;
@@ -19,7 +18,6 @@ void Rasterlization::RasterTerrian(Cloth &cloth, PointCloud &pc, vector<double> 
 		if (col >= 0 && row >= 0)
 		{
 			Particle * pt = cloth.getParticle(col, row);
-//#pragma omp critical
 			pt->correspondingLidarPointList.push_back(i);
 			double pc2particleDist = distSquare(pc_x, pc_z, pt->getPos().f[0], pt->getPos().f[2]);
 			if (pc2particleDist < pt->tmpDist)

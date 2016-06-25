@@ -36,7 +36,6 @@ vector<int> c2cdist::calCloud2CloudDist(Cloth& cloth, PointCloud &pc)
 		float height_var = fxy - pc[i].y;
 		if (std::fabs(height_var) < class_treshold)
 		{
-			//#pragma omp critical
 			re.push_back(i);
 		}
 
