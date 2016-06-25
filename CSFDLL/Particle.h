@@ -6,6 +6,10 @@
 /* Some physics constants */
 #define DAMPING 0.01 // how much to damp the cloth simulation each frame
 
+const float singleMove1[14] = { 0.4, 0.64, 0.784, 0.8704, 0.92224, 0.95334, 0.97201, 0.9832, 0.98992, 0.99395, 0.99637, 0.99782, 0.99869, 0.99922 };
+//当有两端移动时
+const float doubleMove1[14] = { 0.4, 0.48, 0.496, 0.4992, 0.49984, 0.49997, 0.49999, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
+
 /* The particle class represents a particle of mass that can move around in 3D space*/
 class Particle
 {
@@ -27,11 +31,14 @@ public:
 	int pos_y;
 	int c_pos;//在联通分量中的位置
 
+	vector<Particle *> neighborsList;
+
 	//用于rasterlization计算
 	std::vector<int> correspondingLidarPointList;//每个布料节点对应的Lidar点的列表
 	size_t nearestPointIndex;//对应的lidar点最临近点的索引
 	double nearestPointHeight;//该点的y轴值
 	double tmpDist;//临时变量，用于计算lidar点再水平面上距离布料点直接的距离
+	void satisfyConstraintSelf(int constraintTimes);
 
 	
 public:

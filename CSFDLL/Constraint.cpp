@@ -22,3 +22,4 @@ void Constraint::satisfyConstraint(int constraintTimes)
 	}
 }
 
+

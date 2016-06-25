@@ -90,7 +90,12 @@ public:
 	vector<double> heightvals;
 
 	Particle* getParticle(int x, int y) { return &particles[y*num_particles_width + x]; }
-	void makeConstraint(Particle *p1, Particle *p2) { constraints.push_back(Constraint(p1, p2)); }
+	void makeConstraint(Particle *p1, Particle *p2) 
+	{
+		//constraints.push_back(Constraint(p1, p2));
+		p1->neighborsList.push_back(p2);
+		p2->neighborsList.push_back(p1);
+	}
 public:
 	
 	int getSize()
@@ -133,7 +138,8 @@ public:
 	//直接对联通分量进行边坡处理
 	void handle_slop_connected(vector<int> edgePoints, vector<XY> connected, vector<vector<int> >neibors, vector<double> &heightvals);
 
-	void doConstraint(Particle *p1, Particle *p2);
+	void doConstraint(int x, int y);
+	Vec3 GetVec(Particle *p1, Particle *p2);
 
 	//将布料点保存到文件
 	void saveToFile(string path = "");
