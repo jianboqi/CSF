@@ -78,10 +78,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CSFDemo.cpp" />
+    <ClInclude Include="Cfg.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cfg.h" />
+    <ClCompile Include="CSFDemo.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
