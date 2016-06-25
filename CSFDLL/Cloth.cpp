@@ -9,7 +9,6 @@ origin_pos1(origin_pos1), smoothThreshold(smoothThreshold), heightThreshold(heig
 
 	double time_step2 = time_step*time_step;
 
-
 	// creating particles in a grid of particles from (0,0,0) to (width,-height,0)
 	for (int x = 0; x<num_particles_width; x++)
 	{
@@ -51,22 +50,48 @@ origin_pos1(origin_pos1), smoothThreshold(smoothThreshold), heightThreshold(heig
 	}
 }
 
+void Cloth::doConstraint(Particle *p1, Particle *p2)
+{
+	Vec3 correctionVector(0, p2->pos.f[1] - p1->pos.f[1], 0);
+	if (p1->isMovable() && p2->isMovable())
+	{
+		Vec3 correctionVectorHalf = correctionVector * (constraint_iterations>14 ? 0.5 : doubleMove[constraint_iterations - 1]); // Lets make it half that length, so that we can move BOTH p1 and p2.
+		p1->offsetPos(correctionVectorHalf);
+		p2->offsetPos(-correctionVectorHalf);
+	}
+	else if (p1->isMovable() && !p2->isMovable())
+	{
+		Vec3 correctionVectorHalf = correctionVector * (constraint_iterations>14 ? 1 : singleMove[constraint_iterations - 1]); // Lets make it half that length, so that we can move BOTH p1 and p2.
+		p1->offsetPos(correctionVectorHalf);
+	}
+	else if (!p1->isMovable() && p2->isMovable())
+	{
+		Vec3 correctionVectorHalf = correctionVector * (constraint_iterations>14 ? 1 : singleMove[constraint_iterations - 1]); // Lets make it half that length, so that we can move BOTH p1 and p2.
+		p2->offsetPos(-correctionVectorHalf);
+	}
+}
+
+
+
+
+
 double Cloth::timeStep()
 {
 
 int particleCount = static_cast<int>(particles.size());
-
 #pragma omp parallel for
-	for (int i = 0; i < particleCount; i++)
+for (int i = 0; i < particleCount; i++)
 	{
 		particles[i].timeStep();
 	}
+
+
 
 #pragma omp parallel for
 		for (int j = 0; j < constraints.size(); j++)
 		{
 			constraints[j].satisfyConstraint(constraint_iterations);
-		}	
+		}
 
 	double maxDiff = 0;
 #pragma omp parallel for

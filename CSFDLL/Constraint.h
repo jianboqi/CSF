@@ -5,9 +5,9 @@
 #include "Particle.h"
 //每次布料节点回弹的幅度
 //当只有一端移动的时候
-const float singleMove[14] = { 0.3, 0.51, 0.657, 0.7599, 0.83193, 0.88235, 0.91765, 0.94235, 0.95965, 0.97175, 0.98023, 0.98616, 0.99031, 0.99322};
+const float singleMove[14] = { 0.4, 0.64, 0.784, 0.8704, 0.92224, 0.95334, 0.97201, 0.9832, 0.98992, 0.99395, 0.99637, 0.99782, 0.99869, 0.99922};
 //当有两端移动时
-const float doubleMove[14] = { 0.3, 0.42, 0.468, 0.4872, 0.49488, 0.49795, 0.49918, 0.49967, 0.49987, 0.49995, 0.49998, 0.49999, 0.5, 0.5};
+const float doubleMove[14] = { 0.4, 0.48, 0.496, 0.4992, 0.49984, 0.49997, 0.49999, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 
 class Constraint
 {
@@ -19,8 +19,8 @@ public:
 
 	Constraint(Particle *p1, Particle *p2) : p1(p1), p2(p2)
 	{
-		Vec3 vec = p1->getPos() - p2->getPos();
-		rest_distance = vec.length();
+	//	Vec3 vec = p1->getPos() - p2->getPos();
+	//	rest_distance = vec.length();
 	}
 
 	/* This is one of the important methods, where a single constraint between two particles p1 and p2 is solved

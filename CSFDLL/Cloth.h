@@ -39,6 +39,7 @@ have been added to the original source code, including
 #include <list>
 #include <queue>
 #include <cmath>
+#include <list>
 using namespace std;
 
 #include "Vec3.h"
@@ -77,8 +78,7 @@ private:
 	double smoothThreshold;
 	double heightThreshold;
 
-	//heightvalues
-	vector<double> heightvals;
+	
 	
 
 public:
@@ -86,6 +86,8 @@ public:
 	Vec3 origin_pos1; //左上角顶点  平面均为水平
 	double cloth_resolution;//布料网格分辨率
 
+	//heightvalues
+	vector<double> heightvals;
 
 	Particle* getParticle(int x, int y) { return &particles[y*num_particles_width + x]; }
 	void makeConstraint(Particle *p1, Particle *p2) { constraints.push_back(Constraint(p1, p2)); }
@@ -131,35 +133,13 @@ public:
 	//直接对联通分量进行边坡处理
 	void handle_slop_connected(vector<int> edgePoints, vector<XY> connected, vector<vector<int> >neibors, vector<double> &heightvals);
 
+	void doConstraint(Particle *p1, Particle *p2);
+
 	//将布料点保存到文件
 	void saveToFile(string path = "");
 	//将可移动点保存到文件
 	void saveMovableToFile(string path = "");
 
-
-	/************************************************************************/
-	/* for NanoFLann                                                                     */
-	/************************************************************************/
-	inline size_t kdtree_get_point_count() const
-	{
-		return this->particles.size();
-	}
-	inline float kdtree_distance(const float *p1, const size_t idx_p2, size_t) const
-	{
-		const float d0=p1[0]-particles[idx_p2].pos.f[0];
-		const float d2=p1[2]-particles[idx_p2].pos.f[2];
-		return d0*d0+d2*d2;
-	}
-
-	inline float kdtree_get_pt(const size_t idx, int dim) const
-	{
-		if (dim==0) return particles[idx].pos.f[0];
-		else if (dim==1) return particles[idx].pos.f[1];
-		else return particles[idx].pos.f[2];
-	}
-
-	template <class BBOX>
-	bool kdtree_get_bbox(BBOX& /*bb*/) const { return false; }
 
 };
 

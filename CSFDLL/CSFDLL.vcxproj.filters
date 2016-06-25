@@ -30,9 +30,6 @@
     <ClInclude Include="KNN.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="nanoflann.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>头文件</Filter>
     </ClInclude>

@@ -71,10 +71,10 @@ vector<int> CSF::do_filtering()
 	Cloth cloth1(terr.cube[1] - terr.cube[0] + clothbuffer_d * 2, terr.cube[5] - terr.cube[4] + clothbuffer_d * 2, width_num, height_num, origin_pos1, 0.3, 9999, params.rigidness, params.time_step, params.cloth_resolution); // one Cloth object of the Cloth class
 	//
 	Rasterlization raster(params.k_nearest_points);
-	vector<double> heightvals;
+//	vector<double> heightvals;
 	cout<<"KNN..."<<endl;
-	raster.RasterTerrian(cloth1, point_cloud, heightvals);
-	cloth1.setheightvals(heightvals);
+	raster.RasterTerrian(cloth1, point_cloud, cloth1.heightvals);
+//	cloth1.setheightvals(heightvals);
 
 	double time_step2 = params.time_step*params.time_step;
 	double gravity = 0.2;
@@ -84,14 +84,13 @@ vector<int> CSF::do_filtering()
 	for (int i = 0; i < params.interations; i++)
 	{
 		double maxDiff = cloth1.timeStep();
-		cloth1.terrCollision(heightvals, &terr);
+		cloth1.terrCollision(cloth1.heightvals, &terr);
 
 		if (maxDiff != 0 && maxDiff < params.class_threshold / 100)
 		{
 			//early stop
 			break;
 		}
-
 //		pd++;
 	}
 	//±ßÆÂºó´¦Àí

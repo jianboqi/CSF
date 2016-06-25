@@ -2,7 +2,7 @@
 #include <cmath>
 
 
-vector<int> c2cdist::calCloud2CloudDist(Cloth cloth, PointCloud &pc)
+vector<int> c2cdist::calCloud2CloudDist(Cloth& cloth, PointCloud &pc)
 {
 	vector<int> re;
 	//找到每个激光雷达点到布料直接的距离，用该距离阈值来对点云进行分类

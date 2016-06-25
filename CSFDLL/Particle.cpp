@@ -10,7 +10,7 @@ void Particle::timeStep()
 		Vec3 temp = pos;
 		pos = pos + (pos - old_pos)*(1.0 - DAMPING) + acceleration*time_step2;
 		old_pos = temp;
-		acceleration = Vec3(0, 0, 0); // acceleration is reset since it HAS been translated into a change in position (and implicitely into velocity)	
+		//acceleration = Vec3(0, 0, 0); // acceleration is reset since it HAS been translated into a change in position (and implicitely into velocity)	
 	}
 }
 

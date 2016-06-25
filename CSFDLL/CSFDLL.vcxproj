@@ -84,7 +84,6 @@
     <ClInclude Include="Constraint.h" />
     <ClInclude Include="CSF.h" />
     <ClInclude Include="KNN.h" />
-    <ClInclude Include="nanoflann.hpp" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="point_cloud.h" />
     <ClInclude Include="point_types.h" />

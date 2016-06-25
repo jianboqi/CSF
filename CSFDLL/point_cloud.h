@@ -3,10 +3,7 @@
 
 #include "point_types.h"
 #include "las/lasdefinitions.h"
-#include "nanoflann.hpp"
 
-
-using namespace nanoflann;
 using namespace wl;
 using namespace std;
 
@@ -40,32 +37,6 @@ namespace wl
       {
         *this = pc;
       }
-
-		/************************************************************************/
-		/* for NanoFLann                                                                     */
-		/************************************************************************/
-		inline size_t kdtree_get_point_count() const
-		{
-			return this->_points.size();
-		}
-		inline float kdtree_distance(const float *p1, const size_t idx_p2, size_t) const
-		{
-			const float d0=p1[0]-_points[idx_p2].x;
-			const float d2=p1[2]-_points[idx_p2].z;
-			return d0*d0+d2*d2;
-		}
-
-		inline float kdtree_get_pt(const size_t idx, int dim) const
-		{
-			if (dim==0) return _points[idx].x;
-			else if (dim==1) return _points[idx].z;
-			else return _points[idx].y;
-		}
-
-		template <class BBOX>
-		bool kdtree_get_bbox(BBOX& /*bb*/) const { return false; }
-
-
 
       /** \brief Copy constructor from point cloud subset
         * \param[in] pc the cloud to copy into this

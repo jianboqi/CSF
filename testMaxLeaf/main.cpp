@@ -1,10 +1,8 @@
-#include "../CSFDLL/nanoflann.hpp"
 #include <cstdlib>
 #include <iostream>
 #include <time.h>
 #include <windows.h>
 using namespace std;
-using namespace nanoflann;
 
 // Comment-out for using random points:
 //#define REAL_DATASET_FILE "scan_071_points.dat"
