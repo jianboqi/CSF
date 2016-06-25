@@ -8,7 +8,7 @@ void Rasterlization::RasterTerrian(Cloth cloth, PointCloud &pc, vector<double> &
 		PointCloud,
 		2> my_kdtree_t;
 
-	my_kdtree_t index(2,pc,KDTreeSingleIndexAdaptorParams(100 /* max leaf */));
+	my_kdtree_t index(2,pc,KDTreeSingleIndexAdaptorParams(10 /* max leaf */));
 	index.buildIndex();
 	
 	const size_t num_results = 5;
@@ -23,7 +23,7 @@ void Rasterlization::RasterTerrian(Cloth cloth, PointCloud &pc, vector<double> &
 		const float query_pt[3] = {cloth.getParticle1d(i)->getPos().f[0],cloth.getParticle1d(i)->getPos().f[1], cloth.getParticle1d(i)->getPos().f[2]};
 		index.knnSearch(&query_pt[0], num_results, &ret_index[0], &out_dist_sqr[0]);
 		heightVal[i] = pc[ret_index[0]].y;
-		fout<<cloth.getParticle1d(i)->getPos().f[0]<<" "<<cloth.getParticle1d(i)->getPos().f[2]<<" "<<pc[ret_index[0]].x<<" "<<pc[ret_index[0]].z<<" "<<heightVal[i]<<endl;
+		fout << cloth.getParticle1d(i)->getPos().f[0] << " " << cloth.getParticle1d(i)->getPos().f[2] << " " << pc[ret_index[0]].x << " " << pc[ret_index[0]].z << " " << out_dist_sqr[0] << " " << heightVal[i] << endl;
 	}
 }
 

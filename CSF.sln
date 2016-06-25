@@ -5,6 +5,11 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CSFDLL", "CSFDLL\CSFDLL.vcxproj", "{55D46D1E-C81B-413D-8F15-E7CFDC48EFB6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CSFDemo", "CSFDemo\CSFDemo.vcxproj", "{DEF2BBD8-863B-4959-A000-B7C73DE97248}"
+	ProjectSection(ProjectDependencies) = postProject
+		{55D46D1E-C81B-413D-8F15-E7CFDC48EFB6} = {55D46D1E-C81B-413D-8F15-E7CFDC48EFB6}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +20,10 @@ Global
 		{55D46D1E-C81B-413D-8F15-E7CFDC48EFB6}.Debug|Win32.Build.0 = Debug|Win32
 		{55D46D1E-C81B-413D-8F15-E7CFDC48EFB6}.Release|Win32.ActiveCfg = Release|Win32
 		{55D46D1E-C81B-413D-8F15-E7CFDC48EFB6}.Release|Win32.Build.0 = Release|Win32
+		{DEF2BBD8-863B-4959-A000-B7C73DE97248}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DEF2BBD8-863B-4959-A000-B7C73DE97248}.Debug|Win32.Build.0 = Debug|Win32
+		{DEF2BBD8-863B-4959-A000-B7C73DE97248}.Release|Win32.ActiveCfg = Release|Win32
+		{DEF2BBD8-863B-4959-A000-B7C73DE97248}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
