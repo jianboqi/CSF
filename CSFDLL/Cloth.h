@@ -45,7 +45,6 @@ using namespace std;
 #include "Vec3.h"
 #include "Terrian.h"
 #include "Particle.h"
-#include "Constraint.h"
 //#include <boost/progress.hpp>
 
 
@@ -72,14 +71,11 @@ private:
 
 	//所有布料节点
 	std::vector<Particle> particles; // all particles that are part of this cloth
-	std::vector<Constraint> constraints; // alle constraints between particles as part of this cloth
+	//std::vector<Constraint> constraints; // alle constraints between particles as part of this cloth
 
 	//滤波边坡处理参数
 	double smoothThreshold;
 	double heightThreshold;
-
-	
-	
 
 public:
 	//初始平面位置

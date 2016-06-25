@@ -21,9 +21,6 @@
     <ClInclude Include="Cloth.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Constraint.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CSF.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -54,9 +51,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Cloth.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Constraint.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CSF.cpp">

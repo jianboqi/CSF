@@ -5,6 +5,7 @@
 void Rasterlization::RasterTerrian(Cloth &cloth, PointCloud &pc, vector<double> &heightVal)
 {
 	//首先对每个lidar点找到在布料网格中对应的节点，并记录下来
+	double tmp;
 //#pragma omp parallel for
 	for (int i = 0; i < pc.size(); i++)
 	{
@@ -26,14 +27,25 @@ void Rasterlization::RasterTerrian(Cloth &cloth, PointCloud &pc, vector<double> 
 				pt->tmpDist = pc2particleDist;
 				pt->nearestPointHeight = pc[i].y;
 				pt->nearestPointIndex = i;
+				tmp = pc[i].y;
 			}
 		}
 	}
 	heightVal.resize(cloth.getSize());
-#pragma omp parallel for
+//#pragma omp parallel for
 	for (int i = 0; i < cloth.getSize(); i++)
 	{
-		heightVal[i] = cloth.getParticle1d(i)->nearestPointHeight;
+		double nearestHeight = cloth.getParticle1d(i)->nearestPointHeight;
+		if (nearestHeight > MIN_INF)
+		{
+			heightVal[i] = nearestHeight;
+			tmp = nearestHeight;
+		}
+		else
+		{
+			heightVal[i] = tmp;
+		}
+		
 	}
 	
 }

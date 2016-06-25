@@ -81,7 +81,6 @@
   <ItemGroup>
     <ClInclude Include="c2cdist.h" />
     <ClInclude Include="Cloth.h" />
-    <ClInclude Include="Constraint.h" />
     <ClInclude Include="CSF.h" />
     <ClInclude Include="KNN.h" />
     <ClInclude Include="Particle.h" />
@@ -94,7 +93,6 @@
   <ItemGroup>
     <ClCompile Include="c2cdist.cpp" />
     <ClCompile Include="Cloth.cpp" />
-    <ClCompile Include="Constraint.cpp" />
     <ClCompile Include="CSF.cpp" />
     <ClCompile Include="KNN.cpp" />
     <ClCompile Include="Particle.cpp" />

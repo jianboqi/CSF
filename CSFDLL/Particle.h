@@ -5,10 +5,12 @@
 #include <vector>
 /* Some physics constants */
 #define DAMPING 0.01 // how much to damp the cloth simulation each frame
+#define MAX_INF 9999999999 
+#define MIN_INF -9999999999
 
-const float singleMove1[14] = { 0.4, 0.64, 0.784, 0.8704, 0.92224, 0.95334, 0.97201, 0.9832, 0.98992, 0.99395, 0.99637, 0.99782, 0.99869, 0.99922 };
+const float singleMove1[15] = {0, 0.4, 0.64, 0.784, 0.8704, 0.92224, 0.95334, 0.97201, 0.9832, 0.98992, 0.99395, 0.99637, 0.99782, 0.99869, 0.99922 };
 //当有两端移动时
-const float doubleMove1[14] = { 0.4, 0.48, 0.496, 0.4992, 0.49984, 0.49997, 0.49999, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
+const float doubleMove1[15] = {0, 0.4, 0.48, 0.496, 0.4992, 0.49984, 0.49997, 0.49999, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
 
 /* The particle class represents a particle of mass that can move around in 3D space*/
 class Particle
@@ -49,8 +51,8 @@ public:
 		pos_x = 0;
 		pos_y = 0;
 		c_pos = 0;
-		nearestPointHeight = -99999999;
-		tmpDist = 99999999999999;
+		nearestPointHeight = MIN_INF;
+		tmpDist = MAX_INF;
 	}
 
 	Particle(){}

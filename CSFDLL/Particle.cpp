@@ -14,11 +14,6 @@ void Particle::timeStep()
 	}
 }
 
-double vectorScale(double h1,double h2)
-{
-
-}
-
 //取周围领域的平均向量
 void Particle::satisfyConstraintSelf(int constraintTimes)
 {
@@ -33,13 +28,13 @@ void Particle::satisfyConstraintSelf(int constraintTimes)
 			Vec3 correctionVectorHalf = Vec3(0, 0, 0);
 			if (p2->isMovable())
 			{
-				correctionVectorHalf = correctionVector * (constraintTimes>14 ? 0.5 : doubleMove1[constraintTimes - 1]); // Lets make it half that length, so that we can move BOTH p1 and p2.
+				correctionVectorHalf = correctionVector * (constraintTimes>14 ? 0.5 : doubleMove1[constraintTimes]); // Lets make it half that length, so that we can move BOTH p1 and p2.
 				tmpY += correctionVectorHalf.f[1];
 				p2->offsetPos(-correctionVectorHalf);
 			}
 			else if (!p2->isMovable())
 			{
-				correctionVectorHalf = correctionVector * (constraintTimes>14 ? 1 : singleMove1[constraintTimes - 1]); // Lets make it half that length, so that we can move BOTH p1 and p2.
+				correctionVectorHalf = correctionVector * (constraintTimes>14 ? 1 : singleMove1[constraintTimes]); // Lets make it half that length, so that we can move BOTH p1 and p2.
 				tmpY += correctionVectorHalf.f[1];
 			}
 			total = total + correctionVectorHalf;		
