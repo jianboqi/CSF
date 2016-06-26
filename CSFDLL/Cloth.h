@@ -41,7 +41,7 @@ have been added to the original source code, including
 #include <cmath>
 #include <list>
 using namespace std;
-
+#include "Constraint.h"
 #include "Vec3.h"
 #include "Terrian.h"
 #include "Particle.h"
@@ -71,7 +71,7 @@ private:
 
 	//所有布料节点
 	std::vector<Particle> particles; // all particles that are part of this cloth
-	//std::vector<Constraint> constraints; // alle constraints between particles as part of this cloth
+	std::vector<Constraint> constraints; // alle constraints between particles as part of this cloth
 
 	//滤波边坡处理参数
 	double smoothThreshold;
@@ -88,9 +88,9 @@ public:
 	Particle* getParticle(int x, int y) { return &particles[y*num_particles_width + x]; }
 	void makeConstraint(Particle *p1, Particle *p2) 
 	{
-		//constraints.push_back(Constraint(p1, p2));
-		p1->neighborsList.push_back(p2);
-		p2->neighborsList.push_back(p1);
+		constraints.push_back(Constraint(p1, p2));
+		//p1->neighborsList.push_back(p2);
+		//p2->neighborsList.push_back(p1);
 	}
 public:
 	

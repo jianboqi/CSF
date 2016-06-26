@@ -45,6 +45,9 @@
     <ClInclude Include="XYZReader.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Constraint.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="c2cdist.cpp">
@@ -66,6 +69,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="XYZReader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Constraint.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

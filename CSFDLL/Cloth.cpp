@@ -61,13 +61,20 @@ for (int i = 0; i < particleCount; i++)
 		particles[i].timeStep();
 	}
 
-
-
+for (int i = 0; i<constraint_iterations; i++) // iterate over all constraints several times
+{
 #pragma omp parallel for
-for (int j = 0; j < particleCount; j++)
-		{
-			particles[j].satisfyConstraintSelf(constraint_iterations);
-		}
+	for (int j = 0; j < constraints.size(); j++)
+	{
+		constraints[j].satisfyConstraint();
+	}
+}
+
+//#pragma omp parallel for
+//for (int j = 0; j < particleCount; j++)
+//		{
+//			particles[j].satisfyConstraintSelf(constraint_iterations);
+//		}
 
 	double maxDiff = 0;
 #pragma omp parallel for
