@@ -17,6 +17,7 @@ void Particle::timeStep()
 
 void Particle::satisfyConstraintSelf(int constraintTimes)
 {
+
 	Particle *p1 = this;
 	for (int i = 0; i < neighborsList.size(); i++)
 	{

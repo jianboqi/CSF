@@ -68,6 +68,7 @@ vector<int> CSF::do_filtering()
 	int width_num = (terr.cube[1] - terr.cube[0] + clothbuffer_d * 2) / params.cloth_resolution;
 	int height_num = (terr.cube[5] - terr.cube[4] + clothbuffer_d * 2) /params.cloth_resolution;
 	cout<<"Configuring cloth..."<<endl;
+	cout << "width: " << width_num << " " << "height: " << height_num << endl;
 	Cloth cloth1(terr.cube[1] - terr.cube[0] + clothbuffer_d * 2, terr.cube[5] - terr.cube[4] + clothbuffer_d * 2, width_num, height_num, origin_pos1, 0.3, 9999, params.rigidness, params.time_step, params.cloth_resolution); // one Cloth object of the Cloth class
 	//
 	Rasterlization raster(params.k_nearest_points);
