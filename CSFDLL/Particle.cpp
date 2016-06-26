@@ -14,35 +14,75 @@ void Particle::timeStep()
 	}
 }
 
-//取周围领域的平均向量
+
 void Particle::satisfyConstraintSelf(int constraintTimes)
 {
-	if (isMovable())
+	Particle *p1 = this;
+	for (int i = 0; i < neighborsList.size(); i++)
 	{
-		double tmpY = pos.f[1];
-		Vec3 total = Vec3(0, 0, 0);
-		for (int i = 0; i < neighborsList.size(); i++)
+		Particle * p2 = neighborsList[i];
+		Vec3 correctionVector(0, p2->pos.f[1] - p1->pos.f[1], 0);
+		if (p1->isMovable() && p2->isMovable())
 		{
-			Particle * p2 = neighborsList[i];
-			Vec3 correctionVector(0, p2->pos.f[1] - tmpY, 0);
-			Vec3 correctionVectorHalf = Vec3(0, 0, 0);
-			if (p2->isMovable())
-			{
-				correctionVectorHalf = correctionVector * (constraintTimes>14 ? 0.5 : doubleMove1[constraintTimes]); // Lets make it half that length, so that we can move BOTH p1 and p2.
-				tmpY += correctionVectorHalf.f[1];
-				p2->offsetPos(-correctionVectorHalf);
-			}
-			else if (!p2->isMovable())
-			{
-				correctionVectorHalf = correctionVector * (constraintTimes>14 ? 1 : singleMove1[constraintTimes]); // Lets make it half that length, so that we can move BOTH p1 and p2.
-				tmpY += correctionVectorHalf.f[1];
-			}
-			total = total + correctionVectorHalf;		
+			Vec3 correctionVectorHalf = correctionVector * (constraintTimes>14 ? 0.5 : doubleMove1[constraintTimes - 1]); // Lets make it half that length, so that we can move BOTH p1 and p2.
+			p1->offsetPos(correctionVectorHalf);
+			p2->offsetPos(-correctionVectorHalf);
 		}
-
-		this->offsetPos(total);
+		else if (p1->isMovable() && !p2->isMovable())
+		{
+			Vec3 correctionVectorHalf = correctionVector * (constraintTimes>14 ? 1 : singleMove1[constraintTimes - 1]); // Lets make it half that length, so that we can move BOTH p1 and p2.
+			p1->offsetPos(correctionVectorHalf);
+		}
+		else if (!p1->isMovable() && p2->isMovable())
+		{
+			Vec3 correctionVectorHalf = correctionVector * (constraintTimes>14 ? 1 : singleMove1[constraintTimes - 1]); // Lets make it half that length, so that we can move BOTH p1 and p2.
+			p2->offsetPos(-correctionVectorHalf);
+		}
 	}
-	
+
 }
+
+//取周围领域的平均向量
+//void Particle::satisfyConstraintSelf(int constraintTimes)
+//{
+//	cout << "neighbors: " << neighborsList.size()<< endl;
+//		double tmpY = pos.f[1];
+//		Vec3 total = Vec3(0, 0, 0);
+//		for (int i = 0; i < neighborsList.size(); i++)
+//		{
+//			cout << neighborsList[i]->pos_x << neighborsList[i]->pos_y << " ";
+//			Particle * p2 = neighborsList[i];
+//			Vec3 correctionVector(0, p2->pos.f[1] - tmpY, 0);
+//			Vec3 correctionVectorHalf = Vec3(0, 0, 0);
+//			if (p2->isMovable())
+//			{
+//				if (isMovable())
+//				{
+//					correctionVectorHalf = correctionVector * (constraintTimes>14 ? 0.5 : doubleMove1[constraintTimes]); // Lets make it half that length, so that we can move BOTH p1 and p2.
+//					tmpY += correctionVectorHalf.f[1];
+//					p2->offsetPos(-correctionVectorHalf);
+//				}
+//				else
+//				{
+//					correctionVectorHalf = correctionVector * (constraintTimes>14 ? 1 : singleMove1[constraintTimes]); // Lets make it half that length, so that we can move BOTH p1 and p2.
+//					p2->offsetPos(-correctionVectorHalf);
+//				}
+//				
+//			}
+//			else
+//			{
+//				if (isMovable())
+//				{
+//					correctionVectorHalf = correctionVector * (constraintTimes>14 ? 1 : singleMove1[constraintTimes]); // Lets make it half that length, so that we can move BOTH p1 and p2.
+//					tmpY += correctionVectorHalf.f[1];
+//				}
+//				
+//			}
+//			total = total + correctionVectorHalf;		
+//		}
+//
+//		this->offsetPos(total);
+//	
+//}
 
 
