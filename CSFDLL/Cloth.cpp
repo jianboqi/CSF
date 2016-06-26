@@ -94,6 +94,7 @@ void Cloth::addForce(const Vec3 direction)
 }
 
 
+
 //检测布料是否与地形碰撞
 void Cloth::terrCollision(vector<double> &heightvals,Terrian * terr)
 {
