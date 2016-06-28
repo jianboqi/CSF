@@ -52,10 +52,8 @@ void CSF::readPointsFromFile(string filename)
 	read_xyz(filename,this->point_cloud);
 }
 
-vector<int> CSF::do_filtering()
+void CSF::do_filtering(std::vector<int> &groundIndexes, std::vector<int>& offGroundIndexes)
 {
-	vector<int> re;//存储最后分类结果
-
 	//首先从现有创建terrian
 	cout<<"Configuring terrain..."<<endl;
 	wl::Point bbMin, bbMax;
@@ -111,27 +109,21 @@ vector<int> CSF::do_filtering()
 		cloth.movableFilter();
 	}
 
-//	cloth1.saveToFile();
+//	cloth.saveToFile();
 
 	//分类
 	c2cdist c2c(params.class_threshold);
-	re = c2c.calCloud2CloudDist(cloth,point_cloud);
-	return re;
+	c2c.calCloud2CloudDist(cloth, point_cloud, groundIndexes,offGroundIndexes);
 }
 
 
-void CSF::saveGroundPoints(vector<int> grp, string path)
+void CSF::savePoints(vector<int> grp, string path)
 {
-	string filepath = "terr_ground.txt";
 	if (path == "")
 	{
-		filepath = "terr_ground.txt";
+		return;
 	}
-	else
-	{
-		filepath = path;
-	}
-	ofstream f1(filepath, ios::out);
+	ofstream f1(path, ios::out);
 	if (!f1)return;
 	for (size_t i = 0; i < grp.size(); i++)
 	{

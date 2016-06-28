@@ -13,7 +13,7 @@ public:
 	c2cdist(double threshold):class_treshold(threshold){}
 	~c2cdist(){}
 public:
-	vector<int> calCloud2CloudDist(Cloth& cloth, wl::PointCloud &pc);
+	void calCloud2CloudDist(Cloth& cloth, wl::PointCloud &pc, std::vector<int>& groundIndexes, std::vector<int> &offGroundIndexes);
 private:
 	double class_treshold;//
 };

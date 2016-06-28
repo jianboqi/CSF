@@ -45,7 +45,8 @@ using namespace std;
 #include "Vec3.h"
 #include "Particle.h"
 //#include <boost/progress.hpp>
-
+// post processing is only for connected component which is large than 50
+#define MAX_PARTICLE_FOR_POSTPROCESSIN 50
 
 struct XY{
 	XY(int x1, int y1){ x = x1; y = y1; }
@@ -57,8 +58,6 @@ class Cloth
 {
 private:
 
-	int num_particles_width; // number of particles in "width" direction
-	int num_particles_height; // number of particles in "height" direction
 	// total number of particles is num_particles_width*num_particles_height
 	int constraint_iterations;
 
@@ -78,6 +77,8 @@ public:
 	Vec3 origin_pos;
 	double step_x, step_y;
 	vector<double> heightvals;//height values
+	int num_particles_width; // number of particles in "width" direction
+	int num_particles_height; // number of particles in "height" direction
 
 	Particle* getParticle(int x, int y) { return &particles[y*num_particles_width + x]; }
 	void makeConstraint(Particle *p1, Particle *p2) 

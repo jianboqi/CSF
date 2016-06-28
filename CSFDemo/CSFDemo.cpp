@@ -66,13 +66,15 @@ int main()
 	csf.params.time_step = atof(time_step.c_str());
 
 	//step3 执行滤波,result中储存的是地面点的索引 
-	vector<int> result = csf.do_filtering();
+	std::vector<int> groundIndexes, offGroundIndexes;
+	csf.do_filtering(groundIndexes, offGroundIndexes);
 
 	end = clock();
 	double dur = (double)(end - start);
 	printf("Use Time:%f\n", (dur / CLOCKS_PER_SEC));
 
-	csf.saveGroundPoints(result);
+	csf.savePoints(groundIndexes,"ground.txt");
+	csf.savePoints(offGroundIndexes, "non-ground.txt");
 
 	return 0;
 }

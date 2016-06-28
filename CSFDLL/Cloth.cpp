@@ -239,7 +239,7 @@ void Cloth::movableFilter()
 					neibors.push_back(neibor);
 				}
 				//´¦Àí±ßÆÂ
-				if (sum > 100)
+				if (sum > MAX_PARTICLE_FOR_POSTPROCESSIN)
 				{
 					vector<int> edgePoints = findUnmovablePoint(connected);
 					handle_slop_connected(edgePoints, connected, neibors);
