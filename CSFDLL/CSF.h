@@ -1,3 +1,25 @@
+ï»¿
+//#######################################################################################
+//#                                                                                     #
+//#                              CLOUDCOMPARE PLUGIN: qCSF                              #
+//#                                                                                     #
+//#  Please cite the following paper, If you use this plugin in your work.              #
+//#                                                                                     #
+//#  Zhang W, Qi J, Wan P, Wang H, Xie D, Wang X, Yan G. An Easy-to-Use Airborne LiDAR  #
+//#  Data Filtering Method Based on Cloth Simulation. Remote Sensing. 2016; 8(6):501.   #
+//#                                                                                     #
+//#                                     Copyright Â©                                     #
+//#               RAMM laboratory, School of Geography, Beijing Normal University       #
+//#                               (http://ramm.bnu.edu.cn/)                             #
+//#                                                                                     #
+//#                      Wuming Zhang; Jianbo Qi; Peng Wan; Hongtao Wang                #
+//#                                                                                     #
+//#                      contact us: 2009zwm@gmail.com; wpqjbzwm@126.com                #
+//#                                                                                     #
+//#######################################################################################
+
+
+
 //cloth simulation filter for airborne lidar filtering
 #ifndef _CSF_H_
 #define _CSF_H_
@@ -9,65 +31,61 @@ using namespace wl;
 
 #pragma once;
 
-//¸ÃºêÍê³ÉÔÚdllÏîÄ¿ÄÚ²¿Ê¹ÓÃ__declspec(dllexport)µ¼³ö
-//ÔÚdllÏîÄ¿Íâ²¿Ê¹ÓÃÊ±£¬ÓÃ__declspec(dllimport)µ¼Èë
-//ºêDLL_IMPLEMENTÔÚCSF.cppÖĞ¶¨Òå
-#ifdef DLL_IMPLEMENT  
-#define DLL_API __declspec(dllexport)  
-#else  
-#define DLL_API __declspec(dllimport)  
-#endif
+//è¯¥å®å®Œæˆåœ¨dllé¡¹ç›®å†…éƒ¨ä½¿ç”¨__declspec(dllexport)å¯¼å‡º
+//åœ¨dllé¡¹ç›®å¤–éƒ¨ä½¿ç”¨æ—¶ï¼Œç”¨__declspec(dllimport)å¯¼å…¥
+//å®DLL_IMPLEMENTåœ¨CSF.cppä¸­å®šä¹‰
+//#ifdef DLL_IMPLEMENT  
+//#define DLL_API __declspec(dllexport)  
+//#else  
+//#define DLL_API __declspec(dllimport)  
+//#endif
 
-class DLL_API  CSF
+class /*DLL_API*/  CSF
 {
 public:
 	CSF();
 	~CSF();
 
-	//ÉèÖÃµãÔÆÊı¾İ ´Óvectorµ¼ÈëµãÔÆ 
+	//è®¾ç½®ç‚¹äº‘æ•°æ® ä»vectorå¯¼å…¥ç‚¹äº‘ set pointcloud from vector
 	void setPointCloud(vector< LASPoint > points);
-	//´ÓÎÄ¼ş¶ÁÈ¡µãÔÆ Ö÷ÒªÓÃÓÚ²âÊÔ
+	//ä»æ–‡ä»¶è¯»å–ç‚¹äº‘ ä¸»è¦ç”¨äºæµ‹è¯•  read pointcloud from txt file: (X Y Z) for each line
 	void readPointsFromFile(string filename);
-	//±£´æµØÃæµãµ½ÎÄ¼ş µ÷ÊÔÓÃ
+	//ä¿å­˜åœ°é¢ç‚¹åˆ°æ–‡ä»¶ è°ƒè¯•ç”¨ save extracted ground points to file
 	void saveGroundPoints(vector<int> grp, string path = "");
-
 
 	//get size of pointcloud
 	size_t size(){return point_cloud.size();}
 
 
-	//´ÓÒÑÓĞµÄPointCloudÖĞÊäÈë
+	//ä»å·²æœ‰çš„PointCloudä¸­è¾“å…¥  set pointcloud 
 	void setPointCloud(PointCloud &pc);
 
-	//Ö´ĞĞÂË²¨´¦Àí µÃµ½µØÃæµãµÄÔÚPointCloud ÖĞµÄĞòºÅ
+	//æ‰§è¡Œæ»¤æ³¢å¤„ç† å¾—åˆ°åœ°é¢ç‚¹çš„åœ¨PointCloud ä¸­çš„åºå·  
+	//do filtering, the results are index of ground points in the original pointcloud
 	vector<int> do_filtering();
 
-
 private:
-	 class __declspec (dllexport) wl::PointCloud point_cloud;
+	 /*class __declspec (dllexport)*/ wl::PointCloud point_cloud;
 
 public:
 
 	struct{
-		//perameters
-		//×îÁÙ½üËÑË÷ÊÇµÄµãÊı£¬Ò»°ãÉèÖÃÎª1
-		int k_nearest_points;
 
-		//ÊÇ·ñ½øĞĞ±ßÆÂºó´¦Àí
+		//æ˜¯å¦è¿›è¡Œè¾¹å¡åå¤„ç†
 		bool bSloopSmooth;
-		//Ê±¼ä²½³¤
+		//æ—¶é—´æ­¥é•¿
 		double time_step;
 
-		//·ÖÀàãĞÖµ
+		//åˆ†ç±»é˜ˆå€¼
 		double class_threshold;
 
-		//²¼ÁÏ¸ñÍø´óĞ¡
+		//å¸ƒæ–™æ ¼ç½‘å¤§å°
 		double cloth_resolution;
 
-		//²¼ÁÏÓ²¶È²ÎÊı
+		//å¸ƒæ–™ç¡¬åº¦å‚æ•°
 		int rigidness;
 
-		//µü´ú´ÎÊı
+		//è¿­ä»£æ¬¡æ•°
 		int interations;
 	}params;
 };

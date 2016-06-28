@@ -6,11 +6,9 @@
 
 class Rasterlization
 {
+
 public:
-	int N;
-public:
-	Rasterlization(int N=1){
-		this->N = N;
+	Rasterlization(){
 	}
 	~Rasterlization(){}
 

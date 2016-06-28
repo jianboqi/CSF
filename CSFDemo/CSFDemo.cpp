@@ -3,7 +3,7 @@
 #include <vector>
 #include "Cfg.h"
 #include "../CSFDLL/CSF.h" 
-#pragma comment(lib, "../Release/CSFDLL.lib")
+#pragma comment(lib, "../Release/CSF.lib")
 #include <process.h>
 #include <locale.h>
 #include <time.h>
@@ -40,8 +40,6 @@ int main()
 	cfg.readConfigFile("params.cfg", "cloth_resolution", cloth_resolution);
 	string iterations;
 	cfg.readConfigFile("params.cfg", "iterations", iterations);
-	string k_nearest_points;
-	cfg.readConfigFile("params.cfg", "k_nearest_points", k_nearest_points);
 	string rigidness;
 	cfg.readConfigFile("params.cfg", "rigidness", rigidness);
 	string time_step;
@@ -64,7 +62,6 @@ int main()
 	csf.params.class_threshold = atof(class_threshold.c_str());
 	csf.params.cloth_resolution = atof(cloth_resolution.c_str());
 	csf.params.interations = atoi(iterations.c_str());
-	csf.params.k_nearest_points = atoi(k_nearest_points.c_str());
 	csf.params.rigidness = atoi(rigidness.c_str());
 	csf.params.time_step = atof(time_step.c_str());
 

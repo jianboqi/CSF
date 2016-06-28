@@ -134,9 +134,6 @@ public:
 	//直接对联通分量进行边坡处理
 	void handle_slop_connected(vector<int> edgePoints, vector<XY> connected, vector<vector<int> >neibors, vector<double> &heightvals);
 
-	void doConstraint(int x, int y);
-	Vec3 GetVec(Particle *p1, Particle *p2);
-
 	//将布料点保存到文件
 	void saveToFile(string path = "");
 	//将可移动点保存到文件

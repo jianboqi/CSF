@@ -21,7 +21,7 @@ void Rasterlization::RasterTerrian(Cloth &cloth, PointCloud &pc, vector<double> 
 			pt->correspondingLidarPointList.push_back(i);
 			double pc2particleDist = distSquare(pc_x, pc_z, pt->getPos().f[0], pt->getPos().f[2]);
 			if (pc2particleDist < pt->tmpDist)
-			{
+			{			
 				pt->tmpDist = pc2particleDist;
 				pt->nearestPointHeight = pc[i].y;
 				pt->nearestPointIndex = i;
@@ -34,6 +34,7 @@ void Rasterlization::RasterTerrian(Cloth &cloth, PointCloud &pc, vector<double> 
 	for (int i = 0; i < cloth.getSize(); i++)
 	{
 		double nearestHeight = cloth.getParticle1d(i)->nearestPointHeight;
+		fout << nearestHeight << endl; // fout用法和cout一致, 不过是写到文件里面去
 		if (nearestHeight > MIN_INF)
 		{
 			heightVal[i] = nearestHeight;
@@ -43,7 +44,6 @@ void Rasterlization::RasterTerrian(Cloth &cloth, PointCloud &pc, vector<double> 
 		{
 			heightVal[i] = tmp;
 		}
-		
 	}
 	
 }

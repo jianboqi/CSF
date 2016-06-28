@@ -16,7 +16,6 @@
 
 CSF::CSF()
 {
-	params.k_nearest_points = 1;
 	params.bSloopSmooth = true;
 	params.time_step = 0.65;
 	params.class_threshold=0.5;
@@ -63,15 +62,15 @@ vector<int> CSF::do_filtering()
 	//布料初始位置距离地面最高点的位置
 	double cloth_y_height = 0.05;
 	//计算布料中节点个数
-	double clothbuffer_d = 4;//布料边缘缓冲区大小
-	Vec3 origin_pos1(terr.cube[0] - clothbuffer_d, terr.cube[3] + cloth_y_height, terr.cube[4] - clothbuffer_d);
-	int width_num = (terr.cube[1] - terr.cube[0] + clothbuffer_d * 2) / params.cloth_resolution;
-	int height_num = (terr.cube[5] - terr.cube[4] + clothbuffer_d * 2) /params.cloth_resolution;
+	int clothbuffer_d = 2;//布料边缘缓冲区大小
+	Vec3 origin_pos1(terr.cube[0] - clothbuffer_d*params.cloth_resolution, terr.cube[3] + cloth_y_height, terr.cube[4] - clothbuffer_d*params.cloth_resolution);
+	int width_num = int((terr.cube[1] - terr.cube[0]) / params.cloth_resolution) + 2 * clothbuffer_d;
+	int height_num = int((terr.cube[5] - terr.cube[4]) / params.cloth_resolution)+ 2 * clothbuffer_d;
 	cout<<"Configuring cloth..."<<endl;
 	cout << "width: " << width_num << " " << "height: " << height_num << endl;
 	Cloth cloth1(terr.cube[1] - terr.cube[0] + clothbuffer_d * 2, terr.cube[5] - terr.cube[4] + clothbuffer_d * 2, width_num, height_num, origin_pos1, 0.3, 9999, params.rigidness, params.time_step, params.cloth_resolution); // one Cloth object of the Cloth class
 	//
-	Rasterlization raster(params.k_nearest_points);
+	Rasterlization raster;
 //	vector<double> heightvals;
 	cout<<"KNN..."<<endl;
 	raster.RasterTerrian(cloth1, point_cloud, cloth1.heightvals);
@@ -101,13 +100,14 @@ vector<int> CSF::do_filtering()
 		cloth1.movableFilter();
 	}
 
-	cloth1.saveToFile();
+//	cloth1.saveToFile();
 
 	//分类
 	c2cdist c2c(params.class_threshold);
 	re = c2c.calCloud2CloudDist(cloth1,point_cloud);
 	return re;
 }
+
 
 void CSF::saveGroundPoints(vector<int> grp, string path)
 {
