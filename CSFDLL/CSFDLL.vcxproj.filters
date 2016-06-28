@@ -33,9 +33,6 @@
     <ClInclude Include="point_cloud.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="point_types.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Terrian.h">
       <Filter>头文件</Filter>
     </ClInclude>

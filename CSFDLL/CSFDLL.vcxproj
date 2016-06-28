@@ -152,7 +152,6 @@
     <ClInclude Include="KNN.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="point_cloud.h" />
-    <ClInclude Include="point_types.h" />
     <ClInclude Include="Terrian.h" />
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="XYZReader.h" />
