@@ -34,7 +34,6 @@ void Rasterlization::RasterTerrian(Cloth &cloth, PointCloud &pc, vector<double> 
 	for (int i = 0; i < cloth.getSize(); i++)
 	{
 		double nearestHeight = cloth.getParticle1d(i)->nearestPointHeight;
-		fout << nearestHeight << endl; // fout用法和cout一致, 不过是写到文件里面去
 		if (nearestHeight > MIN_INF)
 		{
 			heightVal[i] = nearestHeight;
