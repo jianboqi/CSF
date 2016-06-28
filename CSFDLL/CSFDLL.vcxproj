@@ -149,10 +149,8 @@
     <ClInclude Include="c2cdist.h" />
     <ClInclude Include="Cloth.h" />
     <ClInclude Include="CSF.h" />
-    <ClInclude Include="KNN.h" />
+    <ClInclude Include="Rasterization.h" />
     <ClInclude Include="Particle.h" />
-    <ClInclude Include="point_cloud.h" />
-    <ClInclude Include="Terrian.h" />
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="XYZReader.h" />
   </ItemGroup>
@@ -160,9 +158,9 @@
     <ClCompile Include="c2cdist.cpp" />
     <ClCompile Include="Cloth.cpp" />
     <ClCompile Include="CSF.cpp" />
-    <ClCompile Include="KNN.cpp" />
+    <ClCompile Include="Rasterization.cpp" />
     <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="Terrian.cpp" />
+    <ClCompile Include="point_cloud.cpp" />
     <ClCompile Include="XYZReader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

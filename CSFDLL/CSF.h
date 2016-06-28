@@ -23,15 +23,36 @@
 //cloth simulation filter for airborne lidar filtering
 #ifndef _CSF_H_
 #define _CSF_H_
+//system
+#include <vector>
+namespace wl
+{
+	//! Point type
+	struct Point
+	{
+		union
+		{
+			struct
+			{
+				float x;
+				float y;
+				float z;
+			};
+			float u[3];
+		};
 
-#include "point_cloud.h"
-#include <iostream>
-using namespace wl;
-//#pragma once;
+		Point()
+			: x(0), y(0), z(0)
+		{}
+	};
 
-
-
-
+	class PointCloud : public std::vector < Point >
+	{
+	public:
+		//compute the bounding box
+		void computeBoundingBox(Point& bbMin, Point& bbMax);
+	};
+}
 
 
 //该宏完成在dll项目内部使用__declspec(dllexport)导出

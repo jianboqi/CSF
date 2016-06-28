@@ -7,10 +7,9 @@
 
 #include "CSF.h"
 #include "XYZReader.h"
-#include "Terrian.h"
 #include "Vec3.h"
 #include "Cloth.h"
-#include "KNN.h"
+#include "Rasterization.h"
 #include "c2cdist.h"
 //#include "Cloth.h"
 
@@ -28,7 +27,7 @@ CSF::~CSF()
 }
 
 
-void CSF::setPointCloud(vector< LASPoint > points)
+void CSF::setPointCloud(vector< Point > points)
 {
 
 }
@@ -39,7 +38,7 @@ void CSF::setPointCloud(PointCloud &pc)
 	#pragma omp parallel for
 	for (int i=0;i<pc.size();i++)
 	{
-		LASPoint las;
+		Point las;
 		las.x = pc[i].x;
 		las.y = -pc[i].z;
 		las.z = pc[i].y;
@@ -58,14 +57,18 @@ vector<int> CSF::do_filtering()
 
 	//首先从现有创建terrian
 	cout<<"Configuring terrain..."<<endl;
-	Terrian terr(point_cloud);
+	wl::Point bbMin, bbMax;
+	point_cloud.computeBoundingBox(bbMin, bbMax);
 	//布料初始位置距离地面最高点的位置
 	double cloth_y_height = 0.05;
 	//计算布料中节点个数
-	int clothbuffer_d = 2;//布料边缘缓冲区大小
-	Vec3 origin_pos1(terr.cube[0] - clothbuffer_d*params.cloth_resolution, terr.cube[3] + cloth_y_height, terr.cube[4] - clothbuffer_d*params.cloth_resolution);
-	int width_num = int((terr.cube[1] - terr.cube[0]) / params.cloth_resolution) + 2 * clothbuffer_d;
-	int height_num = int((terr.cube[5] - terr.cube[4]) / params.cloth_resolution)+ 2 * clothbuffer_d;
+	int clothbuffer_d = 2;//缓冲区大小，两个网格默认
+	Vec3 origin_pos(bbMin.x - clothbuffer_d * params.cloth_resolution,
+		bbMax.y + cloth_y_height,
+		bbMin.z - clothbuffer_d * params.cloth_resolution);
+
+	int width_num = static_cast<int>(floor((bbMax.x - bbMin.x) / params.cloth_resolution)) + 2 * clothbuffer_d;
+	int height_num = static_cast<int>(floor((bbMax.z - bbMin.z) / params.cloth_resolution)) + 2 * clothbuffer_d;
 	cout<<"Configuring cloth..."<<endl;
 	cout << "width: " << width_num << " " << "height: " << height_num << endl;
 	Cloth cloth1(terr.cube[1] - terr.cube[0] + clothbuffer_d * 2, terr.cube[5] - terr.cube[4] + clothbuffer_d * 2, width_num, height_num, origin_pos1, 0.3, 9999, params.rigidness, params.time_step, params.cloth_resolution); // one Cloth object of the Cloth class

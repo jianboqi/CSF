@@ -43,7 +43,6 @@ have been added to the original source code, including
 using namespace std;
 
 #include "Vec3.h"
-#include "Terrian.h"
 #include "Particle.h"
 //#include <boost/progress.hpp>
 
@@ -79,7 +78,8 @@ private:
 
 public:
 	//初始平面位置
-	Vec3 origin_pos1; //左上角顶点  平面均为水平
+	Vec3 origin_pos;
+	double step_x, step_y;
 	double cloth_resolution;//布料网格分辨率
 
 	//heightvalues
@@ -108,7 +108,17 @@ public:
 public:
 
 	/* This is a important constructor for the entire system of particles and constraints*/
-	Cloth(double width, double height, int num_particles_width, int num_particles_height, Vec3 origin_pos1, double smoothThreshold, double heightThreshold, int rigidness, double time_step, double cloth_resolution);
+	//Cloth(double width, double height, int num_particles_width, int num_particles_height, Vec3 origin_pos1, double smoothThreshold, double heightThreshold, int rigidness, double time_step, double cloth_resolution);
+	Cloth(const Vec3& origin_pos,
+		int num_particles_width,
+		int num_particles_height,
+		double step_x,
+		double step_y,
+		double smoothThreshold,
+		double heightThreshold,
+		int rigidness,
+		double time_step);
+
 
 	void setheightvals(vector<double> heightvals)
 	{

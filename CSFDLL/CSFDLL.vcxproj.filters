@@ -24,22 +24,16 @@
     <ClInclude Include="CSF.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="KNN.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Particle.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="point_cloud.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Terrian.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Vec3.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="XYZReader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Rasterization.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,16 +47,16 @@
     <ClCompile Include="CSF.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="KNN.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Particle.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Terrian.cpp">
+    <ClCompile Include="XYZReader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="XYZReader.cpp">
+    <ClCompile Include="point_cloud.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Rasterization.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
