@@ -1,4 +1,5 @@
 #include "Cloth.h"
+#include <fstream>
 
 
 Cloth::Cloth(const Vec3& _origin_pos,
@@ -110,7 +111,7 @@ void Cloth::addForce(const Vec3 direction)
 
 
 //检测布料是否与地形碰撞
-void Cloth::terrCollision(vector<double> &heightvals,Terrian * terr)
+void Cloth::terrCollision()
 {
 #pragma omp parallel for
 	for (int i = 0; i < particles.size(); i++)
@@ -240,8 +241,8 @@ void Cloth::movableFilter()
 				//处理边坡
 				if (sum > 100)
 				{
-					vector<int> edgePoints = findUnmovablePoint(connected, heightvals);
-					handle_slop_connected(edgePoints, connected, neibors, heightvals);
+					vector<int> edgePoints = findUnmovablePoint(connected);
+					handle_slop_connected(edgePoints, connected, neibors);
 				}
 
 			}
@@ -250,7 +251,7 @@ void Cloth::movableFilter()
 }
 
 
-vector<int> Cloth::findUnmovablePoint(vector<XY> connected,vector<double> &heightvals)
+vector<int> Cloth::findUnmovablePoint(vector<XY> connected)
 {
 	vector<int> edgePoints;
 	for (size_t i = 0; i < connected.size(); i++)
@@ -331,7 +332,7 @@ vector<int> Cloth::findUnmovablePoint(vector<XY> connected,vector<double> &heigh
 	return edgePoints;
 }
 //直接对联通分量进行边坡处理
-void Cloth::handle_slop_connected(vector<int> edgePoints, vector<XY> connected, vector<vector<int> >neibors, vector<double> &heightvals)
+void Cloth::handle_slop_connected(vector<int> edgePoints, vector<XY> connected, vector<vector<int> >neibors)
 {
 	vector<bool> visited;
 	for (size_t i = 0; i < connected.size(); i++)

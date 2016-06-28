@@ -11,6 +11,7 @@
 #include "Cloth.h"
 #include "Rasterization.h"
 #include "c2cdist.h"
+#include <fstream>
 //#include "Cloth.h"
 
 CSF::CSF()
@@ -27,12 +28,12 @@ CSF::~CSF()
 }
 
 
-void CSF::setPointCloud(vector< Point > points)
+void CSF::setPointCloud(vector< wl::Point > points)
 {
 
 }
 
-void CSF::setPointCloud(PointCloud &pc)
+void CSF::setPointCloud(wl::PointCloud &pc)
 {
 	point_cloud.resize(pc.size());
 	#pragma omp parallel for
@@ -71,23 +72,30 @@ vector<int> CSF::do_filtering()
 	int height_num = static_cast<int>(floor((bbMax.z - bbMin.z) / params.cloth_resolution)) + 2 * clothbuffer_d;
 	cout<<"Configuring cloth..."<<endl;
 	cout << "width: " << width_num << " " << "height: " << height_num << endl;
-	Cloth cloth1(terr.cube[1] - terr.cube[0] + clothbuffer_d * 2, terr.cube[5] - terr.cube[4] + clothbuffer_d * 2, width_num, height_num, origin_pos1, 0.3, 9999, params.rigidness, params.time_step, params.cloth_resolution); // one Cloth object of the Cloth class
-	//
-	Rasterlization raster;
-//	vector<double> heightvals;
-	cout<<"KNN..."<<endl;
-	raster.RasterTerrian(cloth1, point_cloud, cloth1.heightvals);
+	//Cloth cloth1(terr.cube[1] - terr.cube[0] + clothbuffer_d * 2, terr.cube[5] - terr.cube[4] + clothbuffer_d * 2, width_num, height_num, origin_pos1, 0.3, 9999, params.rigidness, params.time_step, params.cloth_resolution); // one Cloth object of the Cloth class
+	Cloth cloth(origin_pos,
+		width_num,
+		height_num,
+		params.cloth_resolution,
+		params.cloth_resolution,
+		0.3,
+		9999,
+		params.rigidness,
+		params.time_step);
+
+	cout<<"Rasterization..."<<endl;
+	Rasterlization::RasterTerrian(cloth, point_cloud, cloth.getHeightvals());
 //	cloth1.setheightvals(heightvals);
 
 	double time_step2 = params.time_step*params.time_step;
 	double gravity = 0.2;
 	cout<<"Starting simulation..."<<endl;
-	cloth1.addForce(Vec3(0, -gravity, 0)*time_step2);
+	cloth.addForce(Vec3(0, -gravity, 0)*time_step2);
 //	boost::progress_display pd(params.interations);
 	for (int i = 0; i < params.interations; i++)
 	{
-		double maxDiff = cloth1.timeStep();
-		cloth1.terrCollision(cloth1.heightvals, &terr);
+		double maxDiff = cloth.timeStep();
+		cloth.terrCollision();
 
 		if (maxDiff != 0 && maxDiff < params.class_threshold / 100)
 		{
@@ -100,14 +108,14 @@ vector<int> CSF::do_filtering()
 	if(params.bSloopSmooth)
 	{
 		cout<<"post handle..."<<endl;
-		cloth1.movableFilter();
+		cloth.movableFilter();
 	}
 
 //	cloth1.saveToFile();
 
 	//·ÖÀà
 	c2cdist c2c(params.class_threshold);
-	re = c2c.calCloud2CloudDist(cloth1,point_cloud);
+	re = c2c.calCloud2CloudDist(cloth,point_cloud);
 	return re;
 }
 

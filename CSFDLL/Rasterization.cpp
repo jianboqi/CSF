@@ -2,6 +2,7 @@
 
 void Rasterlization::RasterTerrian(Cloth &cloth, wl::PointCloud &pc, vector<double> &heightVal)
 {
+
 	//首先对每个lidar点找到在布料网格中对应的节点，并记录下来
 	double tmp;
 	for (int i = 0; i < pc.size(); i++)
@@ -9,10 +10,12 @@ void Rasterlization::RasterTerrian(Cloth &cloth, wl::PointCloud &pc, vector<doub
 		double pc_x = pc[i].x;
 		double pc_z = pc[i].z;
 		//将该坐标与布料的左上角坐标相减
-		double deltaX = pc_x - cloth.origin_pos1.f[0];
-		double deltaZ = pc_z - cloth.origin_pos1.f[2];
+		double deltaX = pc_x - cloth.origin_pos.f[0];
+		double deltaZ = pc_z - cloth.origin_pos.f[2];
+		cout << deltaX <<" " <<deltaZ<< endl;
 		int col = int(deltaX / cloth.cloth_resolution + 0.5);
 		int row = int(deltaZ / cloth.cloth_resolution + 0.5);
+		cout << col << " " << row << endl;
 		if (col >= 0 && row >= 0)
 		{
 			Particle * pt = cloth.getParticle(col, row);
@@ -41,6 +44,7 @@ void Rasterlization::RasterTerrian(Cloth &cloth, wl::PointCloud &pc, vector<doub
 		{
 			heightVal[i] = tmp;
 		}
+		
 	}
 	
 }

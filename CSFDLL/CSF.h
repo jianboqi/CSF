@@ -23,41 +23,12 @@
 //cloth simulation filter for airborne lidar filtering
 #ifndef _CSF_H_
 #define _CSF_H_
-//system
 #include <vector>
-namespace wl
-{
-	//! Point type
-	struct Point
-	{
-		union
-		{
-			struct
-			{
-				float x;
-				float y;
-				float z;
-			};
-			float u[3];
-		};
-
-		Point()
-			: x(0), y(0), z(0)
-		{}
-	};
-
-	class PointCloud : public std::vector < Point >
-	{
-	public:
-		//compute the bounding box
-		void computeBoundingBox(Point& bbMin, Point& bbMax);
-	};
-}
+#include <string>
+#include "point_cloud.h"
+using namespace std;
 
 
-//该宏完成在dll项目内部使用__declspec(dllexport)导出
-//在dll项目外部使用时，用__declspec(dllimport)导入
-//宏DLL_IMPLEMENT在CSF.cpp中定义
 //#ifdef DLL_IMPLEMENT  
 //#define DLL_API __declspec(dllexport)  
 //#else  
@@ -71,7 +42,7 @@ public:
 	~CSF();
 
 	//设置点云数据 从vector导入点云 set pointcloud from vector
-	void setPointCloud(vector< Point > points);
+	void setPointCloud(vector< wl::Point > points);
 	//从文件读取点云 主要用于测试  read pointcloud from txt file: (X Y Z) for each line
 	void readPointsFromFile(string filename);
 	//保存地面点到文件 调试用 save extracted ground points to file
@@ -82,7 +53,7 @@ public:
 
 
 	//从已有的PointCloud中输入  set pointcloud 
-	void setPointCloud(PointCloud &pc);
+	void setPointCloud(wl::PointCloud &pc);
 
 	//执行滤波处理 得到地面点的在PointCloud 中的序号  
 	//do filtering, the results are index of ground points in the original pointcloud

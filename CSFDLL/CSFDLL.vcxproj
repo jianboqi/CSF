@@ -149,6 +149,7 @@
     <ClInclude Include="c2cdist.h" />
     <ClInclude Include="Cloth.h" />
     <ClInclude Include="CSF.h" />
+    <ClInclude Include="point_cloud.h" />
     <ClInclude Include="Rasterization.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Vec3.h" />

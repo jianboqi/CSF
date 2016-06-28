@@ -47,9 +47,6 @@ using namespace std;
 //#include <boost/progress.hpp>
 
 
-
-
-
 struct XY{
 	XY(int x1, int y1){ x = x1; y = y1; }
 	int x;
@@ -80,10 +77,7 @@ public:
 	//初始平面位置
 	Vec3 origin_pos;
 	double step_x, step_y;
-	double cloth_resolution;//布料网格分辨率
-
-	//heightvalues
-	vector<double> heightvals;
+	vector<double> heightvals;//height values
 
 	Particle* getParticle(int x, int y) { return &particles[y*num_particles_width + x]; }
 	void makeConstraint(Particle *p1, Particle *p2) 
@@ -100,6 +94,8 @@ public:
 	}
 
 	size_t get1DIndex(int x, int y){ return y*num_particles_width + x; }
+
+	inline std::vector<double>& getHeightvals() { return heightvals; }
 
 
 	//获取第index个particle
@@ -119,12 +115,6 @@ public:
 		int rigidness,
 		double time_step);
 
-
-	void setheightvals(vector<double> heightvals)
-	{
-		this->heightvals = heightvals;
-	}
-
 	/* this is an important methods where the time is progressed one time step for the entire cloth.
 	This includes calling satisfyConstraint() for every constraint, and calling timeStep() for all particles
 	*/
@@ -135,14 +125,14 @@ public:
 
 
 	//检测布料是否与地形碰撞
-	void terrCollision(vector<double> &heightvals,Terrian * terr);
+	void terrCollision();
 
 	//对可移动的点进行边坡处理
 	void movableFilter();
 	//找到每组可移动点，这个连通分量周围的不可移动点。从四周向中间逼近
-	vector<int> findUnmovablePoint(vector<XY> connected,vector<double> &heightvals);
+	vector<int> findUnmovablePoint(vector<XY> connected);
 	//直接对联通分量进行边坡处理
-	void handle_slop_connected(vector<int> edgePoints, vector<XY> connected, vector<vector<int> >neibors, vector<double> &heightvals);
+	void handle_slop_connected(vector<int> edgePoints, vector<XY> connected, vector<vector<int> >neibors);
 
 	//将布料点保存到文件
 	void saveToFile(string path = "");
