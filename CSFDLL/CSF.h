@@ -27,9 +27,12 @@
 #include "point_cloud.h"
 #include <iostream>
 using namespace wl;
+//#pragma once;
 
 
-#pragma once;
+
+
+
 
 //该宏完成在dll项目内部使用__declspec(dllexport)导出
 //在dll项目外部使用时，用__declspec(dllimport)导入
@@ -47,7 +50,7 @@ public:
 	~CSF();
 
 	//设置点云数据 从vector导入点云 set pointcloud from vector
-	void setPointCloud(vector< LASPoint > points);
+	void setPointCloud(vector< Point > points);
 	//从文件读取点云 主要用于测试  read pointcloud from txt file: (X Y Z) for each line
 	void readPointsFromFile(string filename);
 	//保存地面点到文件 调试用 save extracted ground points to file

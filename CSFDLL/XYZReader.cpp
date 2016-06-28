@@ -16,11 +16,11 @@ void read_xyz(string fname, PointCloud &pointcloud)
 		words >> x;
 		words >> y;
 		words >> z;
-		LASPoint lasPoint;
-		lasPoint.x = atof(x.c_str());
-		lasPoint.y = -atof(z.c_str());
-		lasPoint.z = atof(y.c_str());
-		pointcloud.push_back(lasPoint);
+		Point point;
+		point.x = atof(x.c_str());
+		point.y = -atof(z.c_str());
+		point.z = atof(y.c_str());
+		pointcloud.push_back(point);
 	}
 
 }
