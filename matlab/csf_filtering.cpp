@@ -40,28 +40,6 @@ void csf_filtering(double* points
 	csf.do_filtering(groundIndex,nongroundIndex);
 	groundRows = groundIndex.size();
 	nongroundRows = nongroundIndex.size();
-	// double *groundPoints = new double[3*groundIndex.size()];
-	// double *nongroundPoints = new double[3*nongroundIndex.size()];
-	// wl::PointCloud & pc = csf.getPointCloud(); 
-	// groundRows = groundIndex.size();
-	// nongroundRows = nongroundIndex.size();
-	// for(int i=0;i<groundRows;i++)
-	// {
-	// 	groundPoints[i] = pc[groundIndex[i]].x;
-	// 	groundPoints[groundRows+i] = pc[groundIndex[i]].z;
-	// 	groundPoints[groundRows*2+i] = -pc[groundIndex[i]].y;
-	// }
-
-	// for(int i=0;i<nongroundRows;i++)
-	// {
-	// 	nongroundPoints[i] = pc[nongroundIndex[i]].x;
-	// 	nongroundPoints[nongroundRows+i] = pc[nongroundIndex[i]].z;
-	// 	nongroundPoints[nongroundRows*2+i] = -pc[nongroundIndex[i]].y;
-	// }
-
-
-	//csf.savePoints(groundIndex);
-	//mexPrintf("OK, Done!\n");
 }
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])

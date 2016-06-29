@@ -1,7 +1,7 @@
 ﻿
 //#######################################################################################
 //#                                                                                     #
-//#                              CLOUDCOMPARE PLUGIN: qCSF                              #
+//#            CSF: Airborne LiDAR filtering based on Cloth Simulation                  #
 //#                                                                                     #
 //#  Please cite the following paper, If you use this plugin in your work.              #
 //#                                                                                     #
