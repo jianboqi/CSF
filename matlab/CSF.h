@@ -23,17 +23,12 @@
 //cloth simulation filter for airborne lidar filtering
 #ifndef _CSF_H_
 #define _CSF_H_
-
+#include <vector>
+#include <string>
 #include "point_cloud.h"
-#include <iostream>
-using namespace wl;
+using namespace std;
 
 
-#pragma once;
-
-//该宏完成在dll项目内部使用__declspec(dllexport)导出
-//在dll项目外部使用时，用__declspec(dllimport)导入
-//宏DLL_IMPLEMENT在CSF.cpp中定义
 //#ifdef DLL_IMPLEMENT  
 //#define DLL_API __declspec(dllexport)  
 //#else  
@@ -47,22 +42,30 @@ public:
 	~CSF();
 
 	//设置点云数据 从vector导入点云 set pointcloud from vector
-	void setPointCloud(vector< LASPoint > points);
+	void setPointCloud(vector< wl::Point > points);
+	//set point cloud from a one-dimentional array. it defines a N*3 point cloud by the given rows.
+	void setPointCloud(double *points, int rows);
 	//从文件读取点云 主要用于测试  read pointcloud from txt file: (X Y Z) for each line
 	void readPointsFromFile(string filename);
-	//保存地面点到文件 调试用 save extracted ground points to file
-	void saveGroundPoints(vector<int> grp, string path = "");
+
+	inline wl::PointCloud & getPointCloud(){ return point_cloud; }
+	inline const wl::PointCloud & getPointCloud() const{ return point_cloud; }
+
+	//保存点到文件 调试用 save points to file
+	void savePoints(vector<int> grp, string path);
 
 	//get size of pointcloud
 	size_t size(){return point_cloud.size();}
 
 
 	//从已有的PointCloud中输入  set pointcloud 
-	void setPointCloud(PointCloud &pc);
+	void setPointCloud(wl::PointCloud &pc);
 
 	//执行滤波处理 得到地面点的在PointCloud 中的序号  
 	//do filtering, the results are index of ground points in the original pointcloud
-	vector<int> do_filtering();
+	//groundIndexes gorund points index
+	//offGroundIndexes non-ground points index
+	void do_filtering(std::vector<int>& groundIndexes, std::vector<int>& offGroundIndexes,bool exportCloth=false);
 
 private:
 	 /*class __declspec (dllexport)*/ wl::PointCloud point_cloud;
@@ -70,7 +73,7 @@ private:
 public:
 
 	struct{
-
+		//refer to the website:http://ramm.bnu.edu.cn/projects/CSF/ for the setting of these paramters
 		//是否进行边坡后处理
 		bool bSloopSmooth;
 		//时间步长

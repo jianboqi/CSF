@@ -67,7 +67,7 @@ int main()
 
 	//step3 执行滤波,result中储存的是地面点的索引 
 	std::vector<int> groundIndexes, offGroundIndexes;
-	csf.do_filtering(groundIndexes, offGroundIndexes);
+	csf.do_filtering(groundIndexes, offGroundIndexes,true);
 
 	end = clock();
 	double dur = (double)(end - start);

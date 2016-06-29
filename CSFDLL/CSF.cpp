@@ -30,7 +30,29 @@ CSF::~CSF()
 
 void CSF::setPointCloud(vector< wl::Point > points)
 {
+	point_cloud.resize(points.size());
+#pragma omp parallel for
+	for (int i = 0; i<points.size(); i++)
+	{
+		Point las;
+		las.x = points[i].x;
+		las.y = -points[i].z;
+		las.z = points[i].y;
+		point_cloud[i] = las;
+	}
+}
 
+void CSF::setPointCloud(double *points, int rows)
+{
+	#define A(i,j) points[i+j*rows]
+	for (int i = 0; i<rows; i++)
+	{
+		wl::Point p;
+		p.x = A(i, 0);
+		p.y = -A(i, 2);
+		p.z = A(i, 1);
+		point_cloud.push_back(p);
+	}
 }
 
 void CSF::setPointCloud(wl::PointCloud &pc)
@@ -52,7 +74,7 @@ void CSF::readPointsFromFile(string filename)
 	read_xyz(filename,this->point_cloud);
 }
 
-void CSF::do_filtering(std::vector<int> &groundIndexes, std::vector<int>& offGroundIndexes)
+void CSF::do_filtering(std::vector<int> &groundIndexes, std::vector<int>& offGroundIndexes, bool exportCloth)
 {
 	//首先从现有创建terrian
 	cout<<"Configuring terrain..."<<endl;
@@ -108,8 +130,9 @@ void CSF::do_filtering(std::vector<int> &groundIndexes, std::vector<int>& offGro
 		cout<<"post handle..."<<endl;
 		cloth.movableFilter();
 	}
-
-//	cloth.saveToFile();
+	if (exportCloth)
+		cloth.saveToFile();
+//	
 
 	//分类
 	c2cdist c2c(params.class_threshold);

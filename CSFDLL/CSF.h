@@ -43,8 +43,14 @@ public:
 
 	//设置点云数据 从vector导入点云 set pointcloud from vector
 	void setPointCloud(vector< wl::Point > points);
+	//set point cloud from a one-dimentional array. it defines a N*3 point cloud by the given rows.
+	void setPointCloud(double *points, int rows);
 	//从文件读取点云 主要用于测试  read pointcloud from txt file: (X Y Z) for each line
 	void readPointsFromFile(string filename);
+
+	inline wl::PointCloud & getPointCloud(){ return point_cloud; }
+	inline const wl::PointCloud & getPointCloud() const{ return point_cloud; }
+
 	//保存点到文件 调试用 save points to file
 	void savePoints(vector<int> grp, string path);
 
@@ -59,7 +65,7 @@ public:
 	//do filtering, the results are index of ground points in the original pointcloud
 	//groundIndexes gorund points index
 	//offGroundIndexes non-ground points index
-	void do_filtering(std::vector<int>& groundIndexes, std::vector<int>& offGroundIndexes);
+	void do_filtering(std::vector<int>& groundIndexes, std::vector<int>& offGroundIndexes,bool exportCloth=false);
 
 private:
 	 /*class __declspec (dllexport)*/ wl::PointCloud point_cloud;
