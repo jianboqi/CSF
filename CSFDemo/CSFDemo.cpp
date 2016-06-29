@@ -9,7 +9,7 @@
 #include <time.h>
 using namespace std;
 
-int main()
+int main(int argc,char* argv[])
 {
 	//读取文本参数，仅用于调试
 	Cfg cfg;
@@ -67,7 +67,16 @@ int main()
 
 	//step3 执行滤波,result中储存的是地面点的索引 
 	std::vector<int> groundIndexes, offGroundIndexes;
-	csf.do_filtering(groundIndexes, offGroundIndexes,true);
+	if (argc == 2 && strcmp(argv[1], "-c")==0)
+	{
+		cout << "Export cloth enabled." << endl;
+		csf.do_filtering(groundIndexes, offGroundIndexes, true);
+	}
+	else
+	{
+		csf.do_filtering(groundIndexes, offGroundIndexes, false);
+	}
+		
 
 	end = clock();
 	double dur = (double)(end - start);

@@ -82,7 +82,7 @@ for (int i = 0; i < particleCount; i++)
 #pragma omp parallel for
 for (int j = 0; j < particleCount; j++)
 {
-			particles[j].satisfyConstraintSelf(constraint_iterations);
+	particles[j].satisfyConstraintSelf(constraint_iterations);
 }
 
 	double maxDiff = 0;

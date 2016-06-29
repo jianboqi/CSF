@@ -83,7 +83,7 @@ double Rasterlization::findHeightValByNeighbor(Particle *p, Cloth &cloth)
 				
 		}
 	}
-
+	return MIN_INF;
 }
 
 void Rasterlization::RasterTerrian(Cloth &cloth, wl::PointCloud &pc, vector<double> &heightVal)
