@@ -17,6 +17,10 @@
 %#                      contact us: 2009zwm@gmail.com; wpqjbzwm@126.com                #
 %#                                                                                     #
 %#######################################################################################
+%Compile in the matlab with:
+
+%mex csf_filtering.cpp csf.lib
+
 function [groundIndex,nonGroundIndex]=csf_filtering(PointCloudMatrix,rigidness,isSmooth,clothResolution)
 %CSF_FILTERING Filtering ground points from lidar point cloud
 %   PointCloudMatrix N*3 (N*4...) matrix, each row represents a point
