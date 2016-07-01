@@ -1,9 +1,9 @@
 ﻿
 //#######################################################################################
 //#                                                                                     #
-//#                              CLOUDCOMPARE PLUGIN: qCSF                              #
+//#            CSF: Airborne LiDAR filtering based on Cloth Simulation                  #
 //#                                                                                     #
-//#  Please cite the following paper, If you use this plugin in your work.              #
+//#  Please cite the following paper, If you use this software in your work.            #
 //#                                                                                     #
 //#  Zhang W, Qi J, Wan P, Wang H, Xie D, Wang X, Yan G. An Easy-to-Use Airborne LiDAR  #
 //#  Data Filtering Method Based on Cloth Simulation. Remote Sensing. 2016; 8(6):501.   #
