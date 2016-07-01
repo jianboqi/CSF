@@ -2,7 +2,7 @@
 #include <cmath>
 
 
-void c2cdist::calCloud2CloudDist(Cloth& cloth, wl::PointCloud &pc, std::vector<int>& groundIndexes, std::vector<int>& offGroundIndexes)
+void c2cdist::calCloud2CloudDist(Cloth& cloth, csf::PointCloud &pc, std::vector<int>& groundIndexes, std::vector<int>& offGroundIndexes)
 {
 	//找到每个激光雷达点到布料直接的距离，用该距离阈值来对点云进行分类
 	//双线性插值

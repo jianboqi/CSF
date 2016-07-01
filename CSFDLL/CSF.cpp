@@ -28,13 +28,13 @@ CSF::~CSF()
 }
 
 
-void CSF::setPointCloud(vector< wl::Point > points)
+void CSF::setPointCloud(vector< csf::Point > points)
 {
 	point_cloud.resize(points.size());
 #pragma omp parallel for
 	for (int i = 0; i<points.size(); i++)
 	{
-		Point las;
+		csf::Point las;
 		las.x = points[i].x;
 		las.y = -points[i].z;
 		las.z = points[i].y;
@@ -47,7 +47,7 @@ void CSF::setPointCloud(double *points, int rows)
 	#define A(i,j) points[i+j*rows]
 	for (int i = 0; i<rows; i++)
 	{
-		wl::Point p;
+		csf::Point p;
 		p.x = A(i, 0);
 		p.y = -A(i, 2);
 		p.z = A(i, 1);
@@ -55,13 +55,13 @@ void CSF::setPointCloud(double *points, int rows)
 	}
 }
 
-void CSF::setPointCloud(wl::PointCloud &pc)
+void CSF::setPointCloud(csf::PointCloud &pc)
 {
 	point_cloud.resize(pc.size());
 	#pragma omp parallel for
 	for (int i=0;i<pc.size();i++)
 	{
-		Point las;
+		csf::Point las;
 		las.x = pc[i].x;
 		las.y = -pc[i].z;
 		las.z = pc[i].y;
@@ -78,7 +78,7 @@ void CSF::do_filtering(std::vector<int> &groundIndexes, std::vector<int>& offGro
 {
 	//首先从现有创建terrian
 	cout<<"Configuring terrain..."<<endl;
-	wl::Point bbMin, bbMax;
+	csf::Point bbMin, bbMax;
 	point_cloud.computeBoundingBox(bbMin, bbMax);
 	//布料初始位置距离地面最高点的位置
 	double cloth_y_height = 0.05;

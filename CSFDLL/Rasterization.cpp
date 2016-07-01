@@ -86,7 +86,7 @@ double Rasterlization::findHeightValByNeighbor(Particle *p, Cloth &cloth)
 	return MIN_INF;
 }
 
-void Rasterlization::RasterTerrian(Cloth &cloth, wl::PointCloud &pc, vector<double> &heightVal)
+void Rasterlization::RasterTerrian(Cloth &cloth, csf::PointCloud &pc, vector<double> &heightVal)
 {
 
 	//首先对每个lidar点找到在布料网格中对应的节点，并记录下来

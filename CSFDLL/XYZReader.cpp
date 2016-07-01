@@ -5,7 +5,7 @@
 #include <fstream>
 using namespace std;
 
-void read_xyz(string fname, PointCloud &pointcloud)
+void read_xyz(string fname, csf::PointCloud &pointcloud)
 {
 	ifstream fin(fname.c_str(), ios::in);
 	char line[500];
@@ -16,7 +16,7 @@ void read_xyz(string fname, PointCloud &pointcloud)
 		words >> x;
 		words >> y;
 		words >> z;
-		Point point;
+		csf::Point point;
 		point.x = atof(x.c_str());
 		point.y = -atof(z.c_str());
 		point.z = atof(y.c_str());

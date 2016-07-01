@@ -21,7 +21,7 @@ public:
 	double static findHeightValByScanline(Particle *p, Cloth &cloth);
 
 	//对点云进行最临近搜索，寻找周围最近的N个点  避免求交运算
-	void static RasterTerrian(Cloth& cloth, wl::PointCloud &pc, vector<double> &heightVal);
+	void static RasterTerrian(Cloth& cloth, csf::PointCloud &pc, vector<double> &heightVal);
 
 };
 
