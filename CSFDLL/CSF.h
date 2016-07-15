@@ -28,14 +28,22 @@
 #include "point_cloud.h"
 using namespace std;
 
+#define _CSF_DLL_EXPORT_
 
-//#ifdef DLL_IMPLEMENT  
-//#define DLL_API __declspec(dllexport)  
-//#else  
-//#define DLL_API __declspec(dllimport)  
-//#endif
 
-class /*DLL_API*/  CSF
+#ifdef _CSF_DLL_EXPORT_
+#ifdef DLL_IMPLEMENT  
+#define DLL_API __declspec(dllexport)  
+#else  
+#define DLL_API __declspec(dllimport)  
+#endif
+#endif
+
+#ifdef _CSF_DLL_EXPORT_
+class  DLL_API  CSF
+#else
+class  CSF
+#endif
 {
 public:
 	CSF();
@@ -68,7 +76,11 @@ public:
 	void do_filtering(std::vector<int>& groundIndexes, std::vector<int>& offGroundIndexes,bool exportCloth=false);
 
 private:
-	/*class __declspec (dllexport)*/ csf::PointCloud point_cloud;
+#ifdef _CSF_DLL_EXPORT_
+	class __declspec (dllexport) csf::PointCloud point_cloud;
+#else
+	csf::PointCloud point_cloud;
+#endif
 
 public:
 
