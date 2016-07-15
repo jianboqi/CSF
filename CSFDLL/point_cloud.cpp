@@ -10,7 +10,7 @@ void csf::PointCloud::computeBoundingBox(Point& bbMin, Point& bbMax)
 	}
 
 	bbMin = bbMax = at(0);
-	for (size_t i = 1; i < size(); i++)
+	for (std::size_t i = 1; i < size(); i++)  //zwm
 	{
 		const csf::Point& P = at(i);
 		for (int d = 0; d < 3; ++d)

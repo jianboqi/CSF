@@ -39,7 +39,7 @@ public:
 
 	//用于rasterlization计算
 	std::vector<int> correspondingLidarPointList;//每个布料节点对应的Lidar点的列表
-	size_t nearestPointIndex;//对应的lidar点最临近点的索引
+	std::size_t nearestPointIndex;//对应的lidar点最临近点的索引
 	double nearestPointHeight;//该点的y轴值
 	double tmpDist;//临时变量，用于计算lidar点再水平面上距离布料点直接的距离
 	void satisfyConstraintSelf(int constraintTimes);
