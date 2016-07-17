@@ -28,7 +28,7 @@
 #include "point_cloud.h"
 using namespace std;
 
-#define _CSF_DLL_EXPORT_
+//#define _CSF_DLL_EXPORT_
 
 
 #ifdef _CSF_DLL_EXPORT_
