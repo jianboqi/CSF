@@ -30,6 +30,25 @@ using namespace std;
 
 //#define _CSF_DLL_EXPORT_
 
+struct Params{
+	//refer to the website:http://ramm.bnu.edu.cn/projects/CSF/ for the setting of these paramters
+	//是否进行边坡后处理
+	bool bSloopSmooth;
+	//时间步长
+	double time_step;
+
+	//分类阈值
+	double class_threshold;
+
+	//布料格网大小
+	double cloth_resolution;
+
+	//布料硬度参数
+	int rigidness;
+
+	//迭代次数
+	int interations;
+};
 
 #ifdef _CSF_DLL_EXPORT_
 #ifdef DLL_IMPLEMENT  
@@ -83,26 +102,7 @@ private:
 #endif
 
 public:
-
-	struct{
-		//refer to the website:http://ramm.bnu.edu.cn/projects/CSF/ for the setting of these paramters
-		//是否进行边坡后处理
-		bool bSloopSmooth;
-		//时间步长
-		double time_step;
-
-		//分类阈值
-		double class_threshold;
-
-		//布料格网大小
-		double cloth_resolution;
-
-		//布料硬度参数
-		int rigidness;
-
-		//迭代次数
-		int interations;
-	}params;
+	Params params;
 };
 
 #endif
