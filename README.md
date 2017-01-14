@@ -1,7 +1,8 @@
 # CSF
 Airborne LiDAR filtering method based on Cloth Simulation.
 
-**New feature has been implemented: **
+**New feature has been implemented:**
+
 Now, We has wrapped a Python interface for CSF with swig. It is simpler to use now. It can read point cloud from txt file, or Python 2D list. This new feature can make CSF easier to be embeded into a large project. For example, it can work with Laspy (https://github.com/laspy/laspy). 
 
 This is the code for the article:
