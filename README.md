@@ -32,12 +32,14 @@ outFile.points = points[ground] # extract ground points, and save it to a las fi
 outFile.close()
 
 ```
-### installation
+### Installation
 Download the source code. under python folder:
 ```python
 python setup.py build
 python setup.py install 
 ```
+
+### How to use CSF in C++
 This source code is deveoped under windows and produces DLL, which makes it convenient to be embeded into other applications.
 It is very easy to compile since no external library are needed.
 
