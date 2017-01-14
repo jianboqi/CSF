@@ -30,6 +30,8 @@ using namespace std;
 
 //#define _CSF_DLL_EXPORT_
 
+
+
 struct Params{
 	//refer to the website:http://ramm.bnu.edu.cn/projects/CSF/ for the setting of these paramters
 	//是否进行边坡后处理
@@ -72,6 +74,10 @@ public:
 	void setPointCloud(vector< csf::Point > points);
 	//set point cloud from a one-dimentional array. it defines a N*3 point cloud by the given rows.
 	void setPointCloud(double *points, int rows);
+
+	//set point cloud for python
+	void setPointCloud(vector<vector<float> > points);
+
 	//从文件读取点云 主要用于测试  read pointcloud from txt file: (X Y Z) for each line
 	void readPointsFromFile(string filename);
 

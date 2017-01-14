@@ -55,6 +55,7 @@ void CSF::setPointCloud(double *points, int rows)
 	}
 }
 
+
 void CSF::setPointCloud(csf::PointCloud &pc)
 {
 	point_cloud.resize(pc.size());
@@ -69,8 +70,24 @@ void CSF::setPointCloud(csf::PointCloud &pc)
 	}
 }
 
+void CSF::setPointCloud(vector<vector<float> > points)
+{
+	point_cloud.resize(points.size());
+#pragma omp parallel for
+	for (int i = 0; i<points.size(); i++)
+	{
+		csf::Point las;
+		las.x = points[i][0];
+		las.y = -points[i][2];
+		las.z = points[i][1];
+		point_cloud[i] = las;
+	}
+}
+
+
 void CSF::readPointsFromFile(string filename)
 {
+	this->point_cloud.resize(0);
 	read_xyz(filename,this->point_cloud);
 }
 
@@ -116,7 +133,6 @@ void CSF::do_filtering(std::vector<int> &groundIndexes, std::vector<int>& offGro
 	{
 		double maxDiff = cloth.timeStep();
 		cloth.terrCollision();
-
 		if (maxDiff != 0 && maxDiff < params.class_threshold / 100)
 		{
 			//early stop
