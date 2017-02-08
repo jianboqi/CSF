@@ -3,9 +3,9 @@
 #include <mex.h>
 #include <vector>
 #include <string>
-#include "CSF.h" 
+#include "../CSFDLL/CSF.h"
 using namespace std;
-#pragma comment(lib, "CSF.lib")
+// #pragma comment(lib, "CSF.lib")
 
 //input: pointcloud riginess isSlopSmooth cloth_resolution 
 void csf_filtering(double* points
