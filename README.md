@@ -57,4 +57,6 @@ Note: This code has been changed a lot since the publication of the correspondin
 
 At last, if you are interested in Cloudcompare, there is a good news. our method has been implemented as a Cloudcompare plugin, you can refer to : https://github.com/cloudcompare/trunk
 
+### License
+CSF is maintained and developed by Jianbo　QI. It is free software and can be redistributed and modified under the terms of the GNU General Public License (Version 3) as provided by the Free Software Foundation.
 
