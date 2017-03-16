@@ -1,3 +1,4 @@
+![csf1](https://github.com/jianboqi/CSF/blob/master/CSFDemo/CSF1.png)
 # CSF
 Airborne LiDAR filtering method based on Cloth Simulation.
 This is the code for the article:
