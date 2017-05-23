@@ -39,7 +39,8 @@ outFile.points = points[ground] # extract ground points, and save it to a las fi
 outFile.close() # do not forget this
 ```
 
-**Reading data from txt file**
+**Reading data from txt file:**
+
 If the lidar data is stored in txt file (x y z for each line), it can also be imported directly.
 
 ```python
