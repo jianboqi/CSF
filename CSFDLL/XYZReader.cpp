@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip> 
 #include <fstream>
+#include <cstdlib>
 using namespace std;
 
 void read_xyz(string fname, csf::PointCloud &pointcloud)

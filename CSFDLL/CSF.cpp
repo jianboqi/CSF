@@ -162,7 +162,7 @@ void CSF::savePoints(vector<int> grp, string path)
 	{
 		return;
 	}
-	ofstream f1(path, ios::out);
+	ofstream f1(path.c_str(), ios::out);
 	if (!f1)return;
 	for (size_t i = 0; i < grp.size(); i++)
 	{

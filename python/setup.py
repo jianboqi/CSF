@@ -5,7 +5,7 @@ setup.py
 from distutils.core import setup, Extension
 
 csf_module = Extension('_CSF',
-                           sources=['csf_wrap.cxx',
+                           sources=['CSF_wrap.cxx',
                            '../CSFDLL/c2cdist.cpp',
                            '../CSFDLL/Cloth.cpp',
                            '../CSFDLL/CSF.cpp',

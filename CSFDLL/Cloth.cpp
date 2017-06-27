@@ -380,7 +380,7 @@ void Cloth::saveToFile(string path)
 	{
 		filepath = path;
 	}
-	ofstream f1(filepath);
+       ofstream f1(filepath.c_str());
 	if (!f1)return;
 	for (size_t i = 0; i < particles.size(); i++)
 	{
@@ -401,7 +401,7 @@ void Cloth::saveMovableToFile(string path)
 	{
 		filepath = path;
 	}
-	ofstream f1(filepath);
+	ofstream f1(filepath.c_str());
 	if (!f1)return;
 	for (size_t i = 0; i < particles.size(); i++)
 	{
@@ -410,6 +410,3 @@ void Cloth::saveMovableToFile(string path)
 	}
 	f1.close();
 }
-
-
-
