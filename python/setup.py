@@ -16,7 +16,7 @@ csf_module = Extension('_CSF',
                            )
 
 setup (name = 'CSF',
-       version = '1.1',
+       version = '1.2',
        author      = "Jianbo Qi",
        description = """CSF: Ground Filtering based on Cloth Simulation""",
        ext_modules = [csf_module],
