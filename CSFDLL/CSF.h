@@ -67,7 +67,7 @@ class  CSF
 #endif
 {
 public:
-	CSF();
+	CSF(int index);
 	~CSF();
 
 	//设置点云数据 从vector导入点云 set pointcloud from vector
@@ -109,6 +109,7 @@ private:
 
 public:
 	Params params;
+        int index;
 };
 
 #endif

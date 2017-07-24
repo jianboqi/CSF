@@ -14,7 +14,7 @@
 #include <fstream>
 //#include "Cloth.h"
 
-CSF::CSF()
+CSF::CSF(int index)
 {
 	params.bSloopSmooth = true;
 	params.time_step = 0.65;
@@ -22,6 +22,8 @@ CSF::CSF()
 	params.cloth_resolution = 1;
 	params.rigidness = 3;
 	params.interations = 500;
+
+        this->index = index;
 }
 CSF::~CSF()
 {
@@ -94,7 +96,7 @@ void CSF::readPointsFromFile(string filename)
 void CSF::do_filtering(std::vector<int> &groundIndexes, std::vector<int>& offGroundIndexes, bool exportCloth)
 {
 	//首先从现有创建terrian
-	cout<<"Configuring terrain..."<<endl;
+        cout<<"["<<this->index<<"] Configuring terrain..."<<endl;
 	csf::Point bbMin, bbMax;
 	point_cloud.computeBoundingBox(bbMin, bbMax);
 	//布料初始位置距离地面最高点的位置
@@ -107,8 +109,8 @@ void CSF::do_filtering(std::vector<int> &groundIndexes, std::vector<int>& offGro
 
 	int width_num = static_cast<int>(floor((bbMax.x - bbMin.x) / params.cloth_resolution)) + 2 * clothbuffer_d;
 	int height_num = static_cast<int>(floor((bbMax.z - bbMin.z) / params.cloth_resolution)) + 2 * clothbuffer_d;
-	cout<<"Configuring cloth..."<<endl;
-	cout << "width: " << width_num << " " << "height: " << height_num << endl;
+        cout<<"["<<this->index<<"] Configuring cloth..."<<endl;
+        cout<<"["<<this->index<<"]  - width: " << width_num << " " << "height: " << height_num << endl;
 	//Cloth cloth1(terr.cube[1] - terr.cube[0] + clothbuffer_d * 2, terr.cube[5] - terr.cube[4] + clothbuffer_d * 2, width_num, height_num, origin_pos1, 0.3, 9999, params.rigidness, params.time_step, params.cloth_resolution); // one Cloth object of the Cloth class
 	Cloth cloth(origin_pos,
 		width_num,
@@ -120,13 +122,13 @@ void CSF::do_filtering(std::vector<int> &groundIndexes, std::vector<int>& offGro
 		params.rigidness,
 		params.time_step);
 
-	cout<<"Rasterization..."<<endl;
+        cout<<"["<<this->index<<"] Rasterizing..."<<endl;
 	Rasterlization::RasterTerrian(cloth, point_cloud, cloth.getHeightvals());
 //	cloth1.setheightvals(heightvals);
 
 	double time_step2 = params.time_step*params.time_step;
 	double gravity = 0.2;
-	cout<<"Starting simulation..."<<endl;
+        cout<<"["<<this->index<<"] Simulating..."<<endl;
 	cloth.addForce(Vec3(0, -gravity, 0)*time_step2);
 //	boost::progress_display pd(params.interations);
 	for (int i = 0; i < params.interations; i++)
@@ -143,7 +145,7 @@ void CSF::do_filtering(std::vector<int> &groundIndexes, std::vector<int>& offGro
 	//边坡后处理
 	if(params.bSloopSmooth)
 	{
-		cout<<"post handle..."<<endl;
+		cout<<"["<<this->index<<"]  - post handle..."<<endl;
 		cloth.movableFilter();
 	}
 	if (exportCloth)
