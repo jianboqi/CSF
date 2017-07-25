@@ -124,7 +124,8 @@ void Rasterlization::RasterTerrian(Cloth &cloth, csf::PointCloud &pc, vector<dou
 		}
 		else
 		{
-			heightVal[i] = findHeightValByScanline(pcur, cloth);
+			//heightVal[i] = findHeightValByScanline(pcur, cloth);
+			heightVal[i] = MIN_INF;
 		}
 		
 	}
