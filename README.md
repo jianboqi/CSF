@@ -38,6 +38,26 @@ outFile = laspy.file.File(r"ground.las",
 outFile.points = points[ground] # extract ground points, and save it to a las file.
 outFile.close() # do not forget this
 ```
+
+**Reading data from txt file:**
+
+If the lidar data is stored in txt file (x y z for each line), it can also be imported directly.
+
+```python
+import CSF
+
+csf = CSF.CSF()
+csf.readPointsFromFile('samp52.txt')
+
+csf.params.bSloopSmooth = False
+csf.params.cloth_resolution = 0.5
+
+ground = CSF.VecInt()  # a list to indicate the index of ground points after calculation
+non_ground = CSF.VecInt() # a list to indicate the index of non-ground points after calculation
+csf.do_filtering(ground, non_ground) # do actual filtering.
+csf.savePoints(ground,"ground.txt")
+```
+
 ### Installation
 Download the source code. under python folder:
 ```python
