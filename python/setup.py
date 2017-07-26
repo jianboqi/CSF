@@ -86,27 +86,32 @@ python setup.py build
 
         return False
 
-
 have_openmp = check_for_openmp()
 openmp_args = ['-fopenmp'] if have_openmp else []
 
-csf_module = Extension('_CSF',
-                           sources=['CSF_wrap.cxx',
-                           '../CSFDLL/c2cdist.cpp',
-                           '../CSFDLL/Cloth.cpp',
-                           '../CSFDLL/CSF.cpp',
-                           '../CSFDLL/Particle.cpp',
-                           '../CSFDLL/point_cloud.cpp',
-                           '../CSFDLL/Rasterization.cpp',
-                           '../CSFDLL/XYZReader.cpp'],
-                           extra_compile_args=openmp_args,
-                           extra_link_args=openmp_args
-                           )
+sources = [
+    'CSF_wrap.cxx',
+    '../lib/c2cdist.cpp',
+    '../lib/Cloth.cpp',
+    '../lib/CSF.cpp',
+    '../lib/Particle.cpp',
+    '../lib/point_cloud.cpp',
+    '../lib/Rasterization.cpp',
+    '../lib/XYZReader.cpp'
+]
 
-setup (name = 'CSF',
-       version = '1.1.1',
-       author      = "Jianbo Qi",
-       description = """CSF: Ground Filtering based on Cloth Simulation""",
-       ext_modules = [csf_module],
-       py_modules = ["CSF"],
-       )
+csf_module = Extension(
+    '_CSF',
+    sources=sources,
+    extra_compile_args=openmp_args,
+    extra_link_args=openmp_args
+)
+
+setup(
+    name = 'CSF',
+    version = '1.1.1',
+    author      = 'Jianbo Qi',
+    description = 'CSF: Ground Filtering based on Cloth Simulation',
+    ext_modules = [csf_module],
+    py_modules = ['CSF'],
+)
