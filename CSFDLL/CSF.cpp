@@ -38,7 +38,7 @@ void CSF::setPointCloud(vector< csf::Point > points)
 {
     point_cloud.resize(points.size());
 #pragma omp parallel for
-    for (int i = 0; i<points.size(); i++)
+    for (std::size_t i = 0; i<points.size(); i++)
     {
         csf::Point las;
         las.x = points[i].x;
@@ -66,7 +66,7 @@ void CSF::setPointCloud(csf::PointCloud &pc)
 {
     point_cloud.resize(pc.size());
     #pragma omp parallel for
-    for (int i=0;i<pc.size();i++)
+    for (std::size_t i = 0; i < pc.size(); i++)
     {
         csf::Point las;
         las.x = pc[i].x;
@@ -80,7 +80,7 @@ void CSF::setPointCloud(vector<vector<float> > points)
 {
     point_cloud.resize(points.size());
 #pragma omp parallel for
-    for (int i = 0; i<points.size(); i++)
+    for (std::size_t i = 0; i < points.size(); i++)
     {
         csf::Point las;
         las.x = points[i][0];
@@ -170,7 +170,7 @@ void CSF::savePoints(vector<int> grp, string path)
     }
     ofstream f1(path.c_str(), ios::out);
     if (!f1)return;
-    for (size_t i = 0; i < grp.size(); i++)
+    for (std::size_t i = 0; i < grp.size(); i++)
     {
         f1 << fixed << setprecision(8) << point_cloud[grp[i]].x<< "	" << point_cloud[grp[i]].z << "	" << -point_cloud[grp[i]].y << endl;
     }
