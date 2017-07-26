@@ -4,13 +4,14 @@
   #include "../CSFDLL/CSF.h"
 %}
 
+%include "std_string.i"
 %include "std_vector.i"
 
 namespace std
 {
     %template(VecInt) vector<int>;
-    %template(Vecf) vector<float>;
-    %template(VecVecf) vector< vector<float> >;
+    %template(VecFloat) vector<float>;
+    %template(VecVecFloat) vector< vector<float> >;
 }
 
 %include "../CSFDLL/CSF.h"

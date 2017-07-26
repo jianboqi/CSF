@@ -2955,11 +2955,10 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 #define SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t swig_types[15]
 #define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t swig_types[16]
 #define SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t swig_types[17]
-#define SWIGTYPE_p_string swig_types[18]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[19]
-#define SWIGTYPE_p_value_type swig_types[20]
-static swig_type_info *swig_types[22];
-static swig_module_info swig_module = {swig_types, 21, 0, 0, 0, 0};
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[18]
+#define SWIGTYPE_p_value_type swig_types[19]
+static swig_type_info *swig_types[21];
+static swig_module_info swig_module = {swig_types, 20, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3060,6 +3059,9 @@ namespace swig {
   #include "../CSFDLL/CSF.h"
 
 
+#include <string>
+
+
 #include <iostream>
 
 #if PY_VERSION_HEX >= 0x03020000
@@ -3077,9 +3079,6 @@ namespace swig {
 #     define SWIG_STD_NOMODERN_STL
 #  endif
 #endif
-
-
-#include <string>
 
 
 #include <stddef.h>
@@ -4980,6 +4979,126 @@ SWIG_AsVal_bool (PyObject *obj, bool *val)
     return SWIG_ERROR;
   if (val) *val = r ? true : false;
   return SWIG_OK;
+}
+
+
+SWIGINTERN swig_type_info*
+SWIG_pchar_descriptor(void)
+{
+  static int init = 0;
+  static swig_type_info* info = 0;
+  if (!init) {
+    info = SWIG_TypeQuery("_p_char");
+    init = 1;
+  }
+  return info;
+}
+
+
+SWIGINTERN int
+SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
+{
+#if PY_VERSION_HEX>=0x03000000
+  if (PyUnicode_Check(obj))
+#else  
+  if (PyString_Check(obj))
+#endif
+  {
+    char *cstr; Py_ssize_t len;
+#if PY_VERSION_HEX>=0x03000000
+    if (!alloc && cptr) {
+        /* We can't allow converting without allocation, since the internal
+           representation of string in Python 3 is UCS-2/UCS-4 but we require
+           a UTF-8 representation.
+           TODO(bhy) More detailed explanation */
+        return SWIG_RuntimeError;
+    }
+    obj = PyUnicode_AsUTF8String(obj);
+    PyBytes_AsStringAndSize(obj, &cstr, &len);
+    if(alloc) *alloc = SWIG_NEWOBJ;
+#else
+    PyString_AsStringAndSize(obj, &cstr, &len);
+#endif
+    if (cptr) {
+      if (alloc) {
+	/* 
+	   In python the user should not be able to modify the inner
+	   string representation. To warranty that, if you define
+	   SWIG_PYTHON_SAFE_CSTRINGS, a new/copy of the python string
+	   buffer is always returned.
+
+	   The default behavior is just to return the pointer value,
+	   so, be careful.
+	*/ 
+#if defined(SWIG_PYTHON_SAFE_CSTRINGS)
+	if (*alloc != SWIG_OLDOBJ) 
+#else
+	if (*alloc == SWIG_NEWOBJ) 
+#endif
+	  {
+	    *cptr = reinterpret_cast< char* >(memcpy((new char[len + 1]), cstr, sizeof(char)*(len + 1)));
+	    *alloc = SWIG_NEWOBJ;
+	  }
+	else {
+	  *cptr = cstr;
+	  *alloc = SWIG_OLDOBJ;
+	}
+      } else {
+        #if PY_VERSION_HEX>=0x03000000
+        assert(0); /* Should never reach here in Python 3 */
+        #endif
+	*cptr = SWIG_Python_str_AsChar(obj);
+      }
+    }
+    if (psize) *psize = len + 1;
+#if PY_VERSION_HEX>=0x03000000
+    Py_XDECREF(obj);
+#endif
+    return SWIG_OK;
+  } else {
+    swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+    if (pchar_descriptor) {
+      void* vptr = 0;
+      if (SWIG_ConvertPtr(obj, &vptr, pchar_descriptor, 0) == SWIG_OK) {
+	if (cptr) *cptr = (char *) vptr;
+	if (psize) *psize = vptr ? (strlen((char *)vptr) + 1) : 0;
+	if (alloc) *alloc = SWIG_OLDOBJ;
+	return SWIG_OK;
+      }
+    }
+  }
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsPtr_std_string (PyObject * obj, std::string **val) 
+{
+  char* buf = 0 ; size_t size = 0; int alloc = SWIG_OLDOBJ;
+  if (SWIG_IsOK((SWIG_AsCharPtrAndSize(obj, &buf, &size, &alloc)))) {
+    if (buf) {
+      if (val) *val = new std::string(buf, size - 1);
+      if (alloc == SWIG_NEWOBJ) delete[] buf;
+      return SWIG_NEWOBJ;
+    } else {
+      if (val) *val = 0;
+      return SWIG_OLDOBJ;
+    }
+  } else {
+    static int init = 0;
+    static swig_type_info* descriptor = 0;
+    if (!init) {
+      descriptor = SWIG_TypeQuery("std::string" " *");
+      init = 1;
+    }
+    if (descriptor) {
+      std::string *vptr;
+      int res = SWIG_ConvertPtr(obj, (void**)&vptr, descriptor, 0);
+      if (SWIG_IsOK(res) && val) *val = vptr;
+      return res;
+    }
+  }
+  return SWIG_ERROR;
 }
 
 #ifdef __cplusplus
@@ -7728,7 +7847,7 @@ SWIGINTERN PyObject *VecInt_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObjec
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *_wrap_Vecf_iterator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_iterator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   PyObject **arg2 = (PyObject **) 0 ;
@@ -7738,10 +7857,10 @@ SWIGINTERN PyObject *_wrap_Vecf_iterator(PyObject *SWIGUNUSEDPARM(self), PyObjec
   swig::SwigPyIterator *result = 0 ;
   
   arg2 = &obj0;
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_iterator",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_iterator",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_iterator" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_iterator" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = (swig::SwigPyIterator *)std_vector_Sl_float_Sg__iterator(arg1,arg2);
@@ -7752,7 +7871,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___nonzero__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___nonzero__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -7760,10 +7879,10 @@ SWIGINTERN PyObject *_wrap_Vecf___nonzero__(PyObject *SWIGUNUSEDPARM(self), PyOb
   PyObject * obj0 = 0 ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf___nonzero__",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat___nonzero__",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___nonzero__" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___nonzero__" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = (bool)std_vector_Sl_float_Sg____nonzero__((std::vector< float > const *)arg1);
@@ -7774,7 +7893,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___bool__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___bool__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -7782,10 +7901,10 @@ SWIGINTERN PyObject *_wrap_Vecf___bool__(PyObject *SWIGUNUSEDPARM(self), PyObjec
   PyObject * obj0 = 0 ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf___bool__",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat___bool__",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___bool__" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___bool__" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = (bool)std_vector_Sl_float_Sg____bool__((std::vector< float > const *)arg1);
@@ -7796,7 +7915,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___len__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___len__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -7804,10 +7923,10 @@ SWIGINTERN PyObject *_wrap_Vecf___len__(PyObject *SWIGUNUSEDPARM(self), PyObject
   PyObject * obj0 = 0 ;
   std::vector< float >::size_type result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf___len__",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat___len__",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___len__" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___len__" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = std_vector_Sl_float_Sg____len__((std::vector< float > const *)arg1);
@@ -7818,7 +7937,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_pop(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_pop(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -7826,10 +7945,10 @@ SWIGINTERN PyObject *_wrap_Vecf_pop(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
   PyObject * obj0 = 0 ;
   std::vector< float >::value_type result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_pop",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_pop",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_pop" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_pop" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   try {
@@ -7846,7 +7965,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___getslice__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___getslice__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::difference_type arg2 ;
@@ -7862,20 +7981,20 @@ SWIGINTERN PyObject *_wrap_Vecf___getslice__(PyObject *SWIGUNUSEDPARM(self), PyO
   PyObject * obj2 = 0 ;
   std::vector< float,std::allocator< float > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Vecf___getslice__",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecFloat___getslice__",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___getslice__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___getslice__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf___getslice__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat___getslice__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< float >::difference_type >(val2);
   ecode3 = SWIG_AsVal_ptrdiff_t(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vecf___getslice__" "', argument " "3"" of type '" "std::vector< float >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecFloat___getslice__" "', argument " "3"" of type '" "std::vector< float >::difference_type""'");
   } 
   arg3 = static_cast< std::vector< float >::difference_type >(val3);
   try {
@@ -7895,7 +8014,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___setslice____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___setslice____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::difference_type arg2 ;
@@ -7913,30 +8032,30 @@ SWIGINTERN PyObject *_wrap_Vecf___setslice____SWIG_0(PyObject *SWIGUNUSEDPARM(se
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOO:Vecf___setslice__",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:VecFloat___setslice__",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___setslice__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___setslice__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf___setslice__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat___setslice__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< float >::difference_type >(val2);
   ecode3 = SWIG_AsVal_ptrdiff_t(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vecf___setslice__" "', argument " "3"" of type '" "std::vector< float >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecFloat___setslice__" "', argument " "3"" of type '" "std::vector< float >::difference_type""'");
   } 
   arg3 = static_cast< std::vector< float >::difference_type >(val3);
   {
     std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
     res4 = swig::asptr(obj3, &ptr);
     if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "Vecf___setslice__" "', argument " "4"" of type '" "std::vector< float,std::allocator< float > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "VecFloat___setslice__" "', argument " "4"" of type '" "std::vector< float,std::allocator< float > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Vecf___setslice__" "', argument " "4"" of type '" "std::vector< float,std::allocator< float > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecFloat___setslice__" "', argument " "4"" of type '" "std::vector< float,std::allocator< float > > const &""'"); 
     }
     arg4 = ptr;
   }
@@ -7959,7 +8078,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___setslice____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___setslice____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::difference_type arg2 ;
@@ -7974,20 +8093,20 @@ SWIGINTERN PyObject *_wrap_Vecf___setslice____SWIG_1(PyObject *SWIGUNUSEDPARM(se
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Vecf___setslice__",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecFloat___setslice__",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___setslice__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___setslice__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf___setslice__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat___setslice__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< float >::difference_type >(val2);
   ecode3 = SWIG_AsVal_ptrdiff_t(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vecf___setslice__" "', argument " "3"" of type '" "std::vector< float >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecFloat___setslice__" "', argument " "3"" of type '" "std::vector< float >::difference_type""'");
   } 
   arg3 = static_cast< std::vector< float >::difference_type >(val3);
   try {
@@ -8007,7 +8126,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___setslice__(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___setslice__(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[5];
   int ii;
@@ -8032,7 +8151,7 @@ SWIGINTERN PyObject *_wrap_Vecf___setslice__(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_Vecf___setslice____SWIG_1(self, args);
+          return _wrap_VecFloat___setslice____SWIG_1(self, args);
         }
       }
     }
@@ -8055,7 +8174,7 @@ SWIGINTERN PyObject *_wrap_Vecf___setslice__(PyObject *self, PyObject *args) {
           int res = swig::asptr(argv[3], (std::vector<float,std::allocator< float > >**)(0));
           _v = SWIG_CheckState(res);
           if (_v) {
-            return _wrap_Vecf___setslice____SWIG_0(self, args);
+            return _wrap_VecFloat___setslice____SWIG_0(self, args);
           }
         }
       }
@@ -8063,7 +8182,7 @@ SWIGINTERN PyObject *_wrap_Vecf___setslice__(PyObject *self, PyObject *args) {
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Vecf___setslice__'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecFloat___setslice__'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< float >::__setslice__(std::vector< float >::difference_type,std::vector< float >::difference_type,std::vector< float,std::allocator< float > > const &)\n"
     "    std::vector< float >::__setslice__(std::vector< float >::difference_type,std::vector< float >::difference_type)\n");
@@ -8071,7 +8190,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___delslice__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___delslice__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::difference_type arg2 ;
@@ -8086,20 +8205,20 @@ SWIGINTERN PyObject *_wrap_Vecf___delslice__(PyObject *SWIGUNUSEDPARM(self), PyO
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Vecf___delslice__",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecFloat___delslice__",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___delslice__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___delslice__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf___delslice__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat___delslice__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< float >::difference_type >(val2);
   ecode3 = SWIG_AsVal_ptrdiff_t(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vecf___delslice__" "', argument " "3"" of type '" "std::vector< float >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecFloat___delslice__" "', argument " "3"" of type '" "std::vector< float >::difference_type""'");
   } 
   arg3 = static_cast< std::vector< float >::difference_type >(val3);
   try {
@@ -8119,7 +8238,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___delitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___delitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::difference_type arg2 ;
@@ -8130,15 +8249,15 @@ SWIGINTERN PyObject *_wrap_Vecf___delitem____SWIG_0(PyObject *SWIGUNUSEDPARM(sel
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Vecf___delitem__",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecFloat___delitem__",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___delitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___delitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf___delitem__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat___delitem__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< float >::difference_type >(val2);
   try {
@@ -8155,7 +8274,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___getitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___getitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   PySliceObject *arg2 = (PySliceObject *) 0 ;
@@ -8165,15 +8284,15 @@ SWIGINTERN PyObject *_wrap_Vecf___getitem____SWIG_0(PyObject *SWIGUNUSEDPARM(sel
   PyObject * obj1 = 0 ;
   std::vector< float,std::allocator< float > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Vecf___getitem__",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecFloat___getitem__",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___getitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___getitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   {
     if (!PySlice_Check(obj1)) {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf___getitem__" "', argument " "2"" of type '" "PySliceObject *""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat___getitem__" "', argument " "2"" of type '" "PySliceObject *""'");
     }
     arg2 = (PySliceObject *) obj1;
   }
@@ -8194,7 +8313,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___setitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___setitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   PySliceObject *arg2 = (PySliceObject *) 0 ;
@@ -8206,15 +8325,15 @@ SWIGINTERN PyObject *_wrap_Vecf___setitem____SWIG_0(PyObject *SWIGUNUSEDPARM(sel
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Vecf___setitem__",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecFloat___setitem__",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___setitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___setitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   {
     if (!PySlice_Check(obj1)) {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf___setitem__" "', argument " "2"" of type '" "PySliceObject *""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat___setitem__" "', argument " "2"" of type '" "PySliceObject *""'");
     }
     arg2 = (PySliceObject *) obj1;
   }
@@ -8222,10 +8341,10 @@ SWIGINTERN PyObject *_wrap_Vecf___setitem____SWIG_0(PyObject *SWIGUNUSEDPARM(sel
     std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
     res3 = swig::asptr(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Vecf___setitem__" "', argument " "3"" of type '" "std::vector< float,std::allocator< float > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "VecFloat___setitem__" "', argument " "3"" of type '" "std::vector< float,std::allocator< float > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Vecf___setitem__" "', argument " "3"" of type '" "std::vector< float,std::allocator< float > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecFloat___setitem__" "', argument " "3"" of type '" "std::vector< float,std::allocator< float > > const &""'"); 
     }
     arg3 = ptr;
   }
@@ -8248,7 +8367,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___setitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___setitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   PySliceObject *arg2 = (PySliceObject *) 0 ;
@@ -8257,15 +8376,15 @@ SWIGINTERN PyObject *_wrap_Vecf___setitem____SWIG_1(PyObject *SWIGUNUSEDPARM(sel
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Vecf___setitem__",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecFloat___setitem__",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___setitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___setitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   {
     if (!PySlice_Check(obj1)) {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf___setitem__" "', argument " "2"" of type '" "PySliceObject *""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat___setitem__" "', argument " "2"" of type '" "PySliceObject *""'");
     }
     arg2 = (PySliceObject *) obj1;
   }
@@ -8286,7 +8405,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___delitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___delitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   PySliceObject *arg2 = (PySliceObject *) 0 ;
@@ -8295,15 +8414,15 @@ SWIGINTERN PyObject *_wrap_Vecf___delitem____SWIG_1(PyObject *SWIGUNUSEDPARM(sel
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Vecf___delitem__",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecFloat___delitem__",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___delitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___delitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   {
     if (!PySlice_Check(obj1)) {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf___delitem__" "', argument " "2"" of type '" "PySliceObject *""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat___delitem__" "', argument " "2"" of type '" "PySliceObject *""'");
     }
     arg2 = (PySliceObject *) obj1;
   }
@@ -8324,7 +8443,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___delitem__(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___delitem__(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -8343,7 +8462,7 @@ SWIGINTERN PyObject *_wrap_Vecf___delitem__(PyObject *self, PyObject *args) {
         _v = PySlice_Check(argv[1]);
       }
       if (_v) {
-        return _wrap_Vecf___delitem____SWIG_1(self, args);
+        return _wrap_VecFloat___delitem____SWIG_1(self, args);
       }
     }
   }
@@ -8357,13 +8476,13 @@ SWIGINTERN PyObject *_wrap_Vecf___delitem__(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_Vecf___delitem____SWIG_0(self, args);
+        return _wrap_VecFloat___delitem____SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Vecf___delitem__'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecFloat___delitem__'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< float >::__delitem__(std::vector< float >::difference_type)\n"
     "    std::vector< float >::__delitem__(PySliceObject *)\n");
@@ -8371,7 +8490,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___getitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___getitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::difference_type arg2 ;
@@ -8383,15 +8502,15 @@ SWIGINTERN PyObject *_wrap_Vecf___getitem____SWIG_1(PyObject *SWIGUNUSEDPARM(sel
   PyObject * obj1 = 0 ;
   std::vector< float >::value_type *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Vecf___getitem__",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecFloat___getitem__",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___getitem__" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___getitem__" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf___getitem__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat___getitem__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< float >::difference_type >(val2);
   try {
@@ -8408,7 +8527,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___getitem__(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___getitem__(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -8427,7 +8546,7 @@ SWIGINTERN PyObject *_wrap_Vecf___getitem__(PyObject *self, PyObject *args) {
         _v = PySlice_Check(argv[1]);
       }
       if (_v) {
-        return _wrap_Vecf___getitem____SWIG_0(self, args);
+        return _wrap_VecFloat___getitem____SWIG_0(self, args);
       }
     }
   }
@@ -8441,13 +8560,13 @@ SWIGINTERN PyObject *_wrap_Vecf___getitem__(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_Vecf___getitem____SWIG_1(self, args);
+        return _wrap_VecFloat___getitem____SWIG_1(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Vecf___getitem__'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecFloat___getitem__'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< float >::__getitem__(PySliceObject *)\n"
     "    std::vector< float >::__getitem__(std::vector< float >::difference_type) const\n");
@@ -8455,7 +8574,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___setitem____SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___setitem____SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::difference_type arg2 ;
@@ -8471,20 +8590,20 @@ SWIGINTERN PyObject *_wrap_Vecf___setitem____SWIG_2(PyObject *SWIGUNUSEDPARM(sel
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Vecf___setitem__",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecFloat___setitem__",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf___setitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat___setitem__" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf___setitem__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat___setitem__" "', argument " "2"" of type '" "std::vector< float >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< float >::difference_type >(val2);
   ecode3 = SWIG_AsVal_float(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vecf___setitem__" "', argument " "3"" of type '" "std::vector< float >::value_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecFloat___setitem__" "', argument " "3"" of type '" "std::vector< float >::value_type""'");
   } 
   temp3 = static_cast< std::vector< float >::value_type >(val3);
   arg3 = &temp3;
@@ -8502,7 +8621,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf___setitem__(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat___setitem__(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[4];
   int ii;
@@ -8521,7 +8640,7 @@ SWIGINTERN PyObject *_wrap_Vecf___setitem__(PyObject *self, PyObject *args) {
         _v = PySlice_Check(argv[1]);
       }
       if (_v) {
-        return _wrap_Vecf___setitem____SWIG_1(self, args);
+        return _wrap_VecFloat___setitem____SWIG_1(self, args);
       }
     }
   }
@@ -8537,7 +8656,7 @@ SWIGINTERN PyObject *_wrap_Vecf___setitem__(PyObject *self, PyObject *args) {
         int res = swig::asptr(argv[2], (std::vector<float,std::allocator< float > >**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_Vecf___setitem____SWIG_0(self, args);
+          return _wrap_VecFloat___setitem____SWIG_0(self, args);
         }
       }
     }
@@ -8557,14 +8676,14 @@ SWIGINTERN PyObject *_wrap_Vecf___setitem__(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_Vecf___setitem____SWIG_2(self, args);
+          return _wrap_VecFloat___setitem____SWIG_2(self, args);
         }
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Vecf___setitem__'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecFloat___setitem__'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< float >::__setitem__(PySliceObject *,std::vector< float,std::allocator< float > > const &)\n"
     "    std::vector< float >::__setitem__(PySliceObject *)\n"
@@ -8573,7 +8692,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_append(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_append(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::value_type *arg2 = 0 ;
@@ -8585,15 +8704,15 @@ SWIGINTERN PyObject *_wrap_Vecf_append(PyObject *SWIGUNUSEDPARM(self), PyObject 
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Vecf_append",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecFloat_append",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_append" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_append" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_float(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf_append" "', argument " "2"" of type '" "std::vector< float >::value_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat_append" "', argument " "2"" of type '" "std::vector< float >::value_type""'");
   } 
   temp2 = static_cast< std::vector< float >::value_type >(val2);
   arg2 = &temp2;
@@ -8605,11 +8724,11 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Vecf__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_VecFloat__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_Vecf")) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)":new_VecFloat")) SWIG_fail;
   result = (std::vector< float > *)new std::vector< float >();
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, SWIG_POINTER_NEW |  0 );
   return resultobj;
@@ -8618,22 +8737,22 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Vecf__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_VecFloat__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = 0 ;
   int res1 = SWIG_OLDOBJ ;
   PyObject * obj0 = 0 ;
   std::vector< float > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_Vecf",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:new_VecFloat",&obj0)) SWIG_fail;
   {
     std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
     res1 = swig::asptr(obj0, &ptr);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Vecf" "', argument " "1"" of type '" "std::vector< float > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_VecFloat" "', argument " "1"" of type '" "std::vector< float > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Vecf" "', argument " "1"" of type '" "std::vector< float > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_VecFloat" "', argument " "1"" of type '" "std::vector< float > const &""'"); 
     }
     arg1 = ptr;
   }
@@ -8647,7 +8766,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_empty(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_empty(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -8655,10 +8774,10 @@ SWIGINTERN PyObject *_wrap_Vecf_empty(PyObject *SWIGUNUSEDPARM(self), PyObject *
   PyObject * obj0 = 0 ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_empty",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_empty",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_empty" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_empty" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = (bool)((std::vector< float > const *)arg1)->empty();
@@ -8669,7 +8788,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_size(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_size(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -8677,10 +8796,10 @@ SWIGINTERN PyObject *_wrap_Vecf_size(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   PyObject * obj0 = 0 ;
   std::vector< float >::size_type result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_size",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_size",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_size" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_size" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = ((std::vector< float > const *)arg1)->size();
@@ -8691,17 +8810,17 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_clear(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_clear(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_clear",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_clear",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_clear" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_clear" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   (arg1)->clear();
@@ -8712,7 +8831,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_swap(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_swap(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float > *arg2 = 0 ;
@@ -8723,18 +8842,18 @@ SWIGINTERN PyObject *_wrap_Vecf_swap(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Vecf_swap",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecFloat_swap",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_swap" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_swap" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Vecf_swap" "', argument " "2"" of type '" "std::vector< float > &""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "VecFloat_swap" "', argument " "2"" of type '" "std::vector< float > &""'"); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Vecf_swap" "', argument " "2"" of type '" "std::vector< float > &""'"); 
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecFloat_swap" "', argument " "2"" of type '" "std::vector< float > &""'"); 
   }
   arg2 = reinterpret_cast< std::vector< float > * >(argp2);
   (arg1)->swap(*arg2);
@@ -8745,7 +8864,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_get_allocator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_get_allocator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -8753,10 +8872,10 @@ SWIGINTERN PyObject *_wrap_Vecf_get_allocator(PyObject *SWIGUNUSEDPARM(self), Py
   PyObject * obj0 = 0 ;
   SwigValueWrapper< std::allocator< float > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_get_allocator",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_get_allocator",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_get_allocator" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_get_allocator" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = ((std::vector< float > const *)arg1)->get_allocator();
@@ -8767,7 +8886,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_begin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_begin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -8775,10 +8894,10 @@ SWIGINTERN PyObject *_wrap_Vecf_begin(PyObject *SWIGUNUSEDPARM(self), PyObject *
   PyObject * obj0 = 0 ;
   std::vector< float >::iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_begin",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_begin",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_begin" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_begin" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = (arg1)->begin();
@@ -8790,7 +8909,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_end(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_end(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -8798,10 +8917,10 @@ SWIGINTERN PyObject *_wrap_Vecf_end(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
   PyObject * obj0 = 0 ;
   std::vector< float >::iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_end",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_end",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_end" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_end" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = (arg1)->end();
@@ -8813,7 +8932,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_rbegin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_rbegin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -8821,10 +8940,10 @@ SWIGINTERN PyObject *_wrap_Vecf_rbegin(PyObject *SWIGUNUSEDPARM(self), PyObject 
   PyObject * obj0 = 0 ;
   std::vector< float >::reverse_iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_rbegin",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_rbegin",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_rbegin" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_rbegin" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = (arg1)->rbegin();
@@ -8836,7 +8955,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_rend(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_rend(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -8844,10 +8963,10 @@ SWIGINTERN PyObject *_wrap_Vecf_rend(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   PyObject * obj0 = 0 ;
   std::vector< float >::reverse_iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_rend",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_rend",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_rend" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_rend" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = (arg1)->rend();
@@ -8859,7 +8978,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Vecf__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_VecFloat__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float >::size_type arg1 ;
   size_t val1 ;
@@ -8867,10 +8986,10 @@ SWIGINTERN PyObject *_wrap_new_Vecf__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyOb
   PyObject * obj0 = 0 ;
   std::vector< float > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_Vecf",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:new_VecFloat",&obj0)) SWIG_fail;
   ecode1 = SWIG_AsVal_size_t(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_Vecf" "', argument " "1"" of type '" "std::vector< float >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_VecFloat" "', argument " "1"" of type '" "std::vector< float >::size_type""'");
   } 
   arg1 = static_cast< std::vector< float >::size_type >(val1);
   result = (std::vector< float > *)new std::vector< float >(arg1);
@@ -8881,17 +9000,17 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_pop_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_pop_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_pop_back",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_pop_back",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_pop_back" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_pop_back" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   (arg1)->pop_back();
@@ -8902,7 +9021,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_resize__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_resize__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::size_type arg2 ;
@@ -8913,15 +9032,15 @@ SWIGINTERN PyObject *_wrap_Vecf_resize__SWIG_0(PyObject *SWIGUNUSEDPARM(self), P
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Vecf_resize",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecFloat_resize",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_resize" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_resize" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_size_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf_resize" "', argument " "2"" of type '" "std::vector< float >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat_resize" "', argument " "2"" of type '" "std::vector< float >::size_type""'");
   } 
   arg2 = static_cast< std::vector< float >::size_type >(val2);
   (arg1)->resize(arg2);
@@ -8932,7 +9051,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_erase__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_erase__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::iterator arg2 ;
@@ -8944,21 +9063,21 @@ SWIGINTERN PyObject *_wrap_Vecf_erase__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py
   PyObject * obj1 = 0 ;
   std::vector< float >::iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Vecf_erase",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecFloat_erase",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_erase" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_erase" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, SWIG_as_voidptrptr(&iter2), swig::SwigPyIterator::descriptor(), 0);
   if (!SWIG_IsOK(res2) || !iter2) {
-    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf_erase" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat_erase" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
   } else {
     swig::SwigPyIterator_T<std::vector< float >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::vector< float >::iterator > *>(iter2);
     if (iter_t) {
       arg2 = iter_t->get_current();
     } else {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf_erase" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat_erase" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
     }
   }
   result = std_vector_Sl_float_Sg__erase__SWIG_0(arg1,arg2);
@@ -8970,7 +9089,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_erase__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_erase__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::iterator arg2 ;
@@ -8986,32 +9105,32 @@ SWIGINTERN PyObject *_wrap_Vecf_erase__SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py
   PyObject * obj2 = 0 ;
   std::vector< float >::iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Vecf_erase",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecFloat_erase",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_erase" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_erase" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, SWIG_as_voidptrptr(&iter2), swig::SwigPyIterator::descriptor(), 0);
   if (!SWIG_IsOK(res2) || !iter2) {
-    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf_erase" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat_erase" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
   } else {
     swig::SwigPyIterator_T<std::vector< float >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::vector< float >::iterator > *>(iter2);
     if (iter_t) {
       arg2 = iter_t->get_current();
     } else {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf_erase" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat_erase" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
     }
   }
   res3 = SWIG_ConvertPtr(obj2, SWIG_as_voidptrptr(&iter3), swig::SwigPyIterator::descriptor(), 0);
   if (!SWIG_IsOK(res3) || !iter3) {
-    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf_erase" "', argument " "3"" of type '" "std::vector< float >::iterator""'");
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat_erase" "', argument " "3"" of type '" "std::vector< float >::iterator""'");
   } else {
     swig::SwigPyIterator_T<std::vector< float >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::vector< float >::iterator > *>(iter3);
     if (iter_t) {
       arg3 = iter_t->get_current();
     } else {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf_erase" "', argument " "3"" of type '" "std::vector< float >::iterator""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat_erase" "', argument " "3"" of type '" "std::vector< float >::iterator""'");
     }
   }
   result = std_vector_Sl_float_Sg__erase__SWIG_1(arg1,arg2,arg3);
@@ -9023,7 +9142,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_erase(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_erase(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[4];
   int ii;
@@ -9042,7 +9161,7 @@ SWIGINTERN PyObject *_wrap_Vecf_erase(PyObject *self, PyObject *args) {
       int res = SWIG_ConvertPtr(argv[1], SWIG_as_voidptrptr(&iter), swig::SwigPyIterator::descriptor(), 0);
       _v = (SWIG_IsOK(res) && iter && (dynamic_cast<swig::SwigPyIterator_T<std::vector< float >::iterator > *>(iter) != 0));
       if (_v) {
-        return _wrap_Vecf_erase__SWIG_0(self, args);
+        return _wrap_VecFloat_erase__SWIG_0(self, args);
       }
     }
   }
@@ -9059,14 +9178,14 @@ SWIGINTERN PyObject *_wrap_Vecf_erase(PyObject *self, PyObject *args) {
         int res = SWIG_ConvertPtr(argv[2], SWIG_as_voidptrptr(&iter), swig::SwigPyIterator::descriptor(), 0);
         _v = (SWIG_IsOK(res) && iter && (dynamic_cast<swig::SwigPyIterator_T<std::vector< float >::iterator > *>(iter) != 0));
         if (_v) {
-          return _wrap_Vecf_erase__SWIG_1(self, args);
+          return _wrap_VecFloat_erase__SWIG_1(self, args);
         }
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Vecf_erase'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecFloat_erase'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< float >::erase(std::vector< float >::iterator)\n"
     "    std::vector< float >::erase(std::vector< float >::iterator,std::vector< float >::iterator)\n");
@@ -9074,7 +9193,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Vecf__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_VecFloat__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float >::size_type arg1 ;
   std::vector< float >::value_type *arg2 = 0 ;
@@ -9087,15 +9206,15 @@ SWIGINTERN PyObject *_wrap_new_Vecf__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyOb
   PyObject * obj1 = 0 ;
   std::vector< float > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:new_Vecf",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:new_VecFloat",&obj0,&obj1)) SWIG_fail;
   ecode1 = SWIG_AsVal_size_t(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_Vecf" "', argument " "1"" of type '" "std::vector< float >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_VecFloat" "', argument " "1"" of type '" "std::vector< float >::size_type""'");
   } 
   arg1 = static_cast< std::vector< float >::size_type >(val1);
   ecode2 = SWIG_AsVal_float(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_Vecf" "', argument " "2"" of type '" "std::vector< float >::value_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_VecFloat" "', argument " "2"" of type '" "std::vector< float >::value_type""'");
   } 
   temp2 = static_cast< std::vector< float >::value_type >(val2);
   arg2 = &temp2;
@@ -9107,7 +9226,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Vecf(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_VecFloat(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -9118,7 +9237,7 @@ SWIGINTERN PyObject *_wrap_new_Vecf(PyObject *self, PyObject *args) {
     argv[ii] = PyTuple_GET_ITEM(args,ii);
   }
   if (argc == 0) {
-    return _wrap_new_Vecf__SWIG_0(self, args);
+    return _wrap_new_VecFloat__SWIG_0(self, args);
   }
   if (argc == 1) {
     int _v;
@@ -9127,7 +9246,7 @@ SWIGINTERN PyObject *_wrap_new_Vecf(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_Vecf__SWIG_2(self, args);
+      return _wrap_new_VecFloat__SWIG_2(self, args);
     }
   }
   if (argc == 1) {
@@ -9135,7 +9254,7 @@ SWIGINTERN PyObject *_wrap_new_Vecf(PyObject *self, PyObject *args) {
     int res = swig::asptr(argv[0], (std::vector<float,std::allocator< float > >**)(0));
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_Vecf__SWIG_1(self, args);
+      return _wrap_new_VecFloat__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -9150,13 +9269,13 @@ SWIGINTERN PyObject *_wrap_new_Vecf(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_new_Vecf__SWIG_3(self, args);
+        return _wrap_new_VecFloat__SWIG_3(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_Vecf'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_VecFloat'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< float >::vector()\n"
     "    std::vector< float >::vector(std::vector< float > const &)\n"
@@ -9166,7 +9285,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_push_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_push_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::value_type *arg2 = 0 ;
@@ -9178,15 +9297,15 @@ SWIGINTERN PyObject *_wrap_Vecf_push_back(PyObject *SWIGUNUSEDPARM(self), PyObje
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Vecf_push_back",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecFloat_push_back",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_push_back" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_push_back" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_float(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf_push_back" "', argument " "2"" of type '" "std::vector< float >::value_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat_push_back" "', argument " "2"" of type '" "std::vector< float >::value_type""'");
   } 
   temp2 = static_cast< std::vector< float >::value_type >(val2);
   arg2 = &temp2;
@@ -9198,7 +9317,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_front(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_front(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -9206,10 +9325,10 @@ SWIGINTERN PyObject *_wrap_Vecf_front(PyObject *SWIGUNUSEDPARM(self), PyObject *
   PyObject * obj0 = 0 ;
   std::vector< float >::value_type *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_front",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_front",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_front" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_front" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = (std::vector< float >::value_type *) &((std::vector< float > const *)arg1)->front();
@@ -9220,7 +9339,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -9228,10 +9347,10 @@ SWIGINTERN PyObject *_wrap_Vecf_back(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   PyObject * obj0 = 0 ;
   std::vector< float >::value_type *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_back",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_back",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_back" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_back" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = (std::vector< float >::value_type *) &((std::vector< float > const *)arg1)->back();
@@ -9242,7 +9361,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_assign(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_assign(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::size_type arg2 ;
@@ -9258,20 +9377,20 @@ SWIGINTERN PyObject *_wrap_Vecf_assign(PyObject *SWIGUNUSEDPARM(self), PyObject 
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Vecf_assign",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecFloat_assign",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_assign" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_assign" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_size_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf_assign" "', argument " "2"" of type '" "std::vector< float >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat_assign" "', argument " "2"" of type '" "std::vector< float >::size_type""'");
   } 
   arg2 = static_cast< std::vector< float >::size_type >(val2);
   ecode3 = SWIG_AsVal_float(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vecf_assign" "', argument " "3"" of type '" "std::vector< float >::value_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecFloat_assign" "', argument " "3"" of type '" "std::vector< float >::value_type""'");
   } 
   temp3 = static_cast< std::vector< float >::value_type >(val3);
   arg3 = &temp3;
@@ -9283,7 +9402,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_resize__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_resize__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::size_type arg2 ;
@@ -9299,20 +9418,20 @@ SWIGINTERN PyObject *_wrap_Vecf_resize__SWIG_1(PyObject *SWIGUNUSEDPARM(self), P
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Vecf_resize",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecFloat_resize",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_resize" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_resize" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_size_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf_resize" "', argument " "2"" of type '" "std::vector< float >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat_resize" "', argument " "2"" of type '" "std::vector< float >::size_type""'");
   } 
   arg2 = static_cast< std::vector< float >::size_type >(val2);
   ecode3 = SWIG_AsVal_float(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vecf_resize" "', argument " "3"" of type '" "std::vector< float >::value_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecFloat_resize" "', argument " "3"" of type '" "std::vector< float >::value_type""'");
   } 
   temp3 = static_cast< std::vector< float >::value_type >(val3);
   arg3 = &temp3;
@@ -9324,7 +9443,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_resize(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_resize(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[4];
   int ii;
@@ -9344,7 +9463,7 @@ SWIGINTERN PyObject *_wrap_Vecf_resize(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_Vecf_resize__SWIG_0(self, args);
+        return _wrap_VecFloat_resize__SWIG_0(self, args);
       }
     }
   }
@@ -9363,14 +9482,14 @@ SWIGINTERN PyObject *_wrap_Vecf_resize(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_Vecf_resize__SWIG_1(self, args);
+          return _wrap_VecFloat_resize__SWIG_1(self, args);
         }
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Vecf_resize'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecFloat_resize'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< float >::resize(std::vector< float >::size_type)\n"
     "    std::vector< float >::resize(std::vector< float >::size_type,std::vector< float >::value_type const &)\n");
@@ -9378,7 +9497,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_insert__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_insert__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::iterator arg2 ;
@@ -9395,26 +9514,26 @@ SWIGINTERN PyObject *_wrap_Vecf_insert__SWIG_0(PyObject *SWIGUNUSEDPARM(self), P
   PyObject * obj2 = 0 ;
   std::vector< float >::iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Vecf_insert",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecFloat_insert",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_insert" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_insert" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, SWIG_as_voidptrptr(&iter2), swig::SwigPyIterator::descriptor(), 0);
   if (!SWIG_IsOK(res2) || !iter2) {
-    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf_insert" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat_insert" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
   } else {
     swig::SwigPyIterator_T<std::vector< float >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::vector< float >::iterator > *>(iter2);
     if (iter_t) {
       arg2 = iter_t->get_current();
     } else {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf_insert" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat_insert" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
     }
   }
   ecode3 = SWIG_AsVal_float(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vecf_insert" "', argument " "3"" of type '" "std::vector< float >::value_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecFloat_insert" "', argument " "3"" of type '" "std::vector< float >::value_type""'");
   } 
   temp3 = static_cast< std::vector< float >::value_type >(val3);
   arg3 = &temp3;
@@ -9427,7 +9546,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_insert__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_insert__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::iterator arg2 ;
@@ -9447,31 +9566,31 @@ SWIGINTERN PyObject *_wrap_Vecf_insert__SWIG_1(PyObject *SWIGUNUSEDPARM(self), P
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOO:Vecf_insert",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:VecFloat_insert",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_insert" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_insert" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, SWIG_as_voidptrptr(&iter2), swig::SwigPyIterator::descriptor(), 0);
   if (!SWIG_IsOK(res2) || !iter2) {
-    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf_insert" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat_insert" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
   } else {
     swig::SwigPyIterator_T<std::vector< float >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::vector< float >::iterator > *>(iter2);
     if (iter_t) {
       arg2 = iter_t->get_current();
     } else {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "Vecf_insert" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecFloat_insert" "', argument " "2"" of type '" "std::vector< float >::iterator""'");
     }
   }
   ecode3 = SWIG_AsVal_size_t(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vecf_insert" "', argument " "3"" of type '" "std::vector< float >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecFloat_insert" "', argument " "3"" of type '" "std::vector< float >::size_type""'");
   } 
   arg3 = static_cast< std::vector< float >::size_type >(val3);
   ecode4 = SWIG_AsVal_float(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Vecf_insert" "', argument " "4"" of type '" "std::vector< float >::value_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "VecFloat_insert" "', argument " "4"" of type '" "std::vector< float >::value_type""'");
   } 
   temp4 = static_cast< std::vector< float >::value_type >(val4);
   arg4 = &temp4;
@@ -9483,7 +9602,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_insert(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_insert(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[5];
   int ii;
@@ -9507,7 +9626,7 @@ SWIGINTERN PyObject *_wrap_Vecf_insert(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_Vecf_insert__SWIG_0(self, args);
+          return _wrap_VecFloat_insert__SWIG_0(self, args);
         }
       }
     }
@@ -9531,7 +9650,7 @@ SWIGINTERN PyObject *_wrap_Vecf_insert(PyObject *self, PyObject *args) {
             _v = SWIG_CheckState(res);
           }
           if (_v) {
-            return _wrap_Vecf_insert__SWIG_1(self, args);
+            return _wrap_VecFloat_insert__SWIG_1(self, args);
           }
         }
       }
@@ -9539,7 +9658,7 @@ SWIGINTERN PyObject *_wrap_Vecf_insert(PyObject *self, PyObject *args) {
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Vecf_insert'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecFloat_insert'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< float >::insert(std::vector< float >::iterator,std::vector< float >::value_type const &)\n"
     "    std::vector< float >::insert(std::vector< float >::iterator,std::vector< float >::size_type,std::vector< float >::value_type const &)\n");
@@ -9547,7 +9666,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_reserve(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_reserve(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   std::vector< float >::size_type arg2 ;
@@ -9558,15 +9677,15 @@ SWIGINTERN PyObject *_wrap_Vecf_reserve(PyObject *SWIGUNUSEDPARM(self), PyObject
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Vecf_reserve",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecFloat_reserve",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_reserve" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_reserve" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   ecode2 = SWIG_AsVal_size_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vecf_reserve" "', argument " "2"" of type '" "std::vector< float >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecFloat_reserve" "', argument " "2"" of type '" "std::vector< float >::size_type""'");
   } 
   arg2 = static_cast< std::vector< float >::size_type >(val2);
   (arg1)->reserve(arg2);
@@ -9577,7 +9696,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Vecf_capacity(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecFloat_capacity(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
@@ -9585,10 +9704,10 @@ SWIGINTERN PyObject *_wrap_Vecf_capacity(PyObject *SWIGUNUSEDPARM(self), PyObjec
   PyObject * obj0 = 0 ;
   std::vector< float >::size_type result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Vecf_capacity",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecFloat_capacity",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vecf_capacity" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecFloat_capacity" "', argument " "1"" of type '" "std::vector< float > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   result = ((std::vector< float > const *)arg1)->capacity();
@@ -9599,17 +9718,17 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_Vecf(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_VecFloat(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< float > *arg1 = (std::vector< float > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_Vecf",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_VecFloat",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Vecf" "', argument " "1"" of type '" "std::vector< float > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_VecFloat" "', argument " "1"" of type '" "std::vector< float > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< float > * >(argp1);
   delete arg1;
@@ -9620,14 +9739,14 @@ fail:
 }
 
 
-SWIGINTERN PyObject *Vecf_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *VecFloat_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
   SWIG_TypeNewClientData(SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *_wrap_VecVecf_iterator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_iterator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   PyObject **arg2 = (PyObject **) 0 ;
@@ -9637,10 +9756,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_iterator(PyObject *SWIGUNUSEDPARM(self), PyOb
   swig::SwigPyIterator *result = 0 ;
   
   arg2 = &obj0;
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_iterator",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_iterator",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_iterator" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_iterator" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = (swig::SwigPyIterator *)std_vector_Sl_std_vector_Sl_float_Sg__Sg__iterator(arg1,arg2);
@@ -9651,7 +9770,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___nonzero__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___nonzero__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -9659,10 +9778,10 @@ SWIGINTERN PyObject *_wrap_VecVecf___nonzero__(PyObject *SWIGUNUSEDPARM(self), P
   PyObject * obj0 = 0 ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf___nonzero__",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat___nonzero__",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___nonzero__" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___nonzero__" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = (bool)std_vector_Sl_std_vector_Sl_float_Sg__Sg____nonzero__((std::vector< std::vector< float > > const *)arg1);
@@ -9673,7 +9792,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___bool__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___bool__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -9681,10 +9800,10 @@ SWIGINTERN PyObject *_wrap_VecVecf___bool__(PyObject *SWIGUNUSEDPARM(self), PyOb
   PyObject * obj0 = 0 ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf___bool__",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat___bool__",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___bool__" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___bool__" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = (bool)std_vector_Sl_std_vector_Sl_float_Sg__Sg____bool__((std::vector< std::vector< float > > const *)arg1);
@@ -9695,7 +9814,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___len__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___len__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -9703,10 +9822,10 @@ SWIGINTERN PyObject *_wrap_VecVecf___len__(PyObject *SWIGUNUSEDPARM(self), PyObj
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > >::size_type result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf___len__",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat___len__",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___len__" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___len__" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = std_vector_Sl_std_vector_Sl_float_Sg__Sg____len__((std::vector< std::vector< float > > const *)arg1);
@@ -9717,7 +9836,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_pop(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_pop(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -9725,10 +9844,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_pop(PyObject *SWIGUNUSEDPARM(self), PyObject 
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > >::value_type result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_pop",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_pop",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_pop" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_pop" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   try {
@@ -9745,7 +9864,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___getslice__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___getslice__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::difference_type arg2 ;
@@ -9761,20 +9880,20 @@ SWIGINTERN PyObject *_wrap_VecVecf___getslice__(PyObject *SWIGUNUSEDPARM(self), 
   PyObject * obj2 = 0 ;
   std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecf___getslice__",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecFloat___getslice__",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___getslice__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___getslice__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecf___getslice__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecFloat___getslice__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< std::vector< float > >::difference_type >(val2);
   ecode3 = SWIG_AsVal_ptrdiff_t(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecVecf___getslice__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecVecFloat___getslice__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::difference_type""'");
   } 
   arg3 = static_cast< std::vector< std::vector< float > >::difference_type >(val3);
   try {
@@ -9794,7 +9913,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___setslice____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___setslice____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::difference_type arg2 ;
@@ -9812,30 +9931,30 @@ SWIGINTERN PyObject *_wrap_VecVecf___setslice____SWIG_0(PyObject *SWIGUNUSEDPARM
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOO:VecVecf___setslice__",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:VecVecFloat___setslice__",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___setslice__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___setslice__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecf___setslice__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecFloat___setslice__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< std::vector< float > >::difference_type >(val2);
   ecode3 = SWIG_AsVal_ptrdiff_t(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecVecf___setslice__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecVecFloat___setslice__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::difference_type""'");
   } 
   arg3 = static_cast< std::vector< std::vector< float > >::difference_type >(val3);
   {
     std::vector<std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > *ptr = (std::vector<std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > *)0;
     res4 = swig::asptr(obj3, &ptr);
     if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "VecVecf___setslice__" "', argument " "4"" of type '" "std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "VecVecFloat___setslice__" "', argument " "4"" of type '" "std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecf___setslice__" "', argument " "4"" of type '" "std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecFloat___setslice__" "', argument " "4"" of type '" "std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > const &""'"); 
     }
     arg4 = ptr;
   }
@@ -9858,7 +9977,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___setslice____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___setslice____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::difference_type arg2 ;
@@ -9873,20 +9992,20 @@ SWIGINTERN PyObject *_wrap_VecVecf___setslice____SWIG_1(PyObject *SWIGUNUSEDPARM
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecf___setslice__",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecFloat___setslice__",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___setslice__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___setslice__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecf___setslice__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecFloat___setslice__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< std::vector< float > >::difference_type >(val2);
   ecode3 = SWIG_AsVal_ptrdiff_t(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecVecf___setslice__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecVecFloat___setslice__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::difference_type""'");
   } 
   arg3 = static_cast< std::vector< std::vector< float > >::difference_type >(val3);
   try {
@@ -9906,7 +10025,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___setslice__(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___setslice__(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[5];
   int ii;
@@ -9931,7 +10050,7 @@ SWIGINTERN PyObject *_wrap_VecVecf___setslice__(PyObject *self, PyObject *args) 
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_VecVecf___setslice____SWIG_1(self, args);
+          return _wrap_VecVecFloat___setslice____SWIG_1(self, args);
         }
       }
     }
@@ -9954,7 +10073,7 @@ SWIGINTERN PyObject *_wrap_VecVecf___setslice__(PyObject *self, PyObject *args) 
           int res = swig::asptr(argv[3], (std::vector<std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > >**)(0));
           _v = SWIG_CheckState(res);
           if (_v) {
-            return _wrap_VecVecf___setslice____SWIG_0(self, args);
+            return _wrap_VecVecFloat___setslice____SWIG_0(self, args);
           }
         }
       }
@@ -9962,7 +10081,7 @@ SWIGINTERN PyObject *_wrap_VecVecf___setslice__(PyObject *self, PyObject *args) 
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecf___setslice__'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecFloat___setslice__'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< std::vector< float > >::__setslice__(std::vector< std::vector< float > >::difference_type,std::vector< std::vector< float > >::difference_type,std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > const &)\n"
     "    std::vector< std::vector< float > >::__setslice__(std::vector< std::vector< float > >::difference_type,std::vector< std::vector< float > >::difference_type)\n");
@@ -9970,7 +10089,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___delslice__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___delslice__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::difference_type arg2 ;
@@ -9985,20 +10104,20 @@ SWIGINTERN PyObject *_wrap_VecVecf___delslice__(PyObject *SWIGUNUSEDPARM(self), 
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecf___delslice__",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecFloat___delslice__",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___delslice__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___delslice__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecf___delslice__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecFloat___delslice__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< std::vector< float > >::difference_type >(val2);
   ecode3 = SWIG_AsVal_ptrdiff_t(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecVecf___delslice__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecVecFloat___delslice__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::difference_type""'");
   } 
   arg3 = static_cast< std::vector< std::vector< float > >::difference_type >(val3);
   try {
@@ -10018,7 +10137,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___delitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___delitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::difference_type arg2 ;
@@ -10029,15 +10148,15 @@ SWIGINTERN PyObject *_wrap_VecVecf___delitem____SWIG_0(PyObject *SWIGUNUSEDPARM(
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecf___delitem__",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecFloat___delitem__",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___delitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___delitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecf___delitem__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecFloat___delitem__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< std::vector< float > >::difference_type >(val2);
   try {
@@ -10054,7 +10173,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___getitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___getitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   PySliceObject *arg2 = (PySliceObject *) 0 ;
@@ -10064,15 +10183,15 @@ SWIGINTERN PyObject *_wrap_VecVecf___getitem____SWIG_0(PyObject *SWIGUNUSEDPARM(
   PyObject * obj1 = 0 ;
   std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecf___getitem__",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecFloat___getitem__",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___getitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___getitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   {
     if (!PySlice_Check(obj1)) {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf___getitem__" "', argument " "2"" of type '" "PySliceObject *""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat___getitem__" "', argument " "2"" of type '" "PySliceObject *""'");
     }
     arg2 = (PySliceObject *) obj1;
   }
@@ -10093,7 +10212,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___setitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___setitem____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   PySliceObject *arg2 = (PySliceObject *) 0 ;
@@ -10105,15 +10224,15 @@ SWIGINTERN PyObject *_wrap_VecVecf___setitem____SWIG_0(PyObject *SWIGUNUSEDPARM(
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecf___setitem__",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecFloat___setitem__",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___setitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___setitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   {
     if (!PySlice_Check(obj1)) {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf___setitem__" "', argument " "2"" of type '" "PySliceObject *""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat___setitem__" "', argument " "2"" of type '" "PySliceObject *""'");
     }
     arg2 = (PySliceObject *) obj1;
   }
@@ -10121,10 +10240,10 @@ SWIGINTERN PyObject *_wrap_VecVecf___setitem____SWIG_0(PyObject *SWIGUNUSEDPARM(
     std::vector<std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > *ptr = (std::vector<std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > *)0;
     res3 = swig::asptr(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "VecVecf___setitem__" "', argument " "3"" of type '" "std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "VecVecFloat___setitem__" "', argument " "3"" of type '" "std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecf___setitem__" "', argument " "3"" of type '" "std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecFloat___setitem__" "', argument " "3"" of type '" "std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > const &""'"); 
     }
     arg3 = ptr;
   }
@@ -10147,7 +10266,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___setitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___setitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   PySliceObject *arg2 = (PySliceObject *) 0 ;
@@ -10156,15 +10275,15 @@ SWIGINTERN PyObject *_wrap_VecVecf___setitem____SWIG_1(PyObject *SWIGUNUSEDPARM(
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecf___setitem__",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecFloat___setitem__",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___setitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___setitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   {
     if (!PySlice_Check(obj1)) {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf___setitem__" "', argument " "2"" of type '" "PySliceObject *""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat___setitem__" "', argument " "2"" of type '" "PySliceObject *""'");
     }
     arg2 = (PySliceObject *) obj1;
   }
@@ -10185,7 +10304,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___delitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___delitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   PySliceObject *arg2 = (PySliceObject *) 0 ;
@@ -10194,15 +10313,15 @@ SWIGINTERN PyObject *_wrap_VecVecf___delitem____SWIG_1(PyObject *SWIGUNUSEDPARM(
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecf___delitem__",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecFloat___delitem__",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___delitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___delitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   {
     if (!PySlice_Check(obj1)) {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf___delitem__" "', argument " "2"" of type '" "PySliceObject *""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat___delitem__" "', argument " "2"" of type '" "PySliceObject *""'");
     }
     arg2 = (PySliceObject *) obj1;
   }
@@ -10223,7 +10342,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___delitem__(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___delitem__(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -10242,7 +10361,7 @@ SWIGINTERN PyObject *_wrap_VecVecf___delitem__(PyObject *self, PyObject *args) {
         _v = PySlice_Check(argv[1]);
       }
       if (_v) {
-        return _wrap_VecVecf___delitem____SWIG_1(self, args);
+        return _wrap_VecVecFloat___delitem____SWIG_1(self, args);
       }
     }
   }
@@ -10256,13 +10375,13 @@ SWIGINTERN PyObject *_wrap_VecVecf___delitem__(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_VecVecf___delitem____SWIG_0(self, args);
+        return _wrap_VecVecFloat___delitem____SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecf___delitem__'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecFloat___delitem__'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< std::vector< float > >::__delitem__(std::vector< std::vector< float > >::difference_type)\n"
     "    std::vector< std::vector< float > >::__delitem__(PySliceObject *)\n");
@@ -10270,7 +10389,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___getitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___getitem____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::difference_type arg2 ;
@@ -10282,15 +10401,15 @@ SWIGINTERN PyObject *_wrap_VecVecf___getitem____SWIG_1(PyObject *SWIGUNUSEDPARM(
   PyObject * obj1 = 0 ;
   std::vector< std::vector< float > >::value_type *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecf___getitem__",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecFloat___getitem__",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___getitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___getitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecf___getitem__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecFloat___getitem__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< std::vector< float > >::difference_type >(val2);
   try {
@@ -10307,7 +10426,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___getitem__(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___getitem__(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -10326,7 +10445,7 @@ SWIGINTERN PyObject *_wrap_VecVecf___getitem__(PyObject *self, PyObject *args) {
         _v = PySlice_Check(argv[1]);
       }
       if (_v) {
-        return _wrap_VecVecf___getitem____SWIG_0(self, args);
+        return _wrap_VecVecFloat___getitem____SWIG_0(self, args);
       }
     }
   }
@@ -10340,13 +10459,13 @@ SWIGINTERN PyObject *_wrap_VecVecf___getitem__(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_VecVecf___getitem____SWIG_1(self, args);
+        return _wrap_VecVecFloat___getitem____SWIG_1(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecf___getitem__'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecFloat___getitem__'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< std::vector< float > >::__getitem__(PySliceObject *)\n"
     "    std::vector< std::vector< float > >::__getitem__(std::vector< std::vector< float > >::difference_type) const\n");
@@ -10354,7 +10473,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___setitem____SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___setitem____SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::difference_type arg2 ;
@@ -10368,25 +10487,25 @@ SWIGINTERN PyObject *_wrap_VecVecf___setitem____SWIG_2(PyObject *SWIGUNUSEDPARM(
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecf___setitem__",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecFloat___setitem__",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf___setitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat___setitem__" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecf___setitem__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecFloat___setitem__" "', argument " "2"" of type '" "std::vector< std::vector< float > >::difference_type""'");
   } 
   arg2 = static_cast< std::vector< std::vector< float > >::difference_type >(val2);
   {
     std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
     res3 = swig::asptr(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "VecVecf___setitem__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "VecVecFloat___setitem__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecf___setitem__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecFloat___setitem__" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     arg3 = ptr;
   }
@@ -10406,7 +10525,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf___setitem__(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat___setitem__(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[4];
   int ii;
@@ -10425,7 +10544,7 @@ SWIGINTERN PyObject *_wrap_VecVecf___setitem__(PyObject *self, PyObject *args) {
         _v = PySlice_Check(argv[1]);
       }
       if (_v) {
-        return _wrap_VecVecf___setitem____SWIG_1(self, args);
+        return _wrap_VecVecFloat___setitem____SWIG_1(self, args);
       }
     }
   }
@@ -10441,7 +10560,7 @@ SWIGINTERN PyObject *_wrap_VecVecf___setitem__(PyObject *self, PyObject *args) {
         int res = swig::asptr(argv[2], (std::vector<std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > >**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_VecVecf___setitem____SWIG_0(self, args);
+          return _wrap_VecVecFloat___setitem____SWIG_0(self, args);
         }
       }
     }
@@ -10459,14 +10578,14 @@ SWIGINTERN PyObject *_wrap_VecVecf___setitem__(PyObject *self, PyObject *args) {
         int res = swig::asptr(argv[2], (std::vector<float,std::allocator< float > >**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_VecVecf___setitem____SWIG_2(self, args);
+          return _wrap_VecVecFloat___setitem____SWIG_2(self, args);
         }
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecf___setitem__'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecFloat___setitem__'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< std::vector< float > >::__setitem__(PySliceObject *,std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > const &)\n"
     "    std::vector< std::vector< float > >::__setitem__(PySliceObject *)\n"
@@ -10475,7 +10594,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_append(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_append(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::value_type *arg2 = 0 ;
@@ -10485,20 +10604,20 @@ SWIGINTERN PyObject *_wrap_VecVecf_append(PyObject *SWIGUNUSEDPARM(self), PyObje
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecf_append",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecFloat_append",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_append" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_append" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   {
     std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
     res2 = swig::asptr(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "VecVecf_append" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "VecVecFloat_append" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecf_append" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecFloat_append" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     arg2 = ptr;
   }
@@ -10512,11 +10631,11 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_VecVecf__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_VecVecFloat__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_VecVecf")) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)":new_VecVecFloat")) SWIG_fail;
   result = (std::vector< std::vector< float > > *)new std::vector< std::vector< float > >();
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, SWIG_POINTER_NEW |  0 );
   return resultobj;
@@ -10525,22 +10644,22 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_VecVecf__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_VecVecFloat__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float,std::allocator< float > > > *arg1 = 0 ;
   int res1 = SWIG_OLDOBJ ;
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_VecVecf",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:new_VecVecFloat",&obj0)) SWIG_fail;
   {
     std::vector<std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > *ptr = (std::vector<std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > *)0;
     res1 = swig::asptr(obj0, &ptr);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_VecVecf" "', argument " "1"" of type '" "std::vector< std::vector< float,std::allocator< float > > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_VecVecFloat" "', argument " "1"" of type '" "std::vector< std::vector< float,std::allocator< float > > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_VecVecf" "', argument " "1"" of type '" "std::vector< std::vector< float,std::allocator< float > > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_VecVecFloat" "', argument " "1"" of type '" "std::vector< std::vector< float,std::allocator< float > > > const &""'"); 
     }
     arg1 = ptr;
   }
@@ -10554,7 +10673,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_empty(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_empty(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -10562,10 +10681,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_empty(PyObject *SWIGUNUSEDPARM(self), PyObjec
   PyObject * obj0 = 0 ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_empty",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_empty",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_empty" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_empty" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = (bool)((std::vector< std::vector< float > > const *)arg1)->empty();
@@ -10576,7 +10695,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_size(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_size(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -10584,10 +10703,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_size(PyObject *SWIGUNUSEDPARM(self), PyObject
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > >::size_type result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_size",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_size",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_size" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_size" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = ((std::vector< std::vector< float > > const *)arg1)->size();
@@ -10598,17 +10717,17 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_clear(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_clear(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_clear",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_clear",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_clear" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_clear" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   (arg1)->clear();
@@ -10619,7 +10738,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_swap(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_swap(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float,std::allocator< float > > > *arg2 = 0 ;
@@ -10630,18 +10749,18 @@ SWIGINTERN PyObject *_wrap_VecVecf_swap(PyObject *SWIGUNUSEDPARM(self), PyObject
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecf_swap",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecFloat_swap",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_swap" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_swap" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "VecVecf_swap" "', argument " "2"" of type '" "std::vector< std::vector< float,std::allocator< float > > > &""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "VecVecFloat_swap" "', argument " "2"" of type '" "std::vector< std::vector< float,std::allocator< float > > > &""'"); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecf_swap" "', argument " "2"" of type '" "std::vector< std::vector< float,std::allocator< float > > > &""'"); 
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecFloat_swap" "', argument " "2"" of type '" "std::vector< std::vector< float,std::allocator< float > > > &""'"); 
   }
   arg2 = reinterpret_cast< std::vector< std::vector< float,std::allocator< float > > > * >(argp2);
   (arg1)->swap(*arg2);
@@ -10652,7 +10771,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_get_allocator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_get_allocator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -10660,10 +10779,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_get_allocator(PyObject *SWIGUNUSEDPARM(self),
   PyObject * obj0 = 0 ;
   SwigValueWrapper< std::allocator< std::vector< float,std::allocator< float > > > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_get_allocator",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_get_allocator",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_get_allocator" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_get_allocator" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = ((std::vector< std::vector< float > > const *)arg1)->get_allocator();
@@ -10674,7 +10793,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_begin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_begin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -10682,10 +10801,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_begin(PyObject *SWIGUNUSEDPARM(self), PyObjec
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > >::iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_begin",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_begin",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_begin" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_begin" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = (arg1)->begin();
@@ -10697,7 +10816,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_end(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_end(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -10705,10 +10824,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_end(PyObject *SWIGUNUSEDPARM(self), PyObject 
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > >::iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_end",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_end",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_end" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_end" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = (arg1)->end();
@@ -10720,7 +10839,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_rbegin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_rbegin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -10728,10 +10847,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_rbegin(PyObject *SWIGUNUSEDPARM(self), PyObje
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > >::reverse_iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_rbegin",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_rbegin",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_rbegin" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_rbegin" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = (arg1)->rbegin();
@@ -10743,7 +10862,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_rend(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_rend(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -10751,10 +10870,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_rend(PyObject *SWIGUNUSEDPARM(self), PyObject
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > >::reverse_iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_rend",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_rend",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_rend" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_rend" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = (arg1)->rend();
@@ -10766,7 +10885,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_VecVecf__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_VecVecFloat__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > >::size_type arg1 ;
   size_t val1 ;
@@ -10774,10 +10893,10 @@ SWIGINTERN PyObject *_wrap_new_VecVecf__SWIG_2(PyObject *SWIGUNUSEDPARM(self), P
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_VecVecf",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:new_VecVecFloat",&obj0)) SWIG_fail;
   ecode1 = SWIG_AsVal_size_t(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_VecVecf" "', argument " "1"" of type '" "std::vector< std::vector< float > >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_VecVecFloat" "', argument " "1"" of type '" "std::vector< std::vector< float > >::size_type""'");
   } 
   arg1 = static_cast< std::vector< std::vector< float > >::size_type >(val1);
   result = (std::vector< std::vector< float > > *)new std::vector< std::vector< float > >(arg1);
@@ -10788,17 +10907,17 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_pop_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_pop_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_pop_back",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_pop_back",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_pop_back" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_pop_back" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   (arg1)->pop_back();
@@ -10809,7 +10928,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_resize__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_resize__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::size_type arg2 ;
@@ -10820,15 +10939,15 @@ SWIGINTERN PyObject *_wrap_VecVecf_resize__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecf_resize",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecFloat_resize",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_resize" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_resize" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   ecode2 = SWIG_AsVal_size_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecf_resize" "', argument " "2"" of type '" "std::vector< std::vector< float > >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecFloat_resize" "', argument " "2"" of type '" "std::vector< std::vector< float > >::size_type""'");
   } 
   arg2 = static_cast< std::vector< std::vector< float > >::size_type >(val2);
   (arg1)->resize(arg2);
@@ -10839,7 +10958,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_erase__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_erase__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::iterator arg2 ;
@@ -10851,21 +10970,21 @@ SWIGINTERN PyObject *_wrap_VecVecf_erase__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
   PyObject * obj1 = 0 ;
   std::vector< std::vector< float > >::iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecf_erase",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecFloat_erase",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_erase" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_erase" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, SWIG_as_voidptrptr(&iter2), swig::SwigPyIterator::descriptor(), 0);
   if (!SWIG_IsOK(res2) || !iter2) {
-    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf_erase" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat_erase" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
   } else {
     swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *>(iter2);
     if (iter_t) {
       arg2 = iter_t->get_current();
     } else {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf_erase" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat_erase" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
     }
   }
   result = std_vector_Sl_std_vector_Sl_float_Sg__Sg__erase__SWIG_0(arg1,arg2);
@@ -10877,7 +10996,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_erase__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_erase__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::iterator arg2 ;
@@ -10893,32 +11012,32 @@ SWIGINTERN PyObject *_wrap_VecVecf_erase__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
   PyObject * obj2 = 0 ;
   std::vector< std::vector< float > >::iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecf_erase",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecFloat_erase",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_erase" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_erase" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, SWIG_as_voidptrptr(&iter2), swig::SwigPyIterator::descriptor(), 0);
   if (!SWIG_IsOK(res2) || !iter2) {
-    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf_erase" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat_erase" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
   } else {
     swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *>(iter2);
     if (iter_t) {
       arg2 = iter_t->get_current();
     } else {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf_erase" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat_erase" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
     }
   }
   res3 = SWIG_ConvertPtr(obj2, SWIG_as_voidptrptr(&iter3), swig::SwigPyIterator::descriptor(), 0);
   if (!SWIG_IsOK(res3) || !iter3) {
-    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf_erase" "', argument " "3"" of type '" "std::vector< std::vector< float > >::iterator""'");
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat_erase" "', argument " "3"" of type '" "std::vector< std::vector< float > >::iterator""'");
   } else {
     swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *>(iter3);
     if (iter_t) {
       arg3 = iter_t->get_current();
     } else {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf_erase" "', argument " "3"" of type '" "std::vector< std::vector< float > >::iterator""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat_erase" "', argument " "3"" of type '" "std::vector< std::vector< float > >::iterator""'");
     }
   }
   result = std_vector_Sl_std_vector_Sl_float_Sg__Sg__erase__SWIG_1(arg1,arg2,arg3);
@@ -10930,7 +11049,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_erase(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_erase(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[4];
   int ii;
@@ -10949,7 +11068,7 @@ SWIGINTERN PyObject *_wrap_VecVecf_erase(PyObject *self, PyObject *args) {
       int res = SWIG_ConvertPtr(argv[1], SWIG_as_voidptrptr(&iter), swig::SwigPyIterator::descriptor(), 0);
       _v = (SWIG_IsOK(res) && iter && (dynamic_cast<swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *>(iter) != 0));
       if (_v) {
-        return _wrap_VecVecf_erase__SWIG_0(self, args);
+        return _wrap_VecVecFloat_erase__SWIG_0(self, args);
       }
     }
   }
@@ -10966,14 +11085,14 @@ SWIGINTERN PyObject *_wrap_VecVecf_erase(PyObject *self, PyObject *args) {
         int res = SWIG_ConvertPtr(argv[2], SWIG_as_voidptrptr(&iter), swig::SwigPyIterator::descriptor(), 0);
         _v = (SWIG_IsOK(res) && iter && (dynamic_cast<swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *>(iter) != 0));
         if (_v) {
-          return _wrap_VecVecf_erase__SWIG_1(self, args);
+          return _wrap_VecVecFloat_erase__SWIG_1(self, args);
         }
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecf_erase'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecFloat_erase'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< std::vector< float > >::erase(std::vector< std::vector< float > >::iterator)\n"
     "    std::vector< std::vector< float > >::erase(std::vector< std::vector< float > >::iterator,std::vector< std::vector< float > >::iterator)\n");
@@ -10981,7 +11100,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_VecVecf__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_VecVecFloat__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > >::size_type arg1 ;
   std::vector< std::vector< float > >::value_type *arg2 = 0 ;
@@ -10992,20 +11111,20 @@ SWIGINTERN PyObject *_wrap_new_VecVecf__SWIG_3(PyObject *SWIGUNUSEDPARM(self), P
   PyObject * obj1 = 0 ;
   std::vector< std::vector< float > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:new_VecVecf",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:new_VecVecFloat",&obj0,&obj1)) SWIG_fail;
   ecode1 = SWIG_AsVal_size_t(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_VecVecf" "', argument " "1"" of type '" "std::vector< std::vector< float > >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_VecVecFloat" "', argument " "1"" of type '" "std::vector< std::vector< float > >::size_type""'");
   } 
   arg1 = static_cast< std::vector< std::vector< float > >::size_type >(val1);
   {
     std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
     res2 = swig::asptr(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_VecVecf" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_VecVecFloat" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_VecVecf" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_VecVecFloat" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     arg2 = ptr;
   }
@@ -11019,7 +11138,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_VecVecf(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_VecVecFloat(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -11030,7 +11149,7 @@ SWIGINTERN PyObject *_wrap_new_VecVecf(PyObject *self, PyObject *args) {
     argv[ii] = PyTuple_GET_ITEM(args,ii);
   }
   if (argc == 0) {
-    return _wrap_new_VecVecf__SWIG_0(self, args);
+    return _wrap_new_VecVecFloat__SWIG_0(self, args);
   }
   if (argc == 1) {
     int _v;
@@ -11039,7 +11158,7 @@ SWIGINTERN PyObject *_wrap_new_VecVecf(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_VecVecf__SWIG_2(self, args);
+      return _wrap_new_VecVecFloat__SWIG_2(self, args);
     }
   }
   if (argc == 1) {
@@ -11047,7 +11166,7 @@ SWIGINTERN PyObject *_wrap_new_VecVecf(PyObject *self, PyObject *args) {
     int res = swig::asptr(argv[0], (std::vector<std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > >**)(0));
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_VecVecf__SWIG_1(self, args);
+      return _wrap_new_VecVecFloat__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -11060,13 +11179,13 @@ SWIGINTERN PyObject *_wrap_new_VecVecf(PyObject *self, PyObject *args) {
       int res = swig::asptr(argv[1], (std::vector<float,std::allocator< float > >**)(0));
       _v = SWIG_CheckState(res);
       if (_v) {
-        return _wrap_new_VecVecf__SWIG_3(self, args);
+        return _wrap_new_VecVecFloat__SWIG_3(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_VecVecf'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_VecVecFloat'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< std::vector< float > >::vector()\n"
     "    std::vector< std::vector< float > >::vector(std::vector< std::vector< float,std::allocator< float > > > const &)\n"
@@ -11076,7 +11195,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_push_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_push_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::value_type *arg2 = 0 ;
@@ -11086,20 +11205,20 @@ SWIGINTERN PyObject *_wrap_VecVecf_push_back(PyObject *SWIGUNUSEDPARM(self), PyO
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecf_push_back",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecFloat_push_back",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_push_back" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_push_back" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   {
     std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
     res2 = swig::asptr(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "VecVecf_push_back" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "VecVecFloat_push_back" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecf_push_back" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecFloat_push_back" "', argument " "2"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     arg2 = ptr;
   }
@@ -11113,7 +11232,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_front(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_front(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -11121,10 +11240,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_front(PyObject *SWIGUNUSEDPARM(self), PyObjec
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > >::value_type *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_front",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_front",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_front" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_front" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = (std::vector< std::vector< float > >::value_type *) &((std::vector< std::vector< float > > const *)arg1)->front();
@@ -11135,7 +11254,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_back(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -11143,10 +11262,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_back(PyObject *SWIGUNUSEDPARM(self), PyObject
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > >::value_type *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_back",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_back",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_back" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_back" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = (std::vector< std::vector< float > >::value_type *) &((std::vector< std::vector< float > > const *)arg1)->back();
@@ -11157,7 +11276,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_assign(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_assign(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::size_type arg2 ;
@@ -11171,25 +11290,25 @@ SWIGINTERN PyObject *_wrap_VecVecf_assign(PyObject *SWIGUNUSEDPARM(self), PyObje
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecf_assign",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecFloat_assign",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_assign" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_assign" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   ecode2 = SWIG_AsVal_size_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecf_assign" "', argument " "2"" of type '" "std::vector< std::vector< float > >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecFloat_assign" "', argument " "2"" of type '" "std::vector< std::vector< float > >::size_type""'");
   } 
   arg2 = static_cast< std::vector< std::vector< float > >::size_type >(val2);
   {
     std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
     res3 = swig::asptr(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "VecVecf_assign" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "VecVecFloat_assign" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecf_assign" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecFloat_assign" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     arg3 = ptr;
   }
@@ -11203,7 +11322,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_resize__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_resize__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::size_type arg2 ;
@@ -11217,25 +11336,25 @@ SWIGINTERN PyObject *_wrap_VecVecf_resize__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecf_resize",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecFloat_resize",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_resize" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_resize" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   ecode2 = SWIG_AsVal_size_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecf_resize" "', argument " "2"" of type '" "std::vector< std::vector< float > >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecFloat_resize" "', argument " "2"" of type '" "std::vector< std::vector< float > >::size_type""'");
   } 
   arg2 = static_cast< std::vector< std::vector< float > >::size_type >(val2);
   {
     std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
     res3 = swig::asptr(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "VecVecf_resize" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "VecVecFloat_resize" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecf_resize" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecFloat_resize" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     arg3 = ptr;
   }
@@ -11249,7 +11368,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_resize(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_resize(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[4];
   int ii;
@@ -11269,7 +11388,7 @@ SWIGINTERN PyObject *_wrap_VecVecf_resize(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_VecVecf_resize__SWIG_0(self, args);
+        return _wrap_VecVecFloat_resize__SWIG_0(self, args);
       }
     }
   }
@@ -11286,14 +11405,14 @@ SWIGINTERN PyObject *_wrap_VecVecf_resize(PyObject *self, PyObject *args) {
         int res = swig::asptr(argv[2], (std::vector<float,std::allocator< float > >**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_VecVecf_resize__SWIG_1(self, args);
+          return _wrap_VecVecFloat_resize__SWIG_1(self, args);
         }
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecf_resize'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecFloat_resize'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< std::vector< float > >::resize(std::vector< std::vector< float > >::size_type)\n"
     "    std::vector< std::vector< float > >::resize(std::vector< std::vector< float > >::size_type,std::vector< std::vector< float > >::value_type const &)\n");
@@ -11301,7 +11420,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_insert__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_insert__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::iterator arg2 ;
@@ -11316,31 +11435,31 @@ SWIGINTERN PyObject *_wrap_VecVecf_insert__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
   PyObject * obj2 = 0 ;
   std::vector< std::vector< float > >::iterator result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecf_insert",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:VecVecFloat_insert",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_insert" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_insert" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, SWIG_as_voidptrptr(&iter2), swig::SwigPyIterator::descriptor(), 0);
   if (!SWIG_IsOK(res2) || !iter2) {
-    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf_insert" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat_insert" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
   } else {
     swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *>(iter2);
     if (iter_t) {
       arg2 = iter_t->get_current();
     } else {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf_insert" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat_insert" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
     }
   }
   {
     std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
     res3 = swig::asptr(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "VecVecf_insert" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "VecVecFloat_insert" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecf_insert" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecFloat_insert" "', argument " "3"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     arg3 = ptr;
   }
@@ -11355,7 +11474,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_insert__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_insert__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::iterator arg2 ;
@@ -11373,36 +11492,36 @@ SWIGINTERN PyObject *_wrap_VecVecf_insert__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOO:VecVecf_insert",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:VecVecFloat_insert",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_insert" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_insert" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, SWIG_as_voidptrptr(&iter2), swig::SwigPyIterator::descriptor(), 0);
   if (!SWIG_IsOK(res2) || !iter2) {
-    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf_insert" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
+    SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat_insert" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
   } else {
     swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *iter_t = dynamic_cast<swig::SwigPyIterator_T<std::vector< std::vector< float > >::iterator > *>(iter2);
     if (iter_t) {
       arg2 = iter_t->get_current();
     } else {
-      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecf_insert" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
+      SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "VecVecFloat_insert" "', argument " "2"" of type '" "std::vector< std::vector< float > >::iterator""'");
     }
   }
   ecode3 = SWIG_AsVal_size_t(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecVecf_insert" "', argument " "3"" of type '" "std::vector< std::vector< float > >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "VecVecFloat_insert" "', argument " "3"" of type '" "std::vector< std::vector< float > >::size_type""'");
   } 
   arg3 = static_cast< std::vector< std::vector< float > >::size_type >(val3);
   {
     std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
     res4 = swig::asptr(obj3, &ptr);
     if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "VecVecf_insert" "', argument " "4"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "VecVecFloat_insert" "', argument " "4"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecf_insert" "', argument " "4"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "VecVecFloat_insert" "', argument " "4"" of type '" "std::vector< std::vector< float > >::value_type const &""'"); 
     }
     arg4 = ptr;
   }
@@ -11416,7 +11535,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_insert(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_insert(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[5];
   int ii;
@@ -11438,7 +11557,7 @@ SWIGINTERN PyObject *_wrap_VecVecf_insert(PyObject *self, PyObject *args) {
         int res = swig::asptr(argv[2], (std::vector<float,std::allocator< float > >**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_VecVecf_insert__SWIG_0(self, args);
+          return _wrap_VecVecFloat_insert__SWIG_0(self, args);
         }
       }
     }
@@ -11460,7 +11579,7 @@ SWIGINTERN PyObject *_wrap_VecVecf_insert(PyObject *self, PyObject *args) {
           int res = swig::asptr(argv[3], (std::vector<float,std::allocator< float > >**)(0));
           _v = SWIG_CheckState(res);
           if (_v) {
-            return _wrap_VecVecf_insert__SWIG_1(self, args);
+            return _wrap_VecVecFloat_insert__SWIG_1(self, args);
           }
         }
       }
@@ -11468,7 +11587,7 @@ SWIGINTERN PyObject *_wrap_VecVecf_insert(PyObject *self, PyObject *args) {
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecf_insert'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'VecVecFloat_insert'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    std::vector< std::vector< float > >::insert(std::vector< std::vector< float > >::iterator,std::vector< std::vector< float > >::value_type const &)\n"
     "    std::vector< std::vector< float > >::insert(std::vector< std::vector< float > >::iterator,std::vector< std::vector< float > >::size_type,std::vector< std::vector< float > >::value_type const &)\n");
@@ -11476,7 +11595,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_reserve(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_reserve(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   std::vector< std::vector< float > >::size_type arg2 ;
@@ -11487,15 +11606,15 @@ SWIGINTERN PyObject *_wrap_VecVecf_reserve(PyObject *SWIGUNUSEDPARM(self), PyObj
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecf_reserve",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:VecVecFloat_reserve",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_reserve" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_reserve" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   ecode2 = SWIG_AsVal_size_t(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecf_reserve" "', argument " "2"" of type '" "std::vector< std::vector< float > >::size_type""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "VecVecFloat_reserve" "', argument " "2"" of type '" "std::vector< std::vector< float > >::size_type""'");
   } 
   arg2 = static_cast< std::vector< std::vector< float > >::size_type >(val2);
   (arg1)->reserve(arg2);
@@ -11506,7 +11625,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_VecVecf_capacity(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_VecVecFloat_capacity(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
@@ -11514,10 +11633,10 @@ SWIGINTERN PyObject *_wrap_VecVecf_capacity(PyObject *SWIGUNUSEDPARM(self), PyOb
   PyObject * obj0 = 0 ;
   std::vector< std::vector< float > >::size_type result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:VecVecf_capacity",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:VecVecFloat_capacity",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecf_capacity" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "VecVecFloat_capacity" "', argument " "1"" of type '" "std::vector< std::vector< float > > const *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   result = ((std::vector< std::vector< float > > const *)arg1)->capacity();
@@ -11528,17 +11647,17 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_VecVecf(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_VecVecFloat(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< std::vector< float > > *arg1 = (std::vector< std::vector< float > > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_VecVecf",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_VecVecFloat",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_VecVecf" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_VecVecFloat" "', argument " "1"" of type '" "std::vector< std::vector< float > > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< std::vector< float > > * >(argp1);
   delete arg1;
@@ -11549,7 +11668,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *VecVecf_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *VecVecFloat_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
   SWIG_TypeNewClientData(SWIGTYPE_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, SWIG_NewClientData(obj));
@@ -12110,11 +12229,9 @@ fail:
 SWIGINTERN PyObject *_wrap_CSF_readPointsFromFile(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   CSF *arg1 = (CSF *) 0 ;
-  string arg2 ;
+  std::string arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
@@ -12125,17 +12242,13 @@ SWIGINTERN PyObject *_wrap_CSF_readPointsFromFile(PyObject *SWIGUNUSEDPARM(self)
   }
   arg1 = reinterpret_cast< CSF * >(argp1);
   {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_string,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CSF_readPointsFromFile" "', argument " "2"" of type '" "string""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CSF_readPointsFromFile" "', argument " "2"" of type '" "string""'");
-    } else {
-      string * temp = reinterpret_cast< string * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "CSF_readPointsFromFile" "', argument " "2"" of type '" "std::string""'"); 
     }
+    arg2 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
   }
   (arg1)->readPointsFromFile(arg2);
   resultobj = SWIG_Py_Void();
@@ -12231,11 +12344,9 @@ SWIGINTERN PyObject *_wrap_CSF_savePoints(PyObject *SWIGUNUSEDPARM(self), PyObje
   PyObject *resultobj = 0;
   CSF *arg1 = (CSF *) 0 ;
   std::vector< int > arg2 ;
-  string arg3 ;
+  std::string arg3 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp3 ;
-  int res3 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
@@ -12256,17 +12367,13 @@ SWIGINTERN PyObject *_wrap_CSF_savePoints(PyObject *SWIGUNUSEDPARM(self), PyObje
     if (SWIG_IsNewObj(res)) delete ptr;
   }
   {
-    res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_string,  0  | 0);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "CSF_savePoints" "', argument " "3"" of type '" "string""'"); 
-    }  
-    if (!argp3) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CSF_savePoints" "', argument " "3"" of type '" "string""'");
-    } else {
-      string * temp = reinterpret_cast< string * >(argp3);
-      arg3 = *temp;
-      if (SWIG_IsNewObj(res3)) delete temp;
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(obj2, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "CSF_savePoints" "', argument " "3"" of type '" "std::string""'"); 
     }
+    arg3 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
   }
   (arg1)->savePoints(arg2,arg3);
   resultobj = SWIG_Py_Void();
@@ -12741,74 +12848,74 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"VecInt_capacity", _wrap_VecInt_capacity, METH_VARARGS, NULL},
 	 { (char *)"delete_VecInt", _wrap_delete_VecInt, METH_VARARGS, NULL},
 	 { (char *)"VecInt_swigregister", VecInt_swigregister, METH_VARARGS, NULL},
-	 { (char *)"Vecf_iterator", _wrap_Vecf_iterator, METH_VARARGS, NULL},
-	 { (char *)"Vecf___nonzero__", _wrap_Vecf___nonzero__, METH_VARARGS, NULL},
-	 { (char *)"Vecf___bool__", _wrap_Vecf___bool__, METH_VARARGS, NULL},
-	 { (char *)"Vecf___len__", _wrap_Vecf___len__, METH_VARARGS, NULL},
-	 { (char *)"Vecf_pop", _wrap_Vecf_pop, METH_VARARGS, NULL},
-	 { (char *)"Vecf___getslice__", _wrap_Vecf___getslice__, METH_VARARGS, NULL},
-	 { (char *)"Vecf___setslice__", _wrap_Vecf___setslice__, METH_VARARGS, NULL},
-	 { (char *)"Vecf___delslice__", _wrap_Vecf___delslice__, METH_VARARGS, NULL},
-	 { (char *)"Vecf___delitem__", _wrap_Vecf___delitem__, METH_VARARGS, NULL},
-	 { (char *)"Vecf___getitem__", _wrap_Vecf___getitem__, METH_VARARGS, NULL},
-	 { (char *)"Vecf___setitem__", _wrap_Vecf___setitem__, METH_VARARGS, NULL},
-	 { (char *)"Vecf_append", _wrap_Vecf_append, METH_VARARGS, NULL},
-	 { (char *)"Vecf_empty", _wrap_Vecf_empty, METH_VARARGS, NULL},
-	 { (char *)"Vecf_size", _wrap_Vecf_size, METH_VARARGS, NULL},
-	 { (char *)"Vecf_clear", _wrap_Vecf_clear, METH_VARARGS, NULL},
-	 { (char *)"Vecf_swap", _wrap_Vecf_swap, METH_VARARGS, NULL},
-	 { (char *)"Vecf_get_allocator", _wrap_Vecf_get_allocator, METH_VARARGS, NULL},
-	 { (char *)"Vecf_begin", _wrap_Vecf_begin, METH_VARARGS, NULL},
-	 { (char *)"Vecf_end", _wrap_Vecf_end, METH_VARARGS, NULL},
-	 { (char *)"Vecf_rbegin", _wrap_Vecf_rbegin, METH_VARARGS, NULL},
-	 { (char *)"Vecf_rend", _wrap_Vecf_rend, METH_VARARGS, NULL},
-	 { (char *)"Vecf_pop_back", _wrap_Vecf_pop_back, METH_VARARGS, NULL},
-	 { (char *)"Vecf_erase", _wrap_Vecf_erase, METH_VARARGS, NULL},
-	 { (char *)"new_Vecf", _wrap_new_Vecf, METH_VARARGS, NULL},
-	 { (char *)"Vecf_push_back", _wrap_Vecf_push_back, METH_VARARGS, NULL},
-	 { (char *)"Vecf_front", _wrap_Vecf_front, METH_VARARGS, NULL},
-	 { (char *)"Vecf_back", _wrap_Vecf_back, METH_VARARGS, NULL},
-	 { (char *)"Vecf_assign", _wrap_Vecf_assign, METH_VARARGS, NULL},
-	 { (char *)"Vecf_resize", _wrap_Vecf_resize, METH_VARARGS, NULL},
-	 { (char *)"Vecf_insert", _wrap_Vecf_insert, METH_VARARGS, NULL},
-	 { (char *)"Vecf_reserve", _wrap_Vecf_reserve, METH_VARARGS, NULL},
-	 { (char *)"Vecf_capacity", _wrap_Vecf_capacity, METH_VARARGS, NULL},
-	 { (char *)"delete_Vecf", _wrap_delete_Vecf, METH_VARARGS, NULL},
-	 { (char *)"Vecf_swigregister", Vecf_swigregister, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_iterator", _wrap_VecVecf_iterator, METH_VARARGS, NULL},
-	 { (char *)"VecVecf___nonzero__", _wrap_VecVecf___nonzero__, METH_VARARGS, NULL},
-	 { (char *)"VecVecf___bool__", _wrap_VecVecf___bool__, METH_VARARGS, NULL},
-	 { (char *)"VecVecf___len__", _wrap_VecVecf___len__, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_pop", _wrap_VecVecf_pop, METH_VARARGS, NULL},
-	 { (char *)"VecVecf___getslice__", _wrap_VecVecf___getslice__, METH_VARARGS, NULL},
-	 { (char *)"VecVecf___setslice__", _wrap_VecVecf___setslice__, METH_VARARGS, NULL},
-	 { (char *)"VecVecf___delslice__", _wrap_VecVecf___delslice__, METH_VARARGS, NULL},
-	 { (char *)"VecVecf___delitem__", _wrap_VecVecf___delitem__, METH_VARARGS, NULL},
-	 { (char *)"VecVecf___getitem__", _wrap_VecVecf___getitem__, METH_VARARGS, NULL},
-	 { (char *)"VecVecf___setitem__", _wrap_VecVecf___setitem__, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_append", _wrap_VecVecf_append, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_empty", _wrap_VecVecf_empty, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_size", _wrap_VecVecf_size, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_clear", _wrap_VecVecf_clear, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_swap", _wrap_VecVecf_swap, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_get_allocator", _wrap_VecVecf_get_allocator, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_begin", _wrap_VecVecf_begin, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_end", _wrap_VecVecf_end, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_rbegin", _wrap_VecVecf_rbegin, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_rend", _wrap_VecVecf_rend, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_pop_back", _wrap_VecVecf_pop_back, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_erase", _wrap_VecVecf_erase, METH_VARARGS, NULL},
-	 { (char *)"new_VecVecf", _wrap_new_VecVecf, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_push_back", _wrap_VecVecf_push_back, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_front", _wrap_VecVecf_front, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_back", _wrap_VecVecf_back, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_assign", _wrap_VecVecf_assign, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_resize", _wrap_VecVecf_resize, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_insert", _wrap_VecVecf_insert, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_reserve", _wrap_VecVecf_reserve, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_capacity", _wrap_VecVecf_capacity, METH_VARARGS, NULL},
-	 { (char *)"delete_VecVecf", _wrap_delete_VecVecf, METH_VARARGS, NULL},
-	 { (char *)"VecVecf_swigregister", VecVecf_swigregister, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_iterator", _wrap_VecFloat_iterator, METH_VARARGS, NULL},
+	 { (char *)"VecFloat___nonzero__", _wrap_VecFloat___nonzero__, METH_VARARGS, NULL},
+	 { (char *)"VecFloat___bool__", _wrap_VecFloat___bool__, METH_VARARGS, NULL},
+	 { (char *)"VecFloat___len__", _wrap_VecFloat___len__, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_pop", _wrap_VecFloat_pop, METH_VARARGS, NULL},
+	 { (char *)"VecFloat___getslice__", _wrap_VecFloat___getslice__, METH_VARARGS, NULL},
+	 { (char *)"VecFloat___setslice__", _wrap_VecFloat___setslice__, METH_VARARGS, NULL},
+	 { (char *)"VecFloat___delslice__", _wrap_VecFloat___delslice__, METH_VARARGS, NULL},
+	 { (char *)"VecFloat___delitem__", _wrap_VecFloat___delitem__, METH_VARARGS, NULL},
+	 { (char *)"VecFloat___getitem__", _wrap_VecFloat___getitem__, METH_VARARGS, NULL},
+	 { (char *)"VecFloat___setitem__", _wrap_VecFloat___setitem__, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_append", _wrap_VecFloat_append, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_empty", _wrap_VecFloat_empty, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_size", _wrap_VecFloat_size, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_clear", _wrap_VecFloat_clear, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_swap", _wrap_VecFloat_swap, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_get_allocator", _wrap_VecFloat_get_allocator, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_begin", _wrap_VecFloat_begin, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_end", _wrap_VecFloat_end, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_rbegin", _wrap_VecFloat_rbegin, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_rend", _wrap_VecFloat_rend, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_pop_back", _wrap_VecFloat_pop_back, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_erase", _wrap_VecFloat_erase, METH_VARARGS, NULL},
+	 { (char *)"new_VecFloat", _wrap_new_VecFloat, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_push_back", _wrap_VecFloat_push_back, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_front", _wrap_VecFloat_front, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_back", _wrap_VecFloat_back, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_assign", _wrap_VecFloat_assign, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_resize", _wrap_VecFloat_resize, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_insert", _wrap_VecFloat_insert, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_reserve", _wrap_VecFloat_reserve, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_capacity", _wrap_VecFloat_capacity, METH_VARARGS, NULL},
+	 { (char *)"delete_VecFloat", _wrap_delete_VecFloat, METH_VARARGS, NULL},
+	 { (char *)"VecFloat_swigregister", VecFloat_swigregister, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_iterator", _wrap_VecVecFloat_iterator, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat___nonzero__", _wrap_VecVecFloat___nonzero__, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat___bool__", _wrap_VecVecFloat___bool__, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat___len__", _wrap_VecVecFloat___len__, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_pop", _wrap_VecVecFloat_pop, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat___getslice__", _wrap_VecVecFloat___getslice__, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat___setslice__", _wrap_VecVecFloat___setslice__, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat___delslice__", _wrap_VecVecFloat___delslice__, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat___delitem__", _wrap_VecVecFloat___delitem__, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat___getitem__", _wrap_VecVecFloat___getitem__, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat___setitem__", _wrap_VecVecFloat___setitem__, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_append", _wrap_VecVecFloat_append, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_empty", _wrap_VecVecFloat_empty, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_size", _wrap_VecVecFloat_size, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_clear", _wrap_VecVecFloat_clear, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_swap", _wrap_VecVecFloat_swap, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_get_allocator", _wrap_VecVecFloat_get_allocator, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_begin", _wrap_VecVecFloat_begin, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_end", _wrap_VecVecFloat_end, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_rbegin", _wrap_VecVecFloat_rbegin, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_rend", _wrap_VecVecFloat_rend, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_pop_back", _wrap_VecVecFloat_pop_back, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_erase", _wrap_VecVecFloat_erase, METH_VARARGS, NULL},
+	 { (char *)"new_VecVecFloat", _wrap_new_VecVecFloat, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_push_back", _wrap_VecVecFloat_push_back, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_front", _wrap_VecVecFloat_front, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_back", _wrap_VecVecFloat_back, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_assign", _wrap_VecVecFloat_assign, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_resize", _wrap_VecVecFloat_resize, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_insert", _wrap_VecVecFloat_insert, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_reserve", _wrap_VecVecFloat_reserve, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_capacity", _wrap_VecVecFloat_capacity, METH_VARARGS, NULL},
+	 { (char *)"delete_VecVecFloat", _wrap_delete_VecVecFloat, METH_VARARGS, NULL},
+	 { (char *)"VecVecFloat_swigregister", VecVecFloat_swigregister, METH_VARARGS, NULL},
 	 { (char *)"Params_bSloopSmooth_set", _wrap_Params_bSloopSmooth_set, METH_VARARGS, NULL},
 	 { (char *)"Params_bSloopSmooth_get", _wrap_Params_bSloopSmooth_get, METH_VARARGS, NULL},
 	 { (char *)"Params_time_step_set", _wrap_Params_time_step_set, METH_VARARGS, NULL},
@@ -12861,7 +12968,6 @@ static swig_type_info _swigt__p_std__vectorT_csf__Point_std__allocatorT_csf__Poi
 static swig_type_info _swigt__p_std__vectorT_float_std__allocatorT_float_t_t = {"_p_std__vectorT_float_std__allocatorT_float_t_t", "std::vector< float > *|std::vector< float,std::allocator< float > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_int_std__allocatorT_int_t_t = {"_p_std__vectorT_int_std__allocatorT_int_t_t", "std::vector< int,std::allocator< int > > *|std::vector< int > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t = {"_p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t", "std::vector< std::vector< float,std::allocator< float > >,std::allocator< std::vector< float,std::allocator< float > > > > *|std::vector< std::vector< float,std::allocator< float > > > *|std::vector< std::vector< float > > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_string = {"_p_string", "string *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_swig__SwigPyIterator = {"_p_swig__SwigPyIterator", "swig::SwigPyIterator *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_value_type = {"_p_value_type", "value_type *", 0, 0, (void*)0, 0};
 
@@ -12884,7 +12990,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_std__vectorT_float_std__allocatorT_float_t_t,
   &_swigt__p_std__vectorT_int_std__allocatorT_int_t_t,
   &_swigt__p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t,
-  &_swigt__p_string,
   &_swigt__p_swig__SwigPyIterator,
   &_swigt__p_value_type,
 };
@@ -12907,7 +13012,6 @@ static swig_cast_info _swigc__p_std__vectorT_csf__Point_std__allocatorT_csf__Poi
 static swig_cast_info _swigc__p_std__vectorT_float_std__allocatorT_float_t_t[] = {  {&_swigt__p_std__vectorT_float_std__allocatorT_float_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_int_std__allocatorT_int_t_t[] = {  {&_swigt__p_std__vectorT_int_std__allocatorT_int_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t[] = {  {&_swigt__p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_string[] = {  {&_swigt__p_string, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_swig__SwigPyIterator[] = {  {&_swigt__p_swig__SwigPyIterator, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_value_type[] = {  {&_swigt__p_value_type, 0, 0, 0},{0, 0, 0, 0}};
 
@@ -12930,7 +13034,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_std__vectorT_float_std__allocatorT_float_t_t,
   _swigc__p_std__vectorT_int_std__allocatorT_int_t_t,
   _swigc__p_std__vectorT_std__vectorT_float_std__allocatorT_float_t_t_std__allocatorT_std__vectorT_float_std__allocatorT_float_t_t_t_t,
-  _swigc__p_string,
   _swigc__p_swig__SwigPyIterator,
   _swigc__p_value_type,
 };
