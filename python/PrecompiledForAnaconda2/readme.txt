@@ -1,0 +1,1 @@
+put all the files into Anaconda2/lib/site-packages

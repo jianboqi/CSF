@@ -1,3 +1,4 @@
+![csf1](https://github.com/jianboqi/CSF/blob/master/CSFDemo/CSF1.png) ![csf2](https://github.com/jianboqi/CSF/blob/master/CSFDemo/CSF2.png)
 # CSF
 Airborne LiDAR filtering method based on Cloth Simulation.
 This is the code for the article:
@@ -37,6 +38,26 @@ outFile = laspy.file.File(r"ground.las",
 outFile.points = points[ground] # extract ground points, and save it to a las file.
 outFile.close() # do not forget this
 ```
+
+**Reading data from txt file:**
+
+If the lidar data is stored in txt file (x y z for each line), it can also be imported directly.
+
+```python
+import CSF
+
+csf = CSF.CSF()
+csf.readPointsFromFile('samp52.txt')
+
+csf.params.bSloopSmooth = False
+csf.params.cloth_resolution = 0.5
+
+ground = CSF.VecInt()  # a list to indicate the index of ground points after calculation
+non_ground = CSF.VecInt() # a list to indicate the index of non-ground points after calculation
+csf.do_filtering(ground, non_ground) # do actual filtering.
+csf.savePoints(ground,"ground.txt")
+```
+
 ### Installation
 Download the source code. under python folder:
 ```python
@@ -56,4 +77,6 @@ Note: This code has been changed a lot since the publication of the correspondin
 
 At last, if you are interested in Cloudcompare, there is a good news. our method has been implemented as a Cloudcompare plugin, you can refer to : https://github.com/cloudcompare/trunk
 
+### License
+CSF is maintained and developed by Jianbo QI. It can be redistributed and modified under the terms of the GNU General Public License (Version 3) as provided by the Free Software Foundation.
 
