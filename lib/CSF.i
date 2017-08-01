@@ -1,7 +1,7 @@
 %module CSF
 %{
   #define SWIG_FILE_WITH_INIT
-  #include "../CSFDLL/CSF.h"
+  #include "../lib/CSF.h"
 %}
 
 %include "std_string.i"
@@ -14,4 +14,4 @@ namespace std
     %template(VecVecFloat) vector< vector<float> >;
 }
 
-%include "../CSFDLL/CSF.h"
+%include "../lib/CSF.h"
