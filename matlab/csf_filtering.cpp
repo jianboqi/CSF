@@ -1,18 +1,22 @@
 
-// SimpleDLLTest.cpp : 定义控制台应用程序的入口点。
+// SimpleDLLTest.cpp : 露篓脪氓驴脴脰脝脤篓脫娄脫脙鲁脤脨貌碌脛脠毛驴脷碌茫隆拢
 #include <mex.h>
 #include <vector>
 #include <string>
-#include "CSF.h" 
+#include "../CSFDLL/CSF.h"
 using namespace std;
-#pragma comment(lib, "CSF.lib")
+// #pragma comment(lib, "CSF.lib")
 
 //input: pointcloud riginess isSlopSmooth cloth_resolution 
 void csf_filtering(double* points
 	,int rigidness
 	, bool isSmooth
 	, double cloth_resolution
-	,int rows,std::vector<int>& groundIndex
+	, double class_threshold
+	, int interations
+	, double time_step
+	,int rows
+	,std::vector<int>& groundIndex
 	,std::vector<int>& nongroundIndex
 	,int& groundRows
 	,int& nongroundRows
@@ -25,18 +29,18 @@ void csf_filtering(double* points
 
 	csf.setPointCloud(points,rows);
 
-	//备注：在实际使用过程中，点云数据由主程序提供，调用函数为
-	//csf.setPointCloud(pc);//pc为PointCloud类
+	//卤赂脳垄拢潞脭脷脢碌录脢脢鹿脫脙鹿媒鲁脤脰脨拢卢碌茫脭脝脢媒戮脻脫脡脰梅鲁脤脨貌脤谩鹿漏拢卢碌梅脫脙潞炉脢媒脦陋
+	//csf.setPointCloud(pc);//pc脦陋PointCloud脌脿
 
-	//step 2 设置参数
+	//step 2 脡猫脰脙虏脦脢媒
 	csf.params.bSloopSmooth = isSmooth;
-	csf.params.class_threshold = 0.5;
+	csf.params.class_threshold = class_threshold;
 	csf.params.cloth_resolution = cloth_resolution;
-	csf.params.interations = 500;
+	csf.params.interations = interations;
 	csf.params.rigidness = rigidness ;
-	csf.params.time_step = 0.65;
+	csf.params.time_step = time_step;
 
-	//step3 执行滤波,result中储存的是地面点的索引 
+	//step3 脰麓脨脨脗脣虏篓,result脰脨麓垄麓忙碌脛脢脟碌脴脙忙碌茫碌脛脣梅脪媒 
 	csf.do_filtering(groundIndex,nongroundIndex);
 	groundRows = groundIndex.size();
 	nongroundRows = nongroundIndex.size();
@@ -48,11 +52,15 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 	double resolution = mxGetScalar(prhs[3]);
 	bool isSmooth =  mxIsLogicalScalarTrue(prhs[2]);
 	int rigidness = (int)mxGetScalar(prhs[1]);
+	double class_threshold = mxGetScalar(prhs[4]);
+	int interations = (int) mxGetScalar(prhs[5]);
+	double time_step = mxGetScalar(prhs[6]);
 
 	int rows = mxGetM(prhs[0]);
 	std::vector<int> groundIndex,nongroundIndex;
 	int groundRows,nongroundRows;
-	csf_filtering(points,rigidness,isSmooth,resolution,rows,groundIndex, nongroundIndex,groundRows,nongroundRows);
+	csf_filtering(points,rigidness,isSmooth,resolution,class_threshold,interations,time_step,
+		rows,groundIndex, nongroundIndex,groundRows,nongroundRows);
 	plhs[0] = mxCreateNumericMatrix(groundRows,1, mxINT32_CLASS, mxREAL);
 	plhs[1] = mxCreateNumericMatrix(nongroundRows,1, mxINT32_CLASS, mxREAL);
 

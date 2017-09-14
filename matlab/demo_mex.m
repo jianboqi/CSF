@@ -21,4 +21,5 @@
 %#######################################################################################
 %Compile in the matlab with:
 
-mex csf_filtering.cpp csf.lib
+%build from source
+mex csf_filtering.cpp ../CSFDLL/c2cdist.cpp ../CSFDLL/Cloth.cpp ../CSFDLL/CSF.cpp ../CSFDLL/Particle.cpp ../CSFDLL/point_cloud.cpp ../CSFDLL/Rasterization.cpp ../CSFDLL/XYZReader.cpp

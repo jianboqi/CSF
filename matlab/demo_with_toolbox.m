@@ -31,7 +31,7 @@
 %return groundIndex index of ground points in PointCloudMatrix
 %return nonGroundIndex index of nonGround points in PointCloudMatrix
 %example
-%[groundIndex,nonGroundIndex] = csf_filtering(pointCloud,3,true,1);
+%[groundIndex,nonGroundIndex] = csf_filtering(pointCloud,3,true,1,0.5,500,0.65);
 %groundPoints = pointCloud(groundIndex,:);
 %nonGroundPoints = pointCloud(nonGroundIndex,:);
 
@@ -41,7 +41,7 @@
 ptCloud=pcread('sample.ply');
 %filtering operation
 tic
-[groundIndex,nonGroundIndex] = csf_filtering(ptCloud.Location,3,true,1);
+[groundIndex,nonGroundIndex] = csf_filtering(ptCloud.Location,3,true,1,0.5,500,0.65);
 toc
 %extract gound points and non-ground points
 groundPoints = pointCloud(ptCloud.Location(groundIndex,:));
