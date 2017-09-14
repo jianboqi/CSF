@@ -3,7 +3,7 @@
 #include <mex.h>
 #include <vector>
 #include <string>
-#include "../CSFDLL/CSF.h"
+#include "../lib/CSF.h"
 using namespace std;
 // #pragma comment(lib, "CSF.lib")
 

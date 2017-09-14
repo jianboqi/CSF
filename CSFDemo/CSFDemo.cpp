@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "Cfg.h"
-#include "../CSFDLL/CSF.h" 
+#include "../lib/CSF.h" 
 #pragma comment(lib, "../Release/CSF.lib")
 #include <process.h>
 #include <locale.h>

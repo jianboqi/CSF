@@ -22,4 +22,4 @@
 %Compile in the matlab with:
 
 %build from source
-mex csf_filtering.cpp ../CSFDLL/c2cdist.cpp ../CSFDLL/Cloth.cpp ../CSFDLL/CSF.cpp ../CSFDLL/Particle.cpp ../CSFDLL/point_cloud.cpp ../CSFDLL/Rasterization.cpp ../CSFDLL/XYZReader.cpp
+mex csf_filtering.cpp ../lib/c2cdist.cpp ../lib/Cloth.cpp ../lib/CSF.cpp ../lib/Particle.cpp ../lib/point_cloud.cpp ../lib/Rasterization.cpp ../lib/XYZReader.cpp
