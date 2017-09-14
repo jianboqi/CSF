@@ -5,7 +5,7 @@ clean:
 	@rm -rf build
 
 wrapper:
-	@swig3.0 -python -c++ -o CSF_wrap.cxx ../lib/CSF.i
+	@swig3.0 -python -c++ -o CSF_wrap.cxx CSF.i
 
 build: wrapper
 	@python setup.py build

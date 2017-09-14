@@ -2,11 +2,11 @@
 
 #include <vector>
 #include "Cfg.h"
-#include "../lib/CSF.h" 
-#pragma comment(lib, "../Release/CSF.lib")
-#include <process.h>
+#include "../src/CSF.h" 
 #include <locale.h>
 #include <time.h>
+#include <cstdlib>
+#include <cstring>
 using namespace std;
 
 int main(int argc,char* argv[])

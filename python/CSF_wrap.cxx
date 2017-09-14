@@ -3132,7 +3132,7 @@ namespace swig {
 
 
   #define SWIG_FILE_WITH_INIT
-  #include "../lib/CSF.h"
+  #include "../src/CSF.h"
 
 
 #include <string>
