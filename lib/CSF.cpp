@@ -30,8 +30,9 @@ CSF::~CSF()
 void CSF::setPointCloud(vector<csf::Point> points) {
     point_cloud.resize(points.size());
 
+    int pointCount = static_cast<int>(points.size());
     #pragma omp parallel for
-    for (std::size_t i = 0; i < points.size(); i++) {
+    for (int i = 0; i < pointCount; i++) {
         csf::Point las;
         las.x          = points[i].x;
         las.y          = -points[i].z;
@@ -54,9 +55,9 @@ void CSF::setPointCloud(double *points, int rows) {
 
 void CSF::setPointCloud(csf::PointCloud& pc) {
     point_cloud.resize(pc.size());
-
+    int pointCount = static_cast<int>(pc.size());
     #pragma omp parallel for
-    for (std::size_t i = 0; i < pc.size(); i++) {
+    for (int i = 0; i < pointCount; i++) {
         csf::Point las;
         las.x          = pc[i].x;
         las.y          = -pc[i].z;
@@ -67,9 +68,9 @@ void CSF::setPointCloud(csf::PointCloud& pc) {
 
 void CSF::setPointCloud(vector<vector<float> > points) {
     point_cloud.resize(points.size());
-
+    int pointCount = static_cast<int>(points.size());
     #pragma omp parallel for
-    for (std::size_t i = 0; i < points.size(); i++) {
+    for (int i = 0; i < pointCount; i++) {
         csf::Point las;
         las.x          = points[i][0];
         las.y          = -points[i][2];
@@ -82,6 +83,7 @@ void CSF::readPointsFromFile(string filename) {
     this->point_cloud.resize(0);
     read_xyz(filename, this->point_cloud);
 }
+
 
 void CSF::do_filtering(std::vector<int>& groundIndexes,
                        std::vector<int>& offGroundIndexes,
