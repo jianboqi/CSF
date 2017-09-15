@@ -70,7 +70,8 @@ see more details from file `demo_mex.m` under matlab folder.
 
 ### How to use CSF in C++
 
-Now, CSF is built by CMake, it produces a static library, which can be used by other c++ program.
+Now, CSF is built by CMake, it produces a static library, which can be used by other c++ programs.
+To build the library, run:
 #### linux
 ```bash
 cmake .
@@ -78,13 +79,14 @@ make
 sudo make install
 ```
 #### windows
-you can use CMake GUI to generate visual studio solution file.
+You can use CMake GUI to generate visual studio solution file.
 
-
+### Binary Version
 For binary release version, it can be downloaded at: http://ramm.bnu.edu.cn/projects/CSF/download/
 
 Note: This code has been changed a lot since the publication of the corresponding paper. A lot of optimizations have been made. We are still working on it, and wish it could be better.
 
+### Cloudcompare Pulgin
 At last, if you are interested in Cloudcompare, there is a good news. our method has been implemented as a Cloudcompare plugin, you can refer to : https://github.com/cloudcompare/trunk
 
 ### License
