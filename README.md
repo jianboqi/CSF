@@ -58,18 +58,28 @@ csf.do_filtering(ground, non_ground) # do actual filtering.
 csf.savePoints(ground,"ground.txt")
 ```
 
-### Installation
+### How to use CSF in Python
 Download the source code. under python folder:
 ```python
 python setup.py build
 python setup.py install 
 ```
 
-### How to use CSF in C++
-This source code is deveoped under windows and produces DLL, which makes it convenient to be embeded into other applications.
-It is very easy to compile since no external library are needed.
+### How to use CSF in Matlab
+see more details from file `demo_mex.m` under matlab folder.
 
-Currently, we only export DLL for windows applications. For linux, it is also quite easy, we will do that soon.
+### How to use CSF in C++
+
+Now, CSF is built by CMake, it produces a static library, which can be used by other c++ program.
+#### linux
+```bash
+cmake .
+make
+sudo make install
+```
+#### windows
+you can use CMake GUI to generate visual studio solution file.
+
 
 For binary release version, it can be downloaded at: http://ramm.bnu.edu.cn/projects/CSF/download/
 
