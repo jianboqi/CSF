@@ -71,14 +71,14 @@ see more details from file `demo_mex.m` under matlab folder.
 ### How to use CSF in C++
 
 Now, CSF is built by CMake, it produces a static library, which can be used by other c++ programs.
-To build the library, run:
 #### linux
+To build the library, run:
 ```bash
 cmake .
 make
 sudo make install
 ```
-#### windows
+#### Windows
 You can use CMake GUI to generate visual studio solution file.
 
 ### Binary Version
