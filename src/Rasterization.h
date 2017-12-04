@@ -1,5 +1,6 @@
 // ======================================================================================
-// Copyright 2017 RAMM laboratory, School of Geography, Beijing Normal University
+// Copyright 2017 State Key Laboratory of Remote Sensing Science, 
+// Institute of Remote Sensing Science and Engineering, Beijing Normal University
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.

@@ -1,5 +1,6 @@
 ﻿// ======================================================================================
-// Copyright 2017 RAMM laboratory, School of Geography, Beijing Normal University
+// Copyright 2017 State Key Laboratory of Remote Sensing Science, 
+// Institute of Remote Sensing Science and Engineering, Beijing Normal University
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,9 +23,6 @@
 // #                                                                                     #
 // #  Zhang W, Qi J, Wan P, Wang H, Xie D, Wang X, Yan G. An Easy-to-Use Airborne LiDAR  #
 // #  Data Filtering Method Based on Cloth Simulation. Remote Sensing. 2016; 8(6):501.   #
-// #                                                                                     #
-// #                                     Copyright ©                                     #
-// #               RAMM laboratory, School of Geography, Beijing Normal University       #
 // #                               (http://ramm.bnu.edu.cn/)                             #
 // #                                                                                     #
 // #                      Wuming Zhang; Jianbo Qi; Peng Wan; Hongtao Wang                #
