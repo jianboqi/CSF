@@ -41,11 +41,11 @@ namespace csf {
 struct Point {
     union {
         struct {
-            float x;
-            float y;
-            float z;
+            double x;
+			double y;
+			double z;
         };
-        float u[3];
+		double u[3];
     };
 
     Point() : x(0), y(0), z(0) {}

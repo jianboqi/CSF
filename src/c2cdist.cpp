@@ -50,7 +50,7 @@ void c2cdist::calCloud2CloudDist(Cloth           & cloth,
               cloth.getParticle(col3, row3)->pos.f[1] * (1 - subdeltaX) * subdeltaZ +
               cloth.getParticle(col2, row2)->pos.f[1] * subdeltaX * subdeltaZ +
               cloth.getParticle(col1, row1)->pos.f[1] * subdeltaX * (1 - subdeltaZ);
-        float height_var = fxy - pc[i].y;
+        double height_var = fxy - pc[i].y;
 
         if (std::fabs(height_var) < class_treshold) {
             groundIndexes.push_back(i);
