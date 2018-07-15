@@ -68,14 +68,13 @@ python setup.py install
 ### How to use CSF in Matlab
 see more details from file `demo_mex.m` under matlab folder.
 
-### How to use CSF in C++
-
-Now, CSF is built by CMake, it produces a static library, which can be used by other c++ programs.
-
 ### How to use CSF in R
 
 Thanks to the nice work of @Jean-Romain, through the collaboration, the CSF has been made as a R package, the details can be found here: https://github.com/Jean-Romain/RCSF. This package can be used with the lidR package: https://github.com/Jean-Romain/lidR
 
+
+### How to use CSF in C++
+Now, CSF is built by CMake, it produces a static library, which can be used by other c++ programs.
 #### linux
 To build the library, run:
 ```bash
