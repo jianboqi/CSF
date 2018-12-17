@@ -81,7 +81,22 @@ public:
         tmpDist            = MAX_INF;
     }
 
-    Particle() {}
+    Particle() :
+      movable(true),
+      mass(1),
+      acceleration(Vec3(0, 0, 0)),
+      accumulated_normal(Vec3(0, 0, 0)),
+      pos(Vec3(0, 0, 0)),
+      old_pos(Vec3(0, 0, 0)) {
+      isVisited          = false;
+      neibor_count       = 0;
+      pos_x              = 0;
+      pos_y              = 0;
+      c_pos              = 0;
+      nearestPointHeight = MIN_INF;
+      tmpDist            = MAX_INF;
+    }
+
 
     bool isMovable() {
         return movable;
