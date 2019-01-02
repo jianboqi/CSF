@@ -70,8 +70,13 @@ see more details from file `demo_mex.m` under matlab folder.
 
 ### How to use CSF in R
 
-Thanks to the nice work of @Jean-Romain, through the collaboration, the CSF has been made as a R package, the details can be found here: https://github.com/Jean-Romain/RCSF. This package can be used with the lidR package: https://github.com/Jean-Romain/lidR
+Thanks to the nice work of @Jean-Romain, through the collaboration, the CSF has been made as a R package, the details can be found in the [RCSF repository](https://github.com/Jean-Romain/RCSF). This package can be used easily with the [lidR package](https://github.com/Jean-Romain/lidR):
 
+```r
+library(lidR)
+las  <- readLAS("file.las")
+las  <- lasground(las, csf())
+```
 
 ### How to use CSF in C++
 Now, CSF is built by CMake, it produces a static library, which can be used by other c++ programs.
