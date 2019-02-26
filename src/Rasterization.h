@@ -38,7 +38,10 @@ public:
 
     void static   RasterTerrian(Cloth          & cloth,
                                 csf::PointCloud& pc,
-                                vector<double> & heightVal);
+                                vector<double> & heightVal, 
+								int rasterization_mode, 
+								double rasterization_window_size,
+		                        int downsampling_window_num);
 };
 
 #endif // ifndef _KNN_H_

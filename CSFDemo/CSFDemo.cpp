@@ -23,7 +23,7 @@
 #include <time.h>
 #include <cstdlib>
 #include <cstring>
-using namespace std;
+//using namespace std;
 
 int main(int argc,char* argv[])
 {
@@ -62,10 +62,26 @@ int main(int argc,char* argv[])
 	cfg.readConfigFile("params.cfg", "time_step", time_step);
 	string terr_pointClouds_filepath;
 	cfg.readConfigFile("params.cfg", "terr_pointClouds_filepath", terr_pointClouds_filepath);
+	string rasterization_mode;
+	cfg.readConfigFile("params.cfg", "rasterization_mode", rasterization_mode);
+	string rasterization_window_size;
+	cfg.readConfigFile("params.cfg", "rasterization_window_size", rasterization_window_size);
+	string downsampling_window_num;
+	cfg.readConfigFile("params.cfg", "downsampling_window_num", downsampling_window_num);
 
-	CSF csf;
+	//string offsetXstr;
+	//string offsetYstr;
+	//cfg.readConfigFile("params.cfg", "offsetX", offsetXstr);
+	//cfg.readConfigFile("params.cfg", "offsetY", offsetYstr);
+	//double offsetX = atof(offsetXstr.c_str());
+	//double offsetY = atof(offsetYstr.c_str());
+
+
+	CSF csf(0);
 	//step 1 输入点云
 	csf.readPointsFromFile(terr_pointClouds_filepath);
+
+	std::cout << " - Input file: " << terr_pointClouds_filepath << endl;
 
 	clock_t start, end;
 	start = clock();
@@ -80,15 +96,17 @@ int main(int argc,char* argv[])
 	csf.params.interations = atoi(iterations.c_str());
 	csf.params.rigidness = atoi(rigidness.c_str());
 	csf.params.time_step = atof(time_step.c_str());
+	csf.params.rasterization_mode = atoi(rasterization_mode.c_str());
+	csf.params.rasterization_window_size = atof(rasterization_window_size.c_str());
+	csf.params.downsampling_window_num = atoi(downsampling_window_num.c_str());
 
 	//step3 执行滤波,result中储存的是地面点的索引 
 	std::vector<int> groundIndexes, offGroundIndexes;
-	if (argc == 2 && strcmp(argv[1], "-c")==0)
+	if (argc == 2 && strcmp(argv[1], "-c")==0) //export Cloth
 	{
-		cout << "Export cloth enabled." << endl;
+		cout << " - Export cloth enabled." << endl;
 		csf.do_filtering(groundIndexes, offGroundIndexes, true);
-	}
-	else
+	}else
 	{
 		csf.do_filtering(groundIndexes, offGroundIndexes, false);
 	}
@@ -96,10 +114,10 @@ int main(int argc,char* argv[])
 
 	end = clock();
 	double dur = (double)(end - start);
-	printf("Use Time:%f\n", (dur / CLOCKS_PER_SEC));
+	printf(" - Use Time:%f\n", (dur / CLOCKS_PER_SEC));
 
 	csf.savePoints(groundIndexes,"ground.txt");
 	csf.savePoints(offGroundIndexes, "non-ground.txt");
-
+//	system("pause");
 	return 0;
 }

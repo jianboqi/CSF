@@ -17,7 +17,9 @@
 
 #include "Rasterization.h"
 #include <queue>
-
+#include <fstream>
+#include "delaunator.h"
+#include "TriangleUtils.h"
 
 double Rasterization::findHeightValByScanline(Particle *p, Cloth& cloth) {
     int xpos = p->pos_x;
@@ -101,7 +103,10 @@ double Rasterization::findHeightValByNeighbor(Particle *p, Cloth& cloth) {
 
 void Rasterization::RasterTerrian(Cloth          & cloth,
                                   csf::PointCloud& pc,
-                                  vector<double> & heightVal) {
+                                  vector<double> & heightVal,
+								  int rasterization_mode,
+								  double rasterization_window_size,
+	                              int downsampling_window_num) {
 
     for (std::size_t i = 0; i < pc.size(); i++) {
         double pc_x = pc[i].x;
@@ -128,17 +133,42 @@ void Rasterization::RasterTerrian(Cloth          & cloth,
             }
         }
     }
-    heightVal.resize(cloth.getSize());
 
-    // #pragma omp parallel for
+	#pragma omp parallel for
+	for (int i = 0; i < cloth.getSize(); i++) {
+		Particle *pcur = cloth.getParticle1d(i);
+		if (!pcur->isInterpolated) {
+			if (rasterization_mode == 0) {  //Method 1: simple nearest point
+				// If a Particle does not have a corresponding LiDAR point, nearestPointHeight is initialized as MIN_INF
+				double    nearestHeight = pcur->nearestPointHeight;
+				if (nearestHeight > MIN_INF) {
+					pcur->interpolated_pointHeight = nearestHeight;
+				}
+				else {
+					pcur->interpolated_pointHeight = findHeightValByScanline(pcur, cloth);
+				}
+			}
+			else if (rasterization_mode == 1) {  //Method 2: 2.5D triangulation
+				computeMinimumHeightForParticleByTriangulation(pcur, pc, cloth, rasterization_window_size, downsampling_window_num);
+			}
+			else if (rasterization_mode == 2) {  //Method 3: second-degree polynomial fitting method: Z = a.X2 + b.X + c.XY + d.Y + e.Y2 + f
+													// to be implemented
+													/////
+			}
+		}
+		
+	}
+
+	heightVal.resize(cloth.getSize());
+    #pragma omp parallel for
     for (int i = 0; i < cloth.getSize(); i++) {
         Particle *pcur          = cloth.getParticle1d(i);
-        double    nearestHeight = pcur->nearestPointHeight;
-
-        if (nearestHeight > MIN_INF) {
-            heightVal[i] = nearestHeight;
-        } else {
-            heightVal[i] = findHeightValByScanline(pcur, cloth);
-        }
+		if (pcur->interpolated_pointHeight == MAX_INF) {
+			heightVal[i] = MIN_INF;
+		}
+		else {
+			heightVal[i] = pcur->interpolated_pointHeight;
+		}
     }
+
 }

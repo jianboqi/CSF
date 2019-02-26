@@ -27,12 +27,15 @@
 
 
 CSF::CSF(int index) {
-    params.bSloopSmooth     = true;
-    params.time_step        = 0.65;
-    params.class_threshold  = 0.5;
-    params.cloth_resolution = 1;
-    params.rigidness        = 3;
-    params.interations      = 500;
+    params.bSloopSmooth       = true;
+    params.time_step          = 0.65;
+    params.class_threshold    = 0.5;
+    params.cloth_resolution   = 1;
+    params.rigidness          = 3;
+    params.interations        = 500;
+	params.rasterization_mode = 1;
+	params.rasterization_window_size = 5;
+	params.downsampling_window_num = 3;
 
     this->index = index;
 }
@@ -144,7 +147,17 @@ void CSF::do_filtering(std::vector<int>& groundIndexes,
     );
 
     cout << "[" << this->index << "] Rasterizing..." << endl;
-    Rasterization::RasterTerrian(cloth, point_cloud, cloth.getHeightvals());
+	if (params.rasterization_mode == 0) {
+		cout << "[" << this->index << "]" << " - Rasterization Mode: " << "Nearest 1 point" << endl;
+	}
+	else if (params.rasterization_mode == 1) {
+		cout << "[" << this->index << "]"<< " - Rasterization Mode: " << "2.5D Triangulation" << endl;
+		cout << "[" << this->index << "]" << " - Rasterization Window Size: " << params.rasterization_window_size << endl;
+	}
+    Rasterization::RasterTerrian(cloth, point_cloud, cloth.getHeightvals(),
+		params.rasterization_mode, 
+		params.rasterization_window_size,
+		params.downsampling_window_num);
 
     double time_step2 = params.time_step * params.time_step;
     double gravity    = 0.2;
@@ -165,7 +178,7 @@ void CSF::do_filtering(std::vector<int>& groundIndexes,
     }
 
     if (params.bSloopSmooth) {
-        cout << "[" << this->index << "]  - post handle..." << endl;
+        cout << "[" << this->index << "]  - Post handle..." << endl;
         cloth.movableFilter();
     }
 

@@ -49,6 +49,9 @@ struct Params {
     double cloth_resolution;
     int rigidness;
     int interations;
+	int rasterization_mode;
+	double rasterization_window_size;
+	int downsampling_window_num;
 };
 
 #ifdef _CSF_DLL_EXPORT_

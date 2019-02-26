@@ -54,9 +54,14 @@ public:
     int pos_y;
     int c_pos;
 
-    vector<Particle *> neighborsList;
+	double interpolated_pointHeight;//recording the interpolated point Height from 2.5D triangulation etc.
+	double isInterpolated; // Is this particle has been interpolated.
 
-    std::vector<int> correspondingLidarPointList;
+    vector<Particle *> neighborsList;
+	// Each LiDAR point is assigned to a nearest particle in the horizontal plane, 
+	//this stores the list
+    std::vector<int> correspondingLidarPointList; 
+	// which LiDAR point is the nearest
     std::size_t nearestPointIndex;
     double nearestPointHeight;
     double tmpDist;
@@ -72,13 +77,15 @@ public:
         time_step2(time_step),
         pos(pos),
         old_pos(pos) {
-        isVisited          = false;
-        neibor_count       = 0;
-        pos_x              = 0;
-        pos_y              = 0;
-        c_pos              = 0;
-        nearestPointHeight = MIN_INF;
-        tmpDist            = MAX_INF;
+        isVisited				 = false;
+        neibor_count			 = 0;
+        pos_x					 = 0;
+        pos_y					 = 0;
+        c_pos					 = 0;
+        nearestPointHeight		 = MIN_INF;
+        tmpDist					 = MAX_INF;
+		interpolated_pointHeight = MAX_INF;
+		isInterpolated			 = false;
     }
 
     Particle() :
@@ -88,13 +95,15 @@ public:
       accumulated_normal(Vec3(0, 0, 0)),
       pos(Vec3(0, 0, 0)),
       old_pos(Vec3(0, 0, 0)) {
-      isVisited          = false;
-      neibor_count       = 0;
-      pos_x              = 0;
-      pos_y              = 0;
-      c_pos              = 0;
-      nearestPointHeight = MIN_INF;
-      tmpDist            = MAX_INF;
+      isVisited					= false;
+      neibor_count				= 0;
+      pos_x						= 0;
+      pos_y						= 0;
+      c_pos						= 0;
+      nearestPointHeight		= MIN_INF;
+      tmpDist					= MAX_INF;
+	  interpolated_pointHeight  = MAX_INF;
+	  isInterpolated			= false;
     }
 
 
