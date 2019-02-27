@@ -156,8 +156,8 @@ void CSF::do_filtering(std::vector<int>& groundIndexes,
     for (int i = 0; i < params.interations; i++) {
         double maxDiff = cloth.timeStep();
         cloth.terrCollision();
-
-        if ((maxDiff != 0) && (maxDiff < params.class_threshold / 100)) {
+		//params.class_threshold / 100
+        if ((maxDiff != 0) && (maxDiff < 0.005)) {
             // early stop
             break;
         }
