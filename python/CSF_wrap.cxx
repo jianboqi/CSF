@@ -12362,6 +12362,162 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Params_rasterization_mode_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Params *arg1 = (Params *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Params_rasterization_mode_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Params, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Params_rasterization_mode_set" "', argument " "1"" of type '" "Params *""'"); 
+  }
+  arg1 = reinterpret_cast< Params * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Params_rasterization_mode_set" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  if (arg1) (arg1)->rasterization_mode = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Params_rasterization_mode_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Params *arg1 = (Params *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Params_rasterization_mode_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Params, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Params_rasterization_mode_get" "', argument " "1"" of type '" "Params *""'"); 
+  }
+  arg1 = reinterpret_cast< Params * >(argp1);
+  result = (int) ((arg1)->rasterization_mode);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Params_rasterization_window_size_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Params *arg1 = (Params *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Params_rasterization_window_size_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Params, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Params_rasterization_window_size_set" "', argument " "1"" of type '" "Params *""'"); 
+  }
+  arg1 = reinterpret_cast< Params * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Params_rasterization_window_size_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->rasterization_window_size = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Params_rasterization_window_size_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Params *arg1 = (Params *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Params_rasterization_window_size_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Params, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Params_rasterization_window_size_get" "', argument " "1"" of type '" "Params *""'"); 
+  }
+  arg1 = reinterpret_cast< Params * >(argp1);
+  result = (double) ((arg1)->rasterization_window_size);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Params_downsampling_window_num_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Params *arg1 = (Params *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Params_downsampling_window_num_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Params, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Params_downsampling_window_num_set" "', argument " "1"" of type '" "Params *""'"); 
+  }
+  arg1 = reinterpret_cast< Params * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Params_downsampling_window_num_set" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  if (arg1) (arg1)->downsampling_window_num = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Params_downsampling_window_num_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Params *arg1 = (Params *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Params_downsampling_window_num_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Params, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Params_downsampling_window_num_get" "', argument " "1"" of type '" "Params *""'"); 
+  }
+  arg1 = reinterpret_cast< Params * >(argp1);
+  result = (int) ((arg1)->downsampling_window_num);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_new_Params(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Params *result = 0 ;
@@ -13311,6 +13467,12 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Params_rigidness_get", _wrap_Params_rigidness_get, METH_VARARGS, NULL},
 	 { (char *)"Params_interations_set", _wrap_Params_interations_set, METH_VARARGS, NULL},
 	 { (char *)"Params_interations_get", _wrap_Params_interations_get, METH_VARARGS, NULL},
+	 { (char *)"Params_rasterization_mode_set", _wrap_Params_rasterization_mode_set, METH_VARARGS, NULL},
+	 { (char *)"Params_rasterization_mode_get", _wrap_Params_rasterization_mode_get, METH_VARARGS, NULL},
+	 { (char *)"Params_rasterization_window_size_set", _wrap_Params_rasterization_window_size_set, METH_VARARGS, NULL},
+	 { (char *)"Params_rasterization_window_size_get", _wrap_Params_rasterization_window_size_get, METH_VARARGS, NULL},
+	 { (char *)"Params_downsampling_window_num_set", _wrap_Params_downsampling_window_num_set, METH_VARARGS, NULL},
+	 { (char *)"Params_downsampling_window_num_get", _wrap_Params_downsampling_window_num_get, METH_VARARGS, NULL},
 	 { (char *)"new_Params", _wrap_new_Params, METH_VARARGS, NULL},
 	 { (char *)"delete_Params", _wrap_delete_Params, METH_VARARGS, NULL},
 	 { (char *)"Params_swigregister", Params_swigregister, METH_VARARGS, NULL},

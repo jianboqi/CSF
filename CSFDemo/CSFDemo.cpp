@@ -114,7 +114,7 @@ int main(int argc,char* argv[])
 
 	end = clock();
 	double dur = (double)(end - start);
-	printf(" - Use Time:%f\n", (dur / CLOCKS_PER_SEC));
+	printf(" - Used Time:%f\n", (dur / CLOCKS_PER_SEC));
 
 	csf.savePoints(groundIndexes,"ground.txt");
 	csf.savePoints(offGroundIndexes, "non-ground.txt");

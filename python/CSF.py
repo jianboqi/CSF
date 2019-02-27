@@ -528,6 +528,18 @@ class Params(_object):
     __swig_getmethods__["interations"] = _CSF.Params_interations_get
     if _newclass:
         interations = _swig_property(_CSF.Params_interations_get, _CSF.Params_interations_set)
+    __swig_setmethods__["rasterization_mode"] = _CSF.Params_rasterization_mode_set
+    __swig_getmethods__["rasterization_mode"] = _CSF.Params_rasterization_mode_get
+    if _newclass:
+        rasterization_mode = _swig_property(_CSF.Params_rasterization_mode_get, _CSF.Params_rasterization_mode_set)
+    __swig_setmethods__["rasterization_window_size"] = _CSF.Params_rasterization_window_size_set
+    __swig_getmethods__["rasterization_window_size"] = _CSF.Params_rasterization_window_size_get
+    if _newclass:
+        rasterization_window_size = _swig_property(_CSF.Params_rasterization_window_size_get, _CSF.Params_rasterization_window_size_set)
+    __swig_setmethods__["downsampling_window_num"] = _CSF.Params_downsampling_window_num_set
+    __swig_getmethods__["downsampling_window_num"] = _CSF.Params_downsampling_window_num_get
+    if _newclass:
+        downsampling_window_num = _swig_property(_CSF.Params_downsampling_window_num_get, _CSF.Params_downsampling_window_num_set)
 
     def __init__(self):
         this = _CSF.new_Params()

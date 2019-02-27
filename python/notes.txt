@@ -9,3 +9,6 @@ Use make wrapper to generate CSF_wrap.cxx
 The Makefile also provides two utility targets to aid development.
 make build
 make install
+
+For windows:
+please use:  swig -c++ -python CSF.i to generate CSF_wrap.cxx

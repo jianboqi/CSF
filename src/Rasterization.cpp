@@ -144,9 +144,9 @@ void Rasterization::RasterTerrian(Cloth          & cloth,
 				if (nearestHeight > MIN_INF) {
 					pcur->interpolated_pointHeight = nearestHeight;
 				}
-				else {
+				/*else {
 					pcur->interpolated_pointHeight = findHeightValByScanline(pcur, cloth);
-				}
+				}*/
 			}
 			else if (rasterization_mode == 1) {  //Method 2: 2.5D triangulation
 				computeMinimumHeightForParticleByTriangulation(pcur, pc, cloth, rasterization_window_size, downsampling_window_num);
@@ -164,11 +164,41 @@ void Rasterization::RasterTerrian(Cloth          & cloth,
     for (int i = 0; i < cloth.getSize(); i++) {
         Particle *pcur          = cloth.getParticle1d(i);
 		if (pcur->interpolated_pointHeight == MAX_INF) {
-			heightVal[i] = MIN_INF;
+			heightVal[i] = pcur->nearestPointHeight;
 		}
 		else {
 			heightVal[i] = pcur->interpolated_pointHeight;
 		}
     }
+
+//cloth.saveToFile("before.txt");
+//#pragma omp parallel for
+//	for (int i = 0; i < cloth.getSize(); i++) {
+//		Particle *pcur = cloth.getParticle1d(i);
+//		//relocate the positon of cloth according to the heightVal
+//		int position_determine_widow_size = 40;
+//		int half_steps = int(position_determine_widow_size / 2);
+//		double highestVal = MIN_INF;
+//		for (int w = -half_steps; w <= half_steps; w++) {
+//			for (int h = -half_steps; h <= half_steps; h++) {
+//				int cloth_coord_x = w + pcur->pos_x;
+//				int cloth_coord_y = h + pcur->pos_y;
+//				if (cloth_coord_x >= 0 && cloth_coord_x < cloth.num_particles_width &&
+//					cloth_coord_y >= 0 && cloth_coord_y < cloth.num_particles_height) {
+//					Particle *p_neighbor = cloth.getParticle(cloth_coord_x, cloth_coord_y);
+//					double particle_height_val = heightVal[cloth_coord_y*cloth.num_particles_width + cloth_coord_x];
+//					if (particle_height_val > highestVal) {
+//						highestVal = particle_height_val;
+//					}
+//				}
+//			}
+//		}
+//		if (highestVal == MIN_INF) {
+//			pcur->getPos().f[1] = 0;
+//		}else{
+//			pcur->getPos().f[1] = highestVal + 3;
+//		}
+//	}
+//	cloth.saveToFile("after.txt");
 
 }

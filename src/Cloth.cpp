@@ -379,7 +379,8 @@ void Cloth::saveToFile(string path) {
         return;
 
     for (size_t i = 0; i < particles.size(); i++) {
-        f1 << fixed << setprecision(8) << particles[i].getPos().f[0] << "	"<< particles[i].getPos().f[2] << "	"<< -particles[i].getPos().f[1] << endl;
+		if(particles[i].getPos().f[1] > MIN_INF)
+		   f1 << fixed << setprecision(8) << particles[i].getPos().f[0] << "	"<< particles[i].getPos().f[2] << "	"<< -particles[i].getPos().f[1] << endl;
     }
 
     f1.close();
