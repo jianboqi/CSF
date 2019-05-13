@@ -38,7 +38,13 @@ CSF::CSF(int index) {
 }
 
 CSF::CSF() {
-    CSF(0);
+	params.bSloopSmooth = true;
+	params.time_step = 0.65;
+	params.class_threshold = 0.5;
+	params.cloth_resolution = 1;
+	params.rigidness = 3;
+	params.interations = 500;
+	this->index = 0;
 }
 
 CSF::~CSF()
