@@ -108,7 +108,6 @@ double Cloth::timeStep() {
 
     double maxDiff = 0;
 
-    #pragma omp parallel for
     for (int i = 0; i < particleCount; i++) {
         if (particles[i].isMovable()) {
             double diff = fabs(particles[i].old_pos.f[1] - particles[i].pos.f[1]);
