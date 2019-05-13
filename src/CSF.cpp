@@ -40,7 +40,16 @@ CSF::CSF(int index) {
 }
 
 CSF::CSF() {
-    CSF(0);
+	params.bSloopSmooth = true;
+	params.time_step = 0.65;
+	params.class_threshold = 0.5;
+	params.cloth_resolution = 1;
+	params.rigidness = 3;
+	params.interations = 500;
+	params.rasterization_mode = 1;
+	params.rasterization_window_size = 5;
+	params.downsampling_window_num = 3;
+	this->index = 0;
 }
 
 CSF::~CSF()
@@ -144,7 +153,6 @@ void CSF::do_filtering(std::vector<int>& groundIndexes,
         params.rigidness,
         params.time_step
     );
-
     cout << "[" << this->index << "] Rasterizing..." << endl;
 	if (params.rasterization_mode == 0) {
 		cout << "[" << this->index << "]" << " - Rasterization Mode: " << "Nearest 1 point" << endl;
