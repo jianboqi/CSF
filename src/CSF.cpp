@@ -65,7 +65,7 @@ void CSF::setPointCloud(vector<csf::Point> points) {
 }
 
 void CSF::setPointCloud(double *points, int rows) {
-    #define A(i, j)    points[i * 3 + j]
+	#define A(i, j) points[i + j * rows]
 
     for (int i = 0; i < rows; i++) {
         csf::Point p;
