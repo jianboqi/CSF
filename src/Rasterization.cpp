@@ -137,8 +137,8 @@ void Rasterization::RasterTerrian(Cloth          & cloth,
 
         if (nearestHeight > MIN_INF) {
             heightVal[i] = nearestHeight;
-        } /*else {
+        } else {
             heightVal[i] = findHeightValByScanline(pcur, cloth);
-        }*/
+        }
     }
 }
