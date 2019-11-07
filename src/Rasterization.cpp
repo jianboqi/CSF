@@ -56,7 +56,7 @@ double Rasterization::findHeightValByScanline(Particle *p, Cloth& cloth) {
 
 
 double Rasterization::findHeightValByNeighbor(Particle *p, Cloth& cloth) {
-    queue<Particle *>  nqueue;
+    std::queue<Particle *>  nqueue;
     std::vector<Particle *> pbacklist;
     int neiborsize = p->neighborsList.size();
 

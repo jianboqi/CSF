@@ -24,7 +24,7 @@
 
 
 void read_xyz(std::string fname, csf::PointCloud& pointcloud) {
-    ifstream fin(fname.c_str(), ios::in);
+    ifstream fin(fname.c_str(), std::ios::in);
     char     line[500];
     std::string   x, y, z;
 

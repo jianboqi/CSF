@@ -147,7 +147,7 @@ void Cloth::movableFilter() {
             Particle *ptc = getParticle(x, y);
 
             if (ptc->isMovable() && !ptc->isVisited) {
-                queue<int> que;
+                std::queue<int> que;
                 std::vector<XY> connected; // store the connected component
                 std::vector<std::vector<int> > neibors;
                 int sum   = 1;
@@ -332,7 +332,7 @@ void Cloth::handle_slop_connected(std::vector<int> edgePoints, std::vector<XY> c
 
     for (std::size_t i = 0; i < connected.size(); i++) visited.push_back(false);
 
-    queue<int> que;
+    std::queue<int> que;
 
     for (std::size_t i = 0; i < edgePoints.size(); i++) {
         que.push(edgePoints[i]);

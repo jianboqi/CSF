@@ -187,7 +187,7 @@ void CSF::savePoints(std::vector<int> grp, std::string path) {
         return;
     }
 
-    std::ofstream f1(path.c_str(), ios::out);
+    std::ofstream f1(path.c_str(), std::ios::out);
 
     if (!f1)
         return;
