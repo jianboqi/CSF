@@ -126,11 +126,11 @@ void CSF::do_filtering(std::vector<int>& groundIndexes,
     );
 
     int width_num = static_cast<int>(
-        floor((bbMax.x - bbMin.x) / params.cloth_resolution)
+        std::floor((bbMax.x - bbMin.x) / params.cloth_resolution)
     ) + 2 * clothbuffer_d;
 
     int height_num = static_cast<int>(
-        floor((bbMax.z - bbMin.z) / params.cloth_resolution)
+        std::floor((bbMax.z - bbMin.z) / params.cloth_resolution)
     ) + 2 * clothbuffer_d;
 
     cout << "[" << this->index << "] Configuring cloth..." << endl;

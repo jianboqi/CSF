@@ -23,11 +23,10 @@
 #include <time.h>
 #include <cstdlib>
 #include <cstring>
-using namespace std;
 
 int main(int argc,char* argv[])
 {
-	//¶ÁÈ¡ÎÄ±¾²ÎÊı£¬½öÓÃÓÚµ÷ÊÔ
+	//ï¿½ï¿½È¡ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½
 	Cfg cfg;
 	string slop_smooth;
 	cfg.readConfigFile("params.cfg", "slop_smooth", slop_smooth);
@@ -64,16 +63,16 @@ int main(int argc,char* argv[])
 	cfg.readConfigFile("params.cfg", "terr_pointClouds_filepath", terr_pointClouds_filepath);
 
 	CSF csf;
-	//step 1 ÊäÈëµãÔÆ
+	//step 1 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	csf.readPointsFromFile(terr_pointClouds_filepath);
 
 	clock_t start, end;
 	start = clock();
 
-	//±¸×¢£ºÔÚÊµ¼ÊÊ¹ÓÃ¹ı³ÌÖĞ£¬µãÔÆÊı¾İÓÉÖ÷³ÌĞòÌá¹©£¬µ÷ÓÃº¯ÊıÎª
-	//csf.setPointCloud(pc);//pcÎªPointCloudÀà
+	//ï¿½ï¿½×¢ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½Ê¹ï¿½Ã¹ï¿½ï¿½ï¿½ï¿½Ğ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½á¹©ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½Îª
+	//csf.setPointCloud(pc);//pcÎªPointCloudï¿½ï¿½
 
-	//step 2 ÉèÖÃ²ÎÊı
+	//step 2 ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½
 	csf.params.bSloopSmooth = ss;
 	csf.params.class_threshold = atof(class_threshold.c_str());
 	csf.params.cloth_resolution = atof(cloth_resolution.c_str());
@@ -81,7 +80,7 @@ int main(int argc,char* argv[])
 	csf.params.rigidness = atoi(rigidness.c_str());
 	csf.params.time_step = atof(time_step.c_str());
 
-	//step3 Ö´ĞĞÂË²¨,resultÖĞ´¢´æµÄÊÇµØÃæµãµÄË÷Òı 
+	//step3 Ö´ï¿½ï¿½ï¿½Ë²ï¿½,resultï¿½Ğ´ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	std::vector<int> groundIndexes, offGroundIndexes;
 	if (argc == 2 && strcmp(argv[1], "-c")==0)
 	{

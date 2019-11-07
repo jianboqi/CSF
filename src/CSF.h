@@ -38,7 +38,6 @@
 #include <vector>
 #include <string>
 #include "point_cloud.h"
-using namespace std;
 
 
 struct Params {

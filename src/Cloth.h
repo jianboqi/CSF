@@ -47,17 +47,11 @@
 #include <vector>
 #include <iostream>
 #include <omp.h>
-#include <iostream>
 #include <sstream>
 #include <list>
 #include <cmath>
-#include <vector>
 #include <string>
-#include <list>
 #include <queue>
-#include <cmath>
-#include <list>
-using namespace std;
 
 #include "Vec3.h"
 #include "Particle.h"
