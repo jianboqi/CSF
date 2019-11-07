@@ -112,7 +112,7 @@ void CSF::do_filtering(std::vector<int>& groundIndexes,
                        std::vector<int>& offGroundIndexes,
                        bool              exportCloth) {
     // Terrain
-    cout << "[" << this->index << "] Configuring terrain..." << endl;
+    std::cout << "[" << this->index << "] Configuring terrain..." << std::endl;
     csf::Point bbMin, bbMax;
     point_cloud.computeBoundingBox(bbMin, bbMax);
 
@@ -133,9 +133,9 @@ void CSF::do_filtering(std::vector<int>& groundIndexes,
         std::floor((bbMax.z - bbMin.z) / params.cloth_resolution)
     ) + 2 * clothbuffer_d;
 
-    cout << "[" << this->index << "] Configuring cloth..." << endl;
-    cout << "[" << this->index << "]  - width: " << width_num << " "
-         << "height: " << height_num << endl;
+    std::cout << "[" << this->index << "] Configuring cloth..." << std::endl;
+    std::cout << "[" << this->index << "]  - width: " << width_num << " "
+         << "height: " << height_num << std::endl;
 
     Cloth cloth(
         origin_pos,
@@ -149,13 +149,13 @@ void CSF::do_filtering(std::vector<int>& groundIndexes,
         params.time_step
     );
 
-    cout << "[" << this->index << "] Rasterizing..." << endl;
+    std::cout << "[" << this->index << "] Rasterizing..." << std::endl;
     Rasterization::RasterTerrian(cloth, point_cloud, cloth.getHeightvals());
 
     double time_step2 = params.time_step * params.time_step;
     double gravity    = 0.2;
 
-    cout << "[" << this->index << "] Simulating..." << endl;
+    std::cout << "[" << this->index << "] Simulating..." << std::endl;
     cloth.addForce(Vec3(0, -gravity, 0) * time_step2);
 
     // boost::progress_display pd(params.interations);
@@ -171,7 +171,7 @@ void CSF::do_filtering(std::vector<int>& groundIndexes,
     }
 
     if (params.bSloopSmooth) {
-        cout << "[" << this->index << "]  - post handle..." << endl;
+        std::cout << "[" << this->index << "]  - post handle..." << std::endl;
         cloth.movableFilter();
     }
 
@@ -187,16 +187,16 @@ void CSF::savePoints(std::vector<int> grp, std::string path) {
         return;
     }
 
-    ofstream f1(path.c_str(), ios::out);
+    std::ofstream f1(path.c_str(), ios::out);
 
     if (!f1)
         return;
 
     for (std::size_t i = 0; i < grp.size(); i++) {
-        f1 << fixed << setprecision(8)
+        f1 << std::fixed << std::setprecision(8)
            << point_cloud[grp[i]].x  << "	"
            << point_cloud[grp[i]].z  << "	"
-           << -point_cloud[grp[i]].y << endl;
+           << -point_cloud[grp[i]].y << std::endl;
     }
 
     f1.close();

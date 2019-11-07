@@ -145,7 +145,7 @@ public:
     }
 
     void printself(std::string s = "") {
-        cout << s << ": " << this->getPos().f[0] << " movable:  " << this->movable << endl;
+        std::cout << s << ": " << this->getPos().f[0] << " movable:  " << this->movable << std::endl;
     }
 };
 

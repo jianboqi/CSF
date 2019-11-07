@@ -84,7 +84,7 @@ int main(int argc,char* argv[])
 	std::vector<int> groundIndexes, offGroundIndexes;
 	if (argc == 2 && strcmp(argv[1], "-c")==0)
 	{
-		cout << "Export cloth enabled." << endl;
+		std::cout << "Export cloth enabled." << std::endl;
 		csf.do_filtering(groundIndexes, offGroundIndexes, true);
 	}
 	else

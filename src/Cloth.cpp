@@ -372,13 +372,13 @@ void Cloth::saveToFile(std::string path) {
         filepath = path;
     }
 
-    ofstream f1(filepath.c_str());
+    std::ofstream f1(filepath.c_str());
 
     if (!f1)
         return;
 
     for (std::size_t i = 0; i < particles.size(); i++) {
-        f1 << fixed << setprecision(8) << particles[i].getPos().f[0] << "	"<< particles[i].getPos().f[2] << "	"<< -particles[i].getPos().f[1] << endl;
+        f1 << std::fixed << std::setprecision(8) << particles[i].getPos().f[0] << "	"<< particles[i].getPos().f[2] << "	"<< -particles[i].getPos().f[1] << std::endl;
     }
 
     f1.close();
@@ -393,15 +393,15 @@ void Cloth::saveMovableToFile(std::string path) {
         filepath = path;
     }
 
-    ofstream f1(filepath.c_str());
+    std::ofstream f1(filepath.c_str());
 
     if (!f1)
         return;
 
     for (std::size_t i = 0; i < particles.size(); i++) {
         if (particles[i].isMovable()) {
-            f1 << fixed << setprecision(8) << particles[i].getPos().f[0] << "	"
-               << particles[i].getPos().f[2] << "	"<< -particles[i].getPos().f[1] << endl;
+            f1 << std::fixed << std::setprecision(8) << particles[i].getPos().f[0] << "	"
+               << particles[i].getPos().f[2] << "	"<< -particles[i].getPos().f[1] << std::endl;
         }
     }
 

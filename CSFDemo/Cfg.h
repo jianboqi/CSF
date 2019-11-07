@@ -30,7 +30,7 @@ public:
 		cfgFile.open(cfgfilepath);//���ļ�      
 		if (!cfgFile.is_open())
 		{
-			cout << "can not open cfg file!" << endl;
+			std::cout << "can not open cfg file!" << std::endl;
 			return false;
 		}
 		char tmp[1000];
