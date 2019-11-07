@@ -24,12 +24,12 @@
 
 
 void read_xyz(std::string fname, csf::PointCloud& pointcloud) {
-    ifstream fin(fname.c_str(), std::ios::in);
+    std::ifstream fin(fname.c_str(), std::ios::in);
     char     line[500];
     std::string   x, y, z;
 
     while (fin.getline(line, sizeof(line))) {
-        stringstream words(line);
+        std::stringstream words(line);
 
         words >> x;
         words >> y;
