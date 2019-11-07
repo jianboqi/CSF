@@ -23,10 +23,10 @@
 #include <cstdlib>
 
 
-void read_xyz(string fname, csf::PointCloud& pointcloud) {
+void read_xyz(std::string fname, csf::PointCloud& pointcloud) {
     ifstream fin(fname.c_str(), ios::in);
     char     line[500];
-    string   x, y, z;
+    std::string   x, y, z;
 
     while (fin.getline(line, sizeof(line))) {
         stringstream words(line);

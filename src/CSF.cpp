@@ -50,7 +50,7 @@ CSF::CSF() {
 CSF::~CSF()
 {}
 
-void CSF::setPointCloud(vector<csf::Point> points) {
+void CSF::setPointCloud(std::vector<csf::Point> points) {
     point_cloud.resize(points.size());
 
     int pointCount = static_cast<int>(points.size());
@@ -89,7 +89,7 @@ void CSF::setPointCloud(csf::PointCloud& pc) {
     }
 }
 
-void CSF::setPointCloud(vector<vector<float> > points) {
+void CSF::setPointCloud(std::vector<std::vector<float> > points) {
     point_cloud.resize(points.size());
     int pointCount = static_cast<int>(points.size());
     #pragma omp parallel for
@@ -102,7 +102,7 @@ void CSF::setPointCloud(vector<vector<float> > points) {
     }
 }
 
-void CSF::readPointsFromFile(string filename) {
+void CSF::readPointsFromFile(std::string filename) {
     this->point_cloud.resize(0);
     read_xyz(filename, this->point_cloud);
 }
@@ -182,7 +182,7 @@ void CSF::do_filtering(std::vector<int>& groundIndexes,
     c2c.calCloud2CloudDist(cloth, point_cloud, groundIndexes, offGroundIndexes);
 }
 
-void CSF::savePoints(vector<int> grp, string path) {
+void CSF::savePoints(std::vector<int> grp, std::string path) {
     if (path == "") {
         return;
     }

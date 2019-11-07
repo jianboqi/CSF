@@ -28,7 +28,7 @@ int main(int argc,char* argv[])
 {
 	//��ȡ�ı������������ڵ���
 	Cfg cfg;
-	string slop_smooth;
+	std::string slop_smooth;
 	cfg.readConfigFile("params.cfg", "slop_smooth", slop_smooth);
 	bool ss = false;
 	if (slop_smooth == "true" || slop_smooth == "True")
@@ -49,17 +49,17 @@ int main(int argc,char* argv[])
 		}
 	}
 
-	string class_threshold;
+	std::string class_threshold;
 	cfg.readConfigFile("params.cfg", "class_threshold", class_threshold);
-	string cloth_resolution;
+	std::string cloth_resolution;
 	cfg.readConfigFile("params.cfg", "cloth_resolution", cloth_resolution);
-	string iterations;
+	std::string iterations;
 	cfg.readConfigFile("params.cfg", "iterations", iterations);
-	string rigidness;
+	std::string rigidness;
 	cfg.readConfigFile("params.cfg", "rigidness", rigidness);
-	string time_step;
+	std::string time_step;
 	cfg.readConfigFile("params.cfg", "time_step", time_step);
-	string terr_pointClouds_filepath;
+	std::string terr_pointClouds_filepath;
 	cfg.readConfigFile("params.cfg", "terr_pointClouds_filepath", terr_pointClouds_filepath);
 
 	CSF csf;

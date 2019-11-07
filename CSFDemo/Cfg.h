@@ -24,7 +24,7 @@
 class Cfg
 {
 public:
-	bool readConfigFile(const char * cfgfilepath, const string & key, string & value)
+	bool readConfigFile(const char * cfgfilepath, const std::string & key, std::string & value)
 	{
 		fstream cfgFile;
 		cfgFile.open(cfgfilepath);//���ļ�      
@@ -37,9 +37,9 @@ public:
 		while (!cfgFile.eof())//ѭ����ȡÿһ��  
 		{
 			cfgFile.getline(tmp, 1000);//ÿ�ж�ȡǰ1000���ַ���1000��Ӧ���㹻��  
-			string line(tmp);
-			size_t pos = line.find('=');//�ҵ�ÿ�еġ�=����λ�ã�֮ǰ��key֮����value  
-			if (pos == string::npos) return false;
+			std::string line(tmp);
+			std::size_t pos = line.find('=');//�ҵ�ÿ�еġ�=����λ�ã�֮ǰ��key֮����value  
+			if (pos == std::string::npos) return false;
 			string tmpKey = line.substr(0, pos);//ȡ=��֮ǰ  
 			if (key == tmpKey)
 			{

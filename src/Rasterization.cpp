@@ -57,7 +57,7 @@ double Rasterization::findHeightValByScanline(Particle *p, Cloth& cloth) {
 
 double Rasterization::findHeightValByNeighbor(Particle *p, Cloth& cloth) {
     queue<Particle *>  nqueue;
-    vector<Particle *> pbacklist;
+    std::vector<Particle *> pbacklist;
     int neiborsize = p->neighborsList.size();
 
     for (int i = 0; i < neiborsize; i++) {
@@ -101,7 +101,7 @@ double Rasterization::findHeightValByNeighbor(Particle *p, Cloth& cloth) {
 
 void Rasterization::RasterTerrian(Cloth          & cloth,
                                   csf::PointCloud& pc,
-                                  vector<double> & heightVal) {
+                                  std::vector<double> & heightVal) {
 
     for (std::size_t i = 0; i < pc.size(); i++) {
         double pc_x = pc[i].x;
