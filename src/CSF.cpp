@@ -54,7 +54,7 @@ void CSF::setPointCloud(std::vector<csf::Point> points) {
     point_cloud.resize(points.size());
 
     int pointCount = static_cast<int>(points.size());
-    //#pragma omp parallel for
+    #pragma omp parallel for
     for (int i = 0; i < pointCount; i++) {
         csf::Point las;
         las.x          = points[i].x;
@@ -79,7 +79,7 @@ void CSF::setPointCloud(double *points, int rows) {
 void CSF::setPointCloud(csf::PointCloud& pc) {
     point_cloud.resize(pc.size());
     int pointCount = static_cast<int>(pc.size());
-    //#pragma omp parallel for
+    #pragma omp parallel for
     for (int i = 0; i < pointCount; i++) {
         csf::Point las;
         las.x          = pc[i].x;
@@ -92,7 +92,7 @@ void CSF::setPointCloud(csf::PointCloud& pc) {
 void CSF::setPointCloud(std::vector<std::vector<float> > points) {
     point_cloud.resize(points.size());
     int pointCount = static_cast<int>(points.size());
-    //#pragma omp parallel for
+    #pragma omp parallel for
     for (int i = 0; i < pointCount; i++) {
         csf::Point las;
         las.x          = points[i][0];
