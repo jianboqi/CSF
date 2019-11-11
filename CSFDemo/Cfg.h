@@ -27,23 +27,23 @@ public:
 	bool readConfigFile(const char * cfgfilepath, const std::string & key, std::string & value)
 	{
 		std::fstream cfgFile;
-		cfgFile.open(cfgfilepath);//���ļ�      
+		cfgFile.open(cfgfilepath);
 		if (!cfgFile.is_open())
 		{
 			std::cout << "can not open cfg file!" << std::endl;
 			return false;
 		}
 		char tmp[1000];
-		while (!cfgFile.eof())//ѭ����ȡÿһ��  
+		while (!cfgFile.eof())
 		{
-			cfgFile.getline(tmp, 1000);//ÿ�ж�ȡǰ1000���ַ���1000��Ӧ���㹻��  
+			cfgFile.getline(tmp, 1000);
 			std::string line(tmp);
-			std::size_t pos = line.find('=');//�ҵ�ÿ�еġ�=����λ�ã�֮ǰ��key֮����value  
+			std::size_t pos = line.find('=');
 			if (pos == std::string::npos) return false;
-			std::string tmpKey = line.substr(0, pos);//ȡ=��֮ǰ  
+			std::string tmpKey = line.substr(0, pos);
 			if (key == tmpKey)
 			{
-				value = line.substr(pos + 1);//ȡ=��֮��  
+				value = line.substr(pos + 1);
 				return true;
 			}
 		}

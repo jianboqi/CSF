@@ -26,7 +26,6 @@
 
 int main(int argc,char* argv[])
 {
-	//��ȡ�ı������������ڵ���
 	Cfg cfg;
 	std::string slop_smooth;
 	cfg.readConfigFile("params.cfg", "slop_smooth", slop_smooth);
@@ -63,16 +62,16 @@ int main(int argc,char* argv[])
 	cfg.readConfigFile("params.cfg", "terr_pointClouds_filepath", terr_pointClouds_filepath);
 
 	CSF csf;
-	//step 1 �������
+	//step 1 Input the point cloud
 	csf.readPointsFromFile(terr_pointClouds_filepath);
 
 	clock_t start, end;
 	start = clock();
 
-	//��ע����ʵ��ʹ�ù����У������������������ṩ�����ú���Ϊ
-	//csf.setPointCloud(pc);//pcΪPointCloud��
+	//In real application, the point cloud may be provided by main program
+	//csf.setPointCloud(pc);//pc is PointCloud class
 
-	//step 2 ���ò���
+	//step 2 parameter setting
 	csf.params.bSloopSmooth = ss;
 	csf.params.class_threshold = atof(class_threshold.c_str());
 	csf.params.cloth_resolution = atof(cloth_resolution.c_str());
@@ -80,7 +79,7 @@ int main(int argc,char* argv[])
 	csf.params.rigidness = atoi(rigidness.c_str());
 	csf.params.time_step = atof(time_step.c_str());
 
-	//step3 ִ���˲�,result�д�����ǵ��������� 
+	//step3 do filtering
 	std::vector<int> groundIndexes, offGroundIndexes;
 	if (argc == 2 && strcmp(argv[1], "-c")==0)
 	{
