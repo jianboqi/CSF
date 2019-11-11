@@ -20,31 +20,30 @@
 #include <iostream>  
 #include <string>  
 #include <fstream> 
-using namespace std;
 
 class Cfg
 {
 public:
-	bool readConfigFile(const char * cfgfilepath, const string & key, string & value)
+	bool readConfigFile(const char * cfgfilepath, const std::string & key, std::string & value)
 	{
-		fstream cfgFile;
-		cfgFile.open(cfgfilepath);//´ò¿ªÎÄ¼þ      
+		std::fstream cfgFile;
+		cfgFile.open(cfgfilepath);//ï¿½ï¿½ï¿½Ä¼ï¿½      
 		if (!cfgFile.is_open())
 		{
-			cout << "can not open cfg file!" << endl;
+			std::cout << "can not open cfg file!" << std::endl;
 			return false;
 		}
 		char tmp[1000];
-		while (!cfgFile.eof())//Ñ­»·¶ÁÈ¡Ã¿Ò»ÐÐ  
+		while (!cfgFile.eof())//Ñ­ï¿½ï¿½ï¿½ï¿½È¡Ã¿Ò»ï¿½ï¿½  
 		{
-			cfgFile.getline(tmp, 1000);//Ã¿ÐÐ¶ÁÈ¡Ç°1000¸ö×Ö·û£¬1000¸öÓ¦¸Ã×ã¹»ÁË  
-			string line(tmp);
-			size_t pos = line.find('=');//ÕÒµ½Ã¿ÐÐµÄ¡°=¡±ºÅÎ»ÖÃ£¬Ö®Ç°ÊÇkeyÖ®ºóÊÇvalue  
-			if (pos == string::npos) return false;
-			string tmpKey = line.substr(0, pos);//È¡=ºÅÖ®Ç°  
+			cfgFile.getline(tmp, 1000);//Ã¿ï¿½Ð¶ï¿½È¡Ç°1000ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½1000ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ã¹»ï¿½ï¿½  
+			std::string line(tmp);
+			std::size_t pos = line.find('=');//ï¿½Òµï¿½Ã¿ï¿½ÐµÄ¡ï¿½=ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ã£ï¿½Ö®Ç°ï¿½ï¿½keyÖ®ï¿½ï¿½ï¿½ï¿½value  
+			if (pos == std::string::npos) return false;
+			std::string tmpKey = line.substr(0, pos);//È¡=ï¿½ï¿½Ö®Ç°  
 			if (key == tmpKey)
 			{
-				value = line.substr(pos + 1);//È¡=ºÅÖ®ºó  
+				value = line.substr(pos + 1);//È¡=ï¿½ï¿½Ö®ï¿½ï¿½  
 				return true;
 			}
 		}

@@ -23,13 +23,12 @@
 #include <time.h>
 #include <cstdlib>
 #include <cstring>
-using namespace std;
 
 int main(int argc,char* argv[])
 {
-	//¶ÁÈ¡ÎÄ±¾²ÎÊý£¬½öÓÃÓÚµ÷ÊÔ
+	//ï¿½ï¿½È¡ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½
 	Cfg cfg;
-	string slop_smooth;
+	std::string slop_smooth;
 	cfg.readConfigFile("params.cfg", "slop_smooth", slop_smooth);
 	bool ss = false;
 	if (slop_smooth == "true" || slop_smooth == "True")
@@ -50,30 +49,30 @@ int main(int argc,char* argv[])
 		}
 	}
 
-	string class_threshold;
+	std::string class_threshold;
 	cfg.readConfigFile("params.cfg", "class_threshold", class_threshold);
-	string cloth_resolution;
+	std::string cloth_resolution;
 	cfg.readConfigFile("params.cfg", "cloth_resolution", cloth_resolution);
-	string iterations;
+	std::string iterations;
 	cfg.readConfigFile("params.cfg", "iterations", iterations);
-	string rigidness;
+	std::string rigidness;
 	cfg.readConfigFile("params.cfg", "rigidness", rigidness);
-	string time_step;
+	std::string time_step;
 	cfg.readConfigFile("params.cfg", "time_step", time_step);
-	string terr_pointClouds_filepath;
+	std::string terr_pointClouds_filepath;
 	cfg.readConfigFile("params.cfg", "terr_pointClouds_filepath", terr_pointClouds_filepath);
 
 	CSF csf;
-	//step 1 ÊäÈëµãÔÆ
+	//step 1 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	csf.readPointsFromFile(terr_pointClouds_filepath);
 
 	clock_t start, end;
 	start = clock();
 
-	//±¸×¢£ºÔÚÊµ¼ÊÊ¹ÓÃ¹ý³ÌÖÐ£¬µãÔÆÊý¾ÝÓÉÖ÷³ÌÐòÌá¹©£¬µ÷ÓÃº¯ÊýÎª
-	//csf.setPointCloud(pc);//pcÎªPointCloudÀà
+	//ï¿½ï¿½×¢ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½Ê¹ï¿½Ã¹ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½á¹©ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½Îª
+	//csf.setPointCloud(pc);//pcÎªPointCloudï¿½ï¿½
 
-	//step 2 ÉèÖÃ²ÎÊý
+	//step 2 ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½
 	csf.params.bSloopSmooth = ss;
 	csf.params.class_threshold = atof(class_threshold.c_str());
 	csf.params.cloth_resolution = atof(cloth_resolution.c_str());
@@ -81,11 +80,11 @@ int main(int argc,char* argv[])
 	csf.params.rigidness = atoi(rigidness.c_str());
 	csf.params.time_step = atof(time_step.c_str());
 
-	//step3 Ö´ÐÐÂË²¨,resultÖÐ´¢´æµÄÊÇµØÃæµãµÄË÷Òý 
+	//step3 Ö´ï¿½ï¿½ï¿½Ë²ï¿½,resultï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	std::vector<int> groundIndexes, offGroundIndexes;
 	if (argc == 2 && strcmp(argv[1], "-c")==0)
 	{
-		cout << "Export cloth enabled." << endl;
+		std::cout << "Export cloth enabled." << std::endl;
 		csf.do_filtering(groundIndexes, offGroundIndexes, true);
 	}
 	else

@@ -38,7 +38,7 @@ public:
 
     void static   RasterTerrian(Cloth          & cloth,
                                 csf::PointCloud& pc,
-                                vector<double> & heightVal);
+                                std::vector<double> & heightVal);
 };
 
 #endif // ifndef _KNN_H_

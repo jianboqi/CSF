@@ -54,7 +54,7 @@ public:
     int pos_y;
     int c_pos;
 
-    vector<Particle *> neighborsList;
+    std::vector<Particle *> neighborsList;
 
     std::vector<int> correspondingLidarPointList;
     std::size_t nearestPointIndex;
@@ -144,8 +144,8 @@ public:
         accumulated_normal = Vec3(0, 0, 0);
     }
 
-    void printself(string s = "") {
-        cout << s << ": " << this->getPos().f[0] << " movable:  " << this->movable << endl;
+    void printself(std::string s = "") {
+        std::cout << s << ": " << this->getPos().f[0] << " movable:  " << this->movable << std::endl;
     }
 };
 

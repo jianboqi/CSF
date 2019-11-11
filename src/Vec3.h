@@ -24,7 +24,6 @@
 #include <iostream>
 #include <iomanip>
 
-using namespace std;
 
 // a minimal vector class of 3 doubles and overloaded math operators
 class Vec3 {

@@ -38,7 +38,6 @@
 #include <vector>
 #include <string>
 #include "point_cloud.h"
-using namespace std;
 
 
 struct Params {
@@ -72,15 +71,15 @@ public:
     ~CSF();
 
     // set pointcloud from vector
-    void setPointCloud(vector<csf::Point> points);
+    void setPointCloud(std::vector<csf::Point> points);
     // set point cloud from a one-dimentional array. it defines a N*3 point cloud by the given rows.
     void setPointCloud(double *points, int rows);
 
     // set point cloud for python
-    void setPointCloud(vector<vector<float> > points);
+    void setPointCloud(std::vector<std::vector<float> > points);
 
     // read pointcloud from txt file: (X Y Z) for each line
-    void readPointsFromFile(string filename);
+    void readPointsFromFile(std::string filename);
 
     inline csf::PointCloud& getPointCloud() {
         return point_cloud;
@@ -91,10 +90,10 @@ public:
     }
 
     // save points to file
-    void savePoints(vector<int> grp, string path);
+    void savePoints(std::vector<int> grp, std::string path);
 
     // get size of pointcloud
-    size_t size() {
+    std::size_t size() {
         return point_cloud.size();
     }
 

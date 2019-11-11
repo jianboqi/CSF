@@ -47,17 +47,11 @@
 #include <vector>
 #include <iostream>
 #include <omp.h>
-#include <iostream>
 #include <sstream>
 #include <list>
 #include <cmath>
-#include <vector>
 #include <string>
-#include <list>
 #include <queue>
-#include <cmath>
-#include <list>
-using namespace std;
 
 #include "Vec3.h"
 #include "Particle.h"
@@ -92,7 +86,7 @@ public:
 
     Vec3 origin_pos;
     double step_x, step_y;
-    vector<double> heightvals; // height values
+    std::vector<double> heightvals; // height values
     int num_particles_width;   // number of particles in width direction
     int num_particles_height;  // number of particles in height direction
 
@@ -111,7 +105,7 @@ public:
         return num_particles_width * num_particles_height;
     }
 
-    size_t get1DIndex(int x, int y) {
+    std::size_t get1DIndex(int x, int y) {
         return y * num_particles_width + x;
     }
 
@@ -152,15 +146,15 @@ public:
 
     void movableFilter();
 
-    vector<int> findUnmovablePoint(vector<XY> connected);
+    std::vector<int> findUnmovablePoint(std::vector<XY> connected);
 
-    void        handle_slop_connected(vector<int>          edgePoints,
-                                      vector<XY>           connected,
-                                      vector<vector<int> > neibors);
+    void        handle_slop_connected(std::vector<int>          edgePoints,
+                                      std::vector<XY>           connected,
+                                      std::vector<std::vector<int> > neibors);
 
-    void saveToFile(string path = "");
+    void saveToFile(std::string path = "");
 
-    void saveMovableToFile(string path = "");
+    void saveMovableToFile(std::string path = "");
 };
 
 
