@@ -5,7 +5,7 @@ find_package(OpenMP)
 
 add_subdirectory(src)
 
-option (BUILD_DEMO "Build csfdemo" ON)
+option (BUILD_DEMO "Build csfdemo" OFF)
 
 if (BUILD_DEMO)
   add_subdirectory (CSFDemo)
