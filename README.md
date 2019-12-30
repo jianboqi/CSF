@@ -83,10 +83,23 @@ Now, CSF is built by CMake, it produces a static library, which can be used by o
 #### linux
 To build the library, run:
 ```bash
-cmake .
+mkdir build #or other name
+cd build
+cmake ..
 make
 sudo make install
 ```
+or if you want to build the library and the demo executable `csfdemo`
+
+```bash
+mkdir build #or other name
+cd build
+cmake -DBUILD_DEMO=ON ..
+make
+sudo make install
+
+```
+
 #### Windows
 You can use CMake GUI to generate visual studio solution file.
 

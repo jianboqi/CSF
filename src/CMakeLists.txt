@@ -1,21 +1,35 @@
-cmake_minimum_required(VERSION 2.8)
-project(CSF)
+project(CSF LANGUAGES CXX)
 
-find_package(OpenMP)
-if (OPENMP_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-endif()
-
-file(GLOB_RECURSE sources *.cpp)
-
-ADD_LIBRARY(CSF STATIC ${sources})
-
-set_target_properties(CSF PROPERTIES OUTPUT_NAME "CSF")
+set (package_name "CSF")
 
 set(LIBRARY_OUTPUT_PATH ../lib)
 
-install(TARGETS CSF LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+find_package(OpenMP)
 
-install(FILES CSF.h DESTINATION include)
+add_library(CSF STATIC
+${CMAKE_CURRENT_LIST_DIR}/c2cdist.cpp
+${CMAKE_CURRENT_LIST_DIR}/c2cdist.h
+${CMAKE_CURRENT_LIST_DIR}/Cloth.cpp
+${CMAKE_CURRENT_LIST_DIR}/Cloth.h
+${CMAKE_CURRENT_LIST_DIR}/Constraint.cpp
+${CMAKE_CURRENT_LIST_DIR}/Constraint.h
+${CMAKE_CURRENT_LIST_DIR}/CSF.cpp
+${CMAKE_CURRENT_LIST_DIR}/CSF.h
+${CMAKE_CURRENT_LIST_DIR}/Particle.cpp
+${CMAKE_CURRENT_LIST_DIR}/Particle.h
+${CMAKE_CURRENT_LIST_DIR}/point_cloud.cpp
+${CMAKE_CURRENT_LIST_DIR}/point_cloud.h
+${CMAKE_CURRENT_LIST_DIR}/Rasterization.cpp
+${CMAKE_CURRENT_LIST_DIR}/Rasterization.h
+${CMAKE_CURRENT_LIST_DIR}/Vec3.h
+${CMAKE_CURRENT_LIST_DIR}/XYZReader.cpp
+${CMAKE_CURRENT_LIST_DIR}/XYZReader.h
+)
+
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(CSF PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
+install(TARGETS CSF
+        DESTINATION ../lib
+)
