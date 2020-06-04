@@ -28,6 +28,7 @@ ${CMAKE_CURRENT_LIST_DIR}/XYZReader.h
 
 if(OpenMP_CXX_FOUND)
     target_link_libraries(CSF PUBLIC OpenMP::OpenMP_CXX)
+    target_compile_options(CSF PRIVATE -Werror -Wall -Wextra)
 endif()
 
 install(TARGETS CSF
