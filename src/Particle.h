@@ -25,7 +25,24 @@
 #define MAX_INF    9999999999
 #define MIN_INF    -9999999999
 
+/*
+Initially, we have to make modifications of particle positions for each constraint(constraintTimes = rigidness), However, to save computation time, we 
+precomputed the total displacement of a particle for all constraintTimes.
+For singleMove1, which means one of the two particles is unmovable, then we move the other one only:
+if constraintTimes = 0: singleMove1 = 0
+if constraintTimes = 1: singleMove1 = 0.3, i.e., each time we move 0.3 (scale factor of the total distance) for a particle towards the other one
+if constraintTimes = 2: singleMove1 = (1-0.3)*0.3+0.3 = 0.51
+if constraintTimes = 3: singleMove1 = (1-0.51)*0.3+0.51 = 0.657
+...
 
+For doubleMove1, we move both of the two particles towards each other.
+if constraintTimes = 0: singleMove2 = 0
+if constraintTimes = 1: singleMove2 = 0.3, i.e., each time we move 0.3 (scale factor of the total distance) for the two particles towards each other
+if constraintTimes = 2: singleMove2 = (1-0.3*2)*0.3+0.3 = 0.42
+if constraintTimes = 3: singleMove2 = (1-0.42*2)*0.3+0.42 = 0.468
+...
+
+*/
 const double singleMove1[15] = { 0, 0.3, 0.51, 0.657, 0.7599, 0.83193, 0.88235, 0.91765, 0.94235, 0.95965, 0.97175, 0.98023, 0.98616, 0.99031, 0.99322 };
 const double doubleMove1[15] = { 0, 0.3, 0.42, 0.468, 0.4872, 0.4949, 0.498, 0.4992, 0.4997, 0.4999, 0.4999, 0.5, 0.5, 0.5, 0.5 };
 
