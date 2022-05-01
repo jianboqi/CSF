@@ -35,7 +35,7 @@ csf.do_filtering(ground, non_ground) # do actual filtering.
 
 outFile = laspy.LasData(inFile.header)
 outFile.points = points[ground] # extract ground points, and save it to a las file.
-out_file.write("out.las")
+out_file.write(r"out.las")
 ```
 
 **Reading data from txt file:**
