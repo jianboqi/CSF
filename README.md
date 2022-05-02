@@ -110,6 +110,9 @@ Note: This code has been changed a lot since the publication of the correspondin
 ### Cloudcompare Pulgin
 At last, if you are interested in Cloudcompare, there is a good news. our method has been implemented as a Cloudcompare plugin, you can refer to : https://github.com/cloudcompare/trunk
 
+### Related project
+A tool named `CSFTools` has been recently released, it is based on CSF, and provides dem/chm generation, normalization. Please refer to: https://github.com/jianboqi/CSFTools
+
 ### License
 CSF is maintained and developed by Jianbo QI. It is now released under Apache 2.0.
 
