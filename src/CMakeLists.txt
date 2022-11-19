@@ -22,7 +22,14 @@ set(CSF_HEADERS
 )
 
 add_library(CSF ${CSF_SOURCES} ${CSF_HEADERS})
-target_compile_options(CSF PRIVATE -Werror -Wall -Wextra)
+
+if (MSVC)
+    # warning level 4 and all warnings as errors
+    add_compile_options(/W4 /WX)
+else()
+    # lots of warnings and all warnings as errors
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
 
 if(OpenMP_CXX_FOUND)
     target_link_libraries(CSF PUBLIC OpenMP::OpenMP_CXX)
