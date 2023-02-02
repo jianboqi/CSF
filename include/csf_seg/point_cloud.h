@@ -1,5 +1,5 @@
 ﻿// ======================================================================================
-// Copyright 2017 State Key Laboratory of Remote Sensing Science, 
+// Copyright 2017 State Key Laboratory of Remote Sensing Science,
 // Institute of Remote Sensing Science and Engineering, Beijing Normal University
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,28 +36,32 @@
 
 #include <vector>
 
-namespace csf {
-
-struct Point {
-    union {
-        struct {
-            double x;
-			double y;
-			double z;
-        };
-		double u[3];
+namespace csf
+{
+struct Point
+{
+  union
+  {
+    struct
+    {
+      double x;
+      double y;
+      double z;
     };
+    double u[3];
+  };
 
-    Point() : x(0), y(0), z(0) {}
+  Point() : x(0), y(0), z(0)
+  {
+  }
 };
 
-class PointCloud : public std::vector<Point>{
+class PointCloud : public std::vector<Point>
+{
 public:
-
-    void computeBoundingBox(Point& bbMin, Point& bbMax);
+  void computeBoundingBox(Point& bbMin, Point& bbMax);
 };
 
-}
+}  // namespace csf
 
-
-#endif // ifndef _POINT_CLOUD_H_
+#endif  // ifndef _POINT_CLOUD_H_

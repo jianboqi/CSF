@@ -1,5 +1,5 @@
 ﻿// ======================================================================================
-// Copyright 2017 State Key Laboratory of Remote Sensing Science, 
+// Copyright 2017 State Key Laboratory of Remote Sensing Science,
 // Institute of Remote Sensing Science and Engineering, Beijing Normal University
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,93 +31,59 @@
 // #                                                                                     #
 // #######################################################################################
 
-
 // cloth simulation filter for airborne lidar filtering
-#ifndef _CSF_H_
-#define _CSF_H_
+#ifndef _CSF_GROUND_SEG_H_
+#define _CSF_GROUND_SEG_H_
+
 #include <vector>
 #include <string>
 #include "point_cloud.h"
 
+#include <yaml-cpp/yaml.h>
+#include <pcl/point_types.h>
+#include <pcl/point_cloud.h>
+#include <pcl/filters/extract_indices.h>
 
-struct Params {
-    // refer to the website:http://ramm.bnu.edu.cn/projects/CSF/ for the setting of these paramters
-    bool bSloopSmooth;
-    double time_step;
-    double class_threshold;
-    double cloth_resolution;
-    int rigidness;
-    int interations;
+struct CSFSegParams
+{
+  CSFSegParams()
+    : slope_smooth(true), time_step(0.65), class_threshold(0.5), cloth_resolution(0.5), rigidness(3), iterations(500)
+  {
+  }
+  // refer to the website:http://ramm.bnu.edu.cn/projects/CSF/ for the setting of these paramters
+  bool slope_smooth;
+  double time_step;
+  double class_threshold;
+  double cloth_resolution;
+  int rigidness;
+  int iterations;
 };
 
-#ifdef _CSF_DLL_EXPORT_
-# ifdef DLL_IMPLEMENT
-#  define DLL_API    __declspec(dllexport)
-# else // ifdef DLL_IMPLEMENT
-#  define DLL_API    __declspec(dllimport)
-# endif // ifdef DLL_IMPLEMENT
-#endif // ifdef _CSF_DLL_EXPORT_
-
-#ifdef _CSF_DLL_EXPORT_
-class DLL_API CSF
-#else // ifdef _CSF_DLL_EXPORT_
-class CSF
-#endif // ifdef _CSF_DLL_EXPORT_
+class CSFGroundSeg
 {
 public:
+  CSFGroundSeg();
+  ~CSFGroundSeg();
 
-    CSF(int index);
-    CSF();
-    ~CSF();
-
-    // set pointcloud from vector
-    void setPointCloud(std::vector<csf::Point> points);
-    // set point cloud from a one-dimentional array. it defines a N*3 point cloud by the given rows.
-    void setPointCloud(double *points, int rows);
-
-    // set point cloud for python
-    void setPointCloud(std::vector<std::vector<float> > points);
-
-    // read pointcloud from txt file: (X Y Z) for each line
-    void readPointsFromFile(std::string filename);
-
-    inline csf::PointCloud& getPointCloud() {
-        return point_cloud;
-    }
-
-    inline const csf::PointCloud& getPointCloud() const {
-        return point_cloud;
-    }
-
-    // save points to file
-    void savePoints(std::vector<int> grp, std::string path);
-
-    // get size of pointcloud
-    std::size_t size() {
-        return point_cloud.size();
-    }
-
-    // PointCloud set pointcloud
-    void setPointCloud(csf::PointCloud& pc);
-
-    // The results are index of ground points in the original
-    // pointcloud
-    void do_filtering(std::vector<int>& groundIndexes,
-                      std::vector<int>& offGroundIndexes,
-                      bool              exportCloth = false);
+  void segmentGround(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr& in_points,
+                     pcl::PointCloud<pcl::PointXYZI>& out_groundless_points,
+                     pcl::PointCloud<pcl::PointXYZI>& out_ground_points);
+  void segmentGround(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr& in_points,
+                     pcl::PointCloud<pcl::PointXYZI>& out_upper_ground_points,
+                     pcl::PointCloud<pcl::PointXYZI>& out_lower_ground_points,
+                     pcl::PointCloud<pcl::PointXYZI>& out_ground_points);
+  void getGroundSurface(pcl::PointCloud<pcl::PointXYZ>& ground_surface);
+  void paramInitialize(const std::string& config_file);
 
 private:
+  csf::PointCloud point_cloud;
+  pcl::PointCloud<pcl::PointXYZ> ground_surface_;
+  CSFSegParams params_;
 
-#ifdef _CSF_DLL_EXPORT_
-    class __declspec (dllexport)csf::PointCloud point_cloud;
-#else // ifdef _CSF_DLL_EXPORT_
-    csf::PointCloud point_cloud;
-#endif // ifdef _CSF_DLL_EXPORT_
-
-public:
-
-    Params params;
-    int index;
+  void setPointCloud(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr& input_cloud);
+  void doFiltering(std::vector<int>& groundIndexes, std::vector<int>& offGroundIndexes);
+  void doFiltering(std::vector<int>& groundIndexes, std::vector<int>& upperGroundIndexes,
+                   std::vector<int>& lowerGroundIndexes);
 };
 
-#endif // ifndef _CSF_H_
+#endif  // ifndef _CSF_GROUND_SEG_H_

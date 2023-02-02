@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>csf_seg</name>
+  <version>1.0.0</version>
+  <description>
+    A modified implementation of Cloth Simulation Filter (CSF).
+  </description>
+  <maintainer email="patiphon.narksri.p@tier4.jp">Patiphon NARKSRI</maintainer>
+  <author>Patiphon NARKSRI</author>
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>map4_util</depend>
+
+  <export>
+    <!-- metapackage/-->
+  </export>
+</package>

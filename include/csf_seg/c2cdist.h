@@ -1,5 +1,5 @@
 // ======================================================================================
-// Copyright 2017 State Key Laboratory of Remote Sensing Science, 
+// Copyright 2017 State Key Laboratory of Remote Sensing Science,
 // Institute of Remote Sensing Science and Engineering, Beijing Normal University
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,26 +15,31 @@
 // limitations under the License.
 // ======================================================================================
 
+#ifndef _C2CDIST_H_
+#define _C2CDIST_H_
+
+#include "cloth.h"
 #include "point_cloud.h"
 
+class c2cdist
+{
+public:
+  c2cdist(double threshold) : class_treshold(threshold)
+  {
+  }
 
-void csf::PointCloud::computeBoundingBox(Point& bbMin, Point& bbMax) {
-    if (empty()) {
-        bbMin = bbMax = Point();
-        return;
-    }
+  ~c2cdist()
+  {
+  }
 
-    bbMin = bbMax = at(0);
+public:
+  void calCloud2CloudDist(Cloth& cloth, csf::PointCloud& pc, std::vector<int>& groundIndexes,
+                          std::vector<int>& offGroundIndexes);
+  void calCloud2CloudDist(Cloth& cloth, csf::PointCloud& pc, std::vector<int>& groundIndexes,
+                          std::vector<int>& upperGroundIndexes, std::vector<int>& lowerGroundIndexes);
 
-    for (std::size_t i = 1; i < size(); i++) { // zwm
-        const csf::Point& P = at(i);
+private:
+  double class_treshold;  //
+};
 
-        for (int d = 0; d < 3; ++d) {
-            if (P.u[d] < bbMin.u[d]) {
-                bbMin.u[d] = P.u[d];
-            } else if (P.u[d] > bbMax.u[d]) {
-                bbMax.u[d] = P.u[d];
-            }
-        }
-    }
-}
+#endif  // ifndef _C2CDIST_H_
