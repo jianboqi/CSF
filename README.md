@@ -34,7 +34,7 @@ non_ground = CSF.VecInt() # a list to indicate the index of non-ground points af
 csf.do_filtering(ground, non_ground) # do actual filtering.
 
 outFile = laspy.LasData(inFile.header)
-outFile.points = points[ground] # extract ground points, and save it to a las file.
+outFile.points = points[np.array(ground)] # extract ground points, and save it to a las file.
 out_file.write(r"out.las")
 ```
 
