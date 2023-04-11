@@ -1,0 +1,8 @@
+csf_seg:
+  # For more details on each parater see http://ramm.bnu.edu.cn/projects/CSF/
+  slope_smooth: true
+  time_step: 0.65
+  class_threshold: 0.1
+  cloth_resolution: 0.5
+  rigidness: 3
+  iterations: 500

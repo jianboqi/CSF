@@ -23,10 +23,10 @@
 
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
-#include <map4_util/util.hpp>
-#include <map4_util/error.hpp>
 
 #include <csf_seg/csf_seg.h>
+
+#include <boost/filesystem.hpp>
 
 int main(int argc, char* argv[])
 {
@@ -38,12 +38,13 @@ int main(int argc, char* argv[])
     pcl::PointCloud<pcl::PointXYZI>::Ptr input_cloud(new pcl::PointCloud<pcl::PointXYZI>());
     pcl::PointCloud<pcl::PointXYZI> ground_cloud, lower_ground_cloud, upper_ground_cloud;
 
-    std::string input_pcd_name = map4_util::removeExtension(input_pcd);
+    namespace fs = boost::filesystem;
+    std::string input_pcd_name = fs::path(input_pcd).relative_path().string() + fs::path(input_pcd).stem().string();
     // Import input point cloud
     if (pcl::io::loadPCDFile(input_pcd.c_str(), *input_cloud) == -1)
     {
-      m4e_error::cerr("Error: Cannot load input PCD: " + input_pcd);
-      exit(m4e_error::FILE_IO);
+      std::cerr << "Error: Cannot load input PCD: " + input_pcd << std::endl;
+      exit(1);
     }
     std::cout << "PCD file loaded!" << std::endl;
 
@@ -66,8 +67,8 @@ int main(int argc, char* argv[])
     std::string ground_pcd_name = input_pcd_name + "_ground_cloud.pcd";
     if (pcl::io::savePCDFileBinary(ground_pcd_name, ground_cloud))
     {
-      m4e_error::cerr("Error: Cannot save PCD: " + ground_pcd_name);
-      exit(m4e_error::FILE_IO);
+      std::cerr << "Error: Cannot save PCD: " + ground_pcd_name << std::endl;
+      exit(1);
     }
 
     int separate_upper_lower_ground = std::stoi(argv[3]);
@@ -76,14 +77,14 @@ int main(int argc, char* argv[])
       std::string upper_ground_pcd_name = input_pcd_name + "_upper_ground_cloud.pcd";
       if (pcl::io::savePCDFileBinary(upper_ground_pcd_name, upper_ground_cloud))
       {
-        m4e_error::cerr("Error: Cannot save PCD: " + upper_ground_pcd_name);
-        exit(m4e_error::FILE_IO);
+        std::cerr << "Error: Cannot save PCD: " + upper_ground_pcd_name << std::endl;
+        exit(1);
       }
       std::string lower_ground_pcd_name = input_pcd_name + "_lower_ground_cloud.pcd";
       if (pcl::io::savePCDFileBinary(lower_ground_pcd_name, lower_ground_cloud))
       {
-        m4e_error::cerr("Error: Cannot save PCD: " + lower_ground_pcd_name);
-        exit(m4e_error::FILE_IO);
+        std::cerr << "Error: Cannot save PCD: " + lower_ground_pcd_name << std::endl;
+        exit(1);
       }
     }
     else
@@ -92,8 +93,8 @@ int main(int argc, char* argv[])
       pcl::PointCloud<pcl::PointXYZI> non_ground_cloud = upper_ground_cloud + lower_ground_cloud;
       if (pcl::io::savePCDFileBinary(non_ground_pcd_name, non_ground_cloud))
       {
-        m4e_error::cerr("Error: Cannot save PCD: " + non_ground_pcd_name);
-        exit(m4e_error::FILE_IO);
+        std::cerr << "Error: Cannot save PCD: " + non_ground_pcd_name << std::endl;
+        exit(1);
       }
     }
 
@@ -107,8 +108,8 @@ int main(int argc, char* argv[])
         std::string surface_pcd_name = input_pcd_name + "_ground_surface.pcd";
         if (pcl::io::savePCDFileBinary(surface_pcd_name, ground_surface))
         {
-          m4e_error::cerr("Error: Cannot save PCD: " + surface_pcd_name);
-          exit(m4e_error::FILE_IO);
+          std::cerr << "Error: Cannot save PCD: " + surface_pcd_name << std::endl;
+          exit(1);
         }
       }
     }
@@ -117,6 +118,7 @@ int main(int argc, char* argv[])
   }
   else
   {
-    m4e_error::printInvalidArgument();
+    std::cerr << "Error: Invalid Arguments" << std::endl;
+    exit(1);
   }
 }

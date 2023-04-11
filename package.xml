@@ -11,8 +11,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>map4_util</depend>
-
   <export>
     <!-- metapackage/-->
   </export>
