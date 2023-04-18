@@ -368,8 +368,8 @@ std::vector<double> Cloth::toVector() {
     clothCoordinates.reserve(particles.size()*3);
     for(auto& particle : particles) {
         clothCoordinates.push_back(particle.getPos().f[0]);
-        clothCoordinates.push_back(particle.getPos().f[1]);
         clothCoordinates.push_back(particle.getPos().f[2]);
+        clothCoordinates.push_back(-particle.getPos().f[1]);
     }
     return clothCoordinates;
 }
