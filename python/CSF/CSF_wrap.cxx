@@ -3152,8 +3152,8 @@ namespace swig {
 
 
   #define SWIG_FILE_WITH_INIT
-  #include "../src/CSF.h"
-  #include "../src/Cloth.h"
+  #include "../../src/CSF.h"
+  #include "../../src/Cloth.h"
 
 
 #include <string>

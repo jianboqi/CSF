@@ -13,20 +13,20 @@ else:
 	openmp_linking_args=['-fopenmp']
 
 sources = [
-    'CSF_wrap.cxx',
-    '../src/c2cdist.cpp',
-    '../src/Cloth.cpp',
-    '../src/CSF.cpp',
-    '../src/Particle.cpp',
-    '../src/point_cloud.cpp',
-    '../src/Rasterization.cpp',
-    '../src/XYZReader.cpp'
+    'python/CSF/CSF_wrap.cxx',
+    'src/c2cdist.cpp',
+    'src/Cloth.cpp',
+    'src/CSF.cpp',
+    'src/Particle.cpp',
+    'src/point_cloud.cpp',
+    'src/Rasterization.cpp',
+    'src/XYZReader.cpp'
 ]
 
-include_dirs = ["../src/"]
+include_dirs = ["src/"]
 
 csf_module = Extension(
-    name='CSF',
+    name='_CSF',
     sources=sources,
     include_dirs=include_dirs,
     extra_compile_args=openmp_args,
@@ -38,6 +38,7 @@ setup(
     version = '1.1.2',
     author      = 'Jianbo Qi',
     description = 'CSF: Ground Filtering based on Cloth Simulation',
+    package_dir = {"" : "python/CSF"},
     ext_modules = [csf_module],
     py_modules = ['CSF']
 )
