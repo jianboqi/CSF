@@ -104,25 +104,17 @@ public:
     // The results are index of ground points in the original
     // pointcloud and write the cloth particles coordinates
     void do_filtering(std::vector<int>& groundIndexes,
-                      std::vector<int>& offGroundIndexes);
-    // The results are index of ground points in the original
-    // pointcloud and write the cloth particles coordinates
-    // in a file
-    void do_filtering(std::vector<int>& groundIndexes,
                       std::vector<int>& offGroundIndexes,
-                      const std::string& clothFilename);
+                      bool exportCloth=true);
     
-    // The results are index of ground points in the original
-    // pointcloud and write the cloth particles coordinates
-    // in a vector of size (3*num_particles)
-    void do_filtering(std::vector<int>& groundIndexes,
-                      std::vector<int>& offGroundIndexes,
-                      std::vector<double> & clothPoints);
+
+    std::vector<double> do_cloth_export();
+
 private:
 
     // Do the filtering and return the Cloth object
-    Cloth do_filtering();
-    
+    Cloth do_cloth();
+        
 #ifdef _CSF_DLL_EXPORT_
     class __declspec (dllexport)csf::PointCloud point_cloud;
 #else // ifdef _CSF_DLL_EXPORT_

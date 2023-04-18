@@ -577,8 +577,11 @@ class CSF(object):
     def setPointCloud(self, *args):
         return _CSF.CSF_setPointCloud(self, *args)
 
-    def do_filtering(self, *args):
-        return _CSF.CSF_do_filtering(self, *args)
+    def do_filtering(self, groundIndexes, offGroundIndexes, exportCloth=True):
+        return _CSF.CSF_do_filtering(self, groundIndexes, offGroundIndexes, exportCloth)
+
+    def do_cloth_export(self):
+        return _CSF.CSF_do_cloth_export(self)
     params = property(_CSF.CSF_params_get, _CSF.CSF_params_set)
     index = property(_CSF.CSF_index_get, _CSF.CSF_index_set)
 

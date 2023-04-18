@@ -14612,6 +14612,56 @@ SWIGINTERN PyObject *_wrap_CSF_do_filtering__SWIG_0(PyObject *self, Py_ssize_t n
   CSF *arg1 = (CSF *) 0 ;
   std::vector< int,std::allocator< int > > *arg2 = 0 ;
   std::vector< int,std::allocator< int > > *arg3 = 0 ;
+  bool arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  bool val4 ;
+  int ecode4 = 0 ;
+  
+  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_CSF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CSF_do_filtering" "', argument " "1"" of type '" "CSF *""'"); 
+  }
+  arg1 = reinterpret_cast< CSF * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CSF_do_filtering" "', argument " "2"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CSF_do_filtering" "', argument " "2"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
+  }
+  arg2 = reinterpret_cast< std::vector< int,std::allocator< int > > * >(argp2);
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "CSF_do_filtering" "', argument " "3"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CSF_do_filtering" "', argument " "3"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
+  }
+  arg3 = reinterpret_cast< std::vector< int,std::allocator< int > > * >(argp3);
+  ecode4 = SWIG_AsVal_bool(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "CSF_do_filtering" "', argument " "4"" of type '" "bool""'");
+  } 
+  arg4 = static_cast< bool >(val4);
+  (arg1)->do_filtering(*arg2,*arg3,arg4);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_CSF_do_filtering__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  CSF *arg1 = (CSF *) 0 ;
+  std::vector< int,std::allocator< int > > *arg2 = 0 ;
+  std::vector< int,std::allocator< int > > *arg3 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
@@ -14649,116 +14699,6 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_CSF_do_filtering__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  CSF *arg1 = (CSF *) 0 ;
-  std::vector< int,std::allocator< int > > *arg2 = 0 ;
-  std::vector< int,std::allocator< int > > *arg3 = 0 ;
-  std::string *arg4 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
-  int res4 = SWIG_OLDOBJ ;
-  
-  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_CSF, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CSF_do_filtering" "', argument " "1"" of type '" "CSF *""'"); 
-  }
-  arg1 = reinterpret_cast< CSF * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t,  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CSF_do_filtering" "', argument " "2"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
-  }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CSF_do_filtering" "', argument " "2"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
-  }
-  arg2 = reinterpret_cast< std::vector< int,std::allocator< int > > * >(argp2);
-  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t,  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "CSF_do_filtering" "', argument " "3"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
-  }
-  if (!argp3) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CSF_do_filtering" "', argument " "3"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
-  }
-  arg3 = reinterpret_cast< std::vector< int,std::allocator< int > > * >(argp3);
-  {
-    std::string *ptr = (std::string *)0;
-    res4 = SWIG_AsPtr_std_string(swig_obj[3], &ptr);
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "CSF_do_filtering" "', argument " "4"" of type '" "std::string const &""'"); 
-    }
-    if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CSF_do_filtering" "', argument " "4"" of type '" "std::string const &""'"); 
-    }
-    arg4 = ptr;
-  }
-  (arg1)->do_filtering(*arg2,*arg3,(std::string const &)*arg4);
-  resultobj = SWIG_Py_Void();
-  if (SWIG_IsNewObj(res4)) delete arg4;
-  return resultobj;
-fail:
-  if (SWIG_IsNewObj(res4)) delete arg4;
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_CSF_do_filtering__SWIG_2(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  CSF *arg1 = (CSF *) 0 ;
-  std::vector< int,std::allocator< int > > *arg2 = 0 ;
-  std::vector< int,std::allocator< int > > *arg3 = 0 ;
-  std::vector< double,std::allocator< double > > *arg4 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
-  void *argp4 = 0 ;
-  int res4 = 0 ;
-  
-  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_CSF, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CSF_do_filtering" "', argument " "1"" of type '" "CSF *""'"); 
-  }
-  arg1 = reinterpret_cast< CSF * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t,  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CSF_do_filtering" "', argument " "2"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
-  }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CSF_do_filtering" "', argument " "2"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
-  }
-  arg2 = reinterpret_cast< std::vector< int,std::allocator< int > > * >(argp2);
-  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t,  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "CSF_do_filtering" "', argument " "3"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
-  }
-  if (!argp3) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CSF_do_filtering" "', argument " "3"" of type '" "std::vector< int,std::allocator< int > > &""'"); 
-  }
-  arg3 = reinterpret_cast< std::vector< int,std::allocator< int > > * >(argp3);
-  res4 = SWIG_ConvertPtr(swig_obj[3], &argp4, SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t,  0 );
-  if (!SWIG_IsOK(res4)) {
-    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "CSF_do_filtering" "', argument " "4"" of type '" "std::vector< double,std::allocator< double > > &""'"); 
-  }
-  if (!argp4) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CSF_do_filtering" "', argument " "4"" of type '" "std::vector< double,std::allocator< double > > &""'"); 
-  }
-  arg4 = reinterpret_cast< std::vector< double,std::allocator< double > > * >(argp4);
-  (arg1)->do_filtering(*arg2,*arg3,*arg4);
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *_wrap_CSF_do_filtering(PyObject *self, PyObject *args) {
   Py_ssize_t argc;
   PyObject *argv[5] = {
@@ -14781,7 +14721,7 @@ SWIGINTERN PyObject *_wrap_CSF_do_filtering(PyObject *self, PyObject *args) {
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t, SWIG_POINTER_NO_NULL);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_CSF_do_filtering__SWIG_0(self, argc, argv);
+          return _wrap_CSF_do_filtering__SWIG_1(self, argc, argv);
         }
       }
     }
@@ -14800,34 +14740,12 @@ SWIGINTERN PyObject *_wrap_CSF_do_filtering(PyObject *self, PyObject *args) {
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t, SWIG_POINTER_NO_NULL);
         _v = SWIG_CheckState(res);
         if (_v) {
-          void *vptr = 0;
-          int res = SWIG_ConvertPtr(argv[3], &vptr, SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t, SWIG_POINTER_NO_NULL);
-          _v = SWIG_CheckState(res);
-          if (_v) {
-            return _wrap_CSF_do_filtering__SWIG_2(self, argc, argv);
+          {
+            int res = SWIG_AsVal_bool(argv[3], NULL);
+            _v = SWIG_CheckState(res);
           }
-        }
-      }
-    }
-  }
-  if (argc == 4) {
-    int _v = 0;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_CSF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t, SWIG_POINTER_NO_NULL);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t, SWIG_POINTER_NO_NULL);
-        _v = SWIG_CheckState(res);
-        if (_v) {
-          int res = SWIG_AsPtr_std_string(argv[3], (std::string**)(0));
-          _v = SWIG_CheckState(res);
           if (_v) {
-            return _wrap_CSF_do_filtering__SWIG_1(self, argc, argv);
+            return _wrap_CSF_do_filtering__SWIG_0(self, argc, argv);
           }
         }
       }
@@ -14837,10 +14755,32 @@ SWIGINTERN PyObject *_wrap_CSF_do_filtering(PyObject *self, PyObject *args) {
 fail:
   SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'CSF_do_filtering'.\n"
     "  Possible C/C++ prototypes are:\n"
-    "    CSF::do_filtering(std::vector< int,std::allocator< int > > &,std::vector< int,std::allocator< int > > &)\n"
-    "    CSF::do_filtering(std::vector< int,std::allocator< int > > &,std::vector< int,std::allocator< int > > &,std::string const &)\n"
-    "    CSF::do_filtering(std::vector< int,std::allocator< int > > &,std::vector< int,std::allocator< int > > &,std::vector< double,std::allocator< double > > &)\n");
+    "    CSF::do_filtering(std::vector< int,std::allocator< int > > &,std::vector< int,std::allocator< int > > &,bool)\n"
+    "    CSF::do_filtering(std::vector< int,std::allocator< int > > &,std::vector< int,std::allocator< int > > &)\n");
   return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_CSF_do_cloth_export(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  CSF *arg1 = (CSF *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  std::vector< double,std::allocator< double > > result;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_CSF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CSF_do_cloth_export" "', argument " "1"" of type '" "CSF *""'"); 
+  }
+  arg1 = reinterpret_cast< CSF * >(argp1);
+  result = (arg1)->do_cloth_export();
+  resultobj = swig::from(static_cast< std::vector< double,std::allocator< double > > >(result));
+  return resultobj;
+fail:
+  return NULL;
 }
 
 
@@ -15142,6 +15082,7 @@ static PyMethodDef SwigMethods[] = {
 	 { "CSF_size", _wrap_CSF_size, METH_O, NULL},
 	 { "CSF_setPointCloud", _wrap_CSF_setPointCloud, METH_VARARGS, NULL},
 	 { "CSF_do_filtering", _wrap_CSF_do_filtering, METH_VARARGS, NULL},
+	 { "CSF_do_cloth_export", _wrap_CSF_do_cloth_export, METH_O, NULL},
 	 { "CSF_params_set", _wrap_CSF_params_set, METH_VARARGS, NULL},
 	 { "CSF_params_get", _wrap_CSF_params_get, METH_O, NULL},
 	 { "CSF_index_set", _wrap_CSF_index_set, METH_VARARGS, NULL},

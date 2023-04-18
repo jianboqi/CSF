@@ -107,7 +107,7 @@ void CSF::readPointsFromFile(std::string filename) {
 }
 
 
-Cloth CSF::do_filtering() {
+Cloth CSF::do_cloth() {
     // Terrain
     std::cout << "[" << this->index << "] Configuring terrain..." << std::endl;
     csf::Point bbMin, bbMax;
@@ -175,33 +175,21 @@ Cloth CSF::do_filtering() {
     return cloth;
 }
 
+std::vector<double> CSF::do_cloth_export() {
+    auto cloth = do_cloth();
+    return cloth.toVector();
+}
+
 void CSF::do_filtering(std::vector<int>& groundIndexes,
-                    std::vector<int>& offGroundIndexes) {
-    auto cloth = do_filtering();
- 
+                      std::vector<int>& offGroundIndexes,
+                      bool exportCloth) {
+    auto cloth = do_cloth();
+    if (exportCloth)
+        cloth.saveToFile();
     c2cdist c2c(params.class_threshold);
     c2c.calCloud2CloudDist(cloth, point_cloud, groundIndexes, offGroundIndexes);
 }
 
-void CSF::do_filtering(std::vector<int>& groundIndexes,
-                    std::vector<int>& offGroundIndexes,
-                    const std::string& clothFilename) {
-    auto cloth = do_filtering();
-    cloth.saveToFile();
-
-    c2cdist c2c(params.class_threshold);
-    c2c.calCloud2CloudDist(cloth, point_cloud, groundIndexes, offGroundIndexes);
-}
-
-void CSF::do_filtering(std::vector<int>& groundIndexes,
-                    std::vector<int>& offGroundIndexes,
-                    std::vector<double> & clothPoints) {
-    auto cloth = do_filtering();
-    clothPoints = cloth.toVector();
-
-    c2cdist c2c(params.class_threshold);
-    c2c.calCloud2CloudDist(cloth, point_cloud, groundIndexes, offGroundIndexes);
-}
 
 void CSF::savePoints(std::vector<int> grp, std::string path) {
     if (path == "") {
