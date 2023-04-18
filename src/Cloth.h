@@ -154,6 +154,8 @@ public:
 
     void saveToFile(std::string path = "");
 
+    std::vector<double> toVector();
+
     void saveMovableToFile(std::string path = "");
 };
 

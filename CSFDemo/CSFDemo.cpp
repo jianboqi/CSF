@@ -84,11 +84,11 @@ int main(int argc,char* argv[])
 	if (argc == 2 && strcmp(argv[1], "-c")==0)
 	{
 		std::cout << "Export cloth enabled." << std::endl;
-		csf.do_filtering(groundIndexes, offGroundIndexes, true);
+		csf.do_filtering(groundIndexes, offGroundIndexes, "cloth_nodes.txt");
 	}
 	else
 	{
-		csf.do_filtering(groundIndexes, offGroundIndexes, false);
+		csf.do_filtering(groundIndexes, offGroundIndexes);
 	}
 		
 

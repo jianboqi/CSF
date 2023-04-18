@@ -38,6 +38,7 @@
 #include <vector>
 #include <string>
 #include "point_cloud.h"
+#include "Cloth.h"
 
 
 struct Params {
@@ -101,13 +102,27 @@ public:
     void setPointCloud(csf::PointCloud& pc);
 
     // The results are index of ground points in the original
-    // pointcloud
+    // pointcloud and write the cloth particles coordinates
+    void do_filtering(std::vector<int>& groundIndexes,
+                      std::vector<int>& offGroundIndexes);
+    // The results are index of ground points in the original
+    // pointcloud and write the cloth particles coordinates
+    // in a file
     void do_filtering(std::vector<int>& groundIndexes,
                       std::vector<int>& offGroundIndexes,
-                      bool              exportCloth = false);
-
+                      const std::string& clothFilename);
+    
+    // The results are index of ground points in the original
+    // pointcloud and write the cloth particles coordinates
+    // in a vector of size (3*num_particles)
+    void do_filtering(std::vector<int>& groundIndexes,
+                      std::vector<int>& offGroundIndexes,
+                      std::vector<double> & clothPoints);
 private:
 
+    // Do the filtering and return the Cloth object
+    Cloth do_filtering();
+    
 #ifdef _CSF_DLL_EXPORT_
     class __declspec (dllexport)csf::PointCloud point_cloud;
 #else // ifdef _CSF_DLL_EXPORT_

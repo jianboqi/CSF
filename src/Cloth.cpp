@@ -363,6 +363,18 @@ void Cloth::handle_slop_connected(std::vector<int> edgePoints, std::vector<XY> c
     }
 }
 
+std::vector<double> Cloth::toVector() {
+    std::vector<double> clothCoordinates;
+    clothCoordinates.reserve(particles.size()*3);
+    for(auto& particle : particles) {
+        clothCoordinates.push_back(particle.getPos().f[0]);
+        clothCoordinates.push_back(particle.getPos().f[1]);
+        clothCoordinates.push_back(particle.getPos().f[2]);
+    }
+    return clothCoordinates;
+}
+
+
 void Cloth::saveToFile(std::string path) {
     std::string filepath = "cloth_nodes.txt";
 
