@@ -40,9 +40,12 @@ csf_module = Extension(
 )
 
 setup(
-    name="CSF",
+    name="cloth_simulation",
     version="1.1.2",
     author="Jianbo Qi",
+    maintainer="Romain Janvier",
+    maintainer_email="romain.janvier@hotmail.fr",
+    license="Apache-2.0",
     description="CSF: Ground Filtering based on Cloth Simulation",
     package_dir={"": "python/CSF"},
     ext_modules=[csf_module],
