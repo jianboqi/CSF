@@ -96,12 +96,16 @@ Cloth::Cloth(const Vec3& _origin_pos,
 
 double Cloth::timeStep() {
     int particleCount = static_cast<int>(particles.size());
+    #ifdef CSF_USE_OPENMP
     #pragma omp parallel for
+    #endif
     for (int i = 0; i < particleCount; i++) {
         particles[i].timeStep();
     }
 
+    #ifdef CSF_USE_OPENMP
     #pragma omp parallel for
+    #endif
     for (int j = 0; j < particleCount; j++) {
         particles[j].satisfyConstraintSelf(constraint_iterations);
     }
@@ -128,7 +132,10 @@ void Cloth::addForce(const Vec3 direction) {
 
 void Cloth::terrCollision() {
     int particleCount = static_cast<int>(particles.size());
+    
+    #ifdef CSF_USE_OPENMP
     #pragma omp parallel for
+    #endif
     for (int i = 0; i < particleCount; i++) {
         Vec3 v = particles[i].getPos();
 

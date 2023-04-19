@@ -46,7 +46,9 @@
 #include <math.h>
 #include <vector>
 #include <iostream>
+#ifdef CSF_USE_OPENMP
 #include <omp.h>
+#endif
 #include <sstream>
 #include <list>
 #include <cmath>
