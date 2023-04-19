@@ -15,6 +15,7 @@ elif platform.system() == "Linux":
 else:  # macOS, macOS clang that won't come with openmp
     openmp_args = []
     openmp_linking_args = []
+    openmp_macro = []
 
 sources = [
     "python/CSF/CSF_wrap.cxx",
