@@ -1,6 +1,3 @@
-"""
-setup.py
-"""
 import platform
 from setuptools import setup, Extension
 
@@ -12,10 +9,13 @@ elif platform.system() == "Linux":
     openmp_args = ["-fopenmp"]
     openmp_linking_args = ["-fopenmp"]
     openmp_macro = [("CSF_USE_OPENMP", None)]
-else:  # macOS, macOS clang that won't come with openmp
+else:  # macOS, macOS clang won't come with openmp
     openmp_args = []
     openmp_linking_args = []
     openmp_macro = []
+
+with open("README.md") as readme:
+    readme_content = readme.read()
 
 sources = [
     "python/CSF/CSF_wrap.cxx",
@@ -41,11 +41,14 @@ csf_module = Extension(
 
 setup(
     name="cloth_simulation",
-    version="1.1.2",
+    version="1.1.3",
     author="Jianbo Qi",
+    url="ramm.bnu.edu.cn/projects/CSF/",
+    long_description=readme_content,
     maintainer="Romain Janvier",
     maintainer_email="romain.janvier@hotmail.fr",
     license="Apache-2.0",
+    keywords="LiDAR DTM DSM Classification",
     description="CSF: Ground Filtering based on Cloth Simulation",
     package_dir={"": "python/CSF"},
     ext_modules=[csf_module],
