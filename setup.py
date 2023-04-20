@@ -14,7 +14,7 @@ else:  # macOS, macOS clang won't come with openmp
     openmp_linking_args = []
     openmp_macro = []
 
-with open("README.md") as readme:
+with open("README.md", encoding="utf8") as readme:
     readme_content = readme.read()
 
 sources = [
