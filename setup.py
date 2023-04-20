@@ -43,7 +43,7 @@ setup(
     name="cloth_simulation",
     version="1.1.3",
     author="Jianbo Qi",
-    url="ramm.bnu.edu.cn/projects/CSF/",
+    url="http://ramm.bnu.edu.cn/projects/CSF/",
     long_description=readme_content,
     maintainer="Romain Janvier",
     maintainer_email="romain.janvier@hotmail.fr",
