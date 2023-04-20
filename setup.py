@@ -45,6 +45,7 @@ setup(
     author="Jianbo Qi",
     url="http://ramm.bnu.edu.cn/projects/CSF/",
     long_description=readme_content,
+    long_description_content_type='text/markdown',
     maintainer="Romain Janvier",
     maintainer_email="romain.janvier@hotmail.fr",
     license="Apache-2.0",
