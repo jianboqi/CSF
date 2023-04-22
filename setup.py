@@ -40,14 +40,14 @@ csf_module = Extension(
 )
 
 setup(
-    name="cloth_simulation",
-    version="1.1.3",
+    name="CSF",
+    version="1.1.4",
     author="Jianbo Qi",
     url="http://ramm.bnu.edu.cn/projects/CSF/",
     long_description=readme_content,
     long_description_content_type='text/markdown',
-    maintainer="Romain Janvier",
-    maintainer_email="romain.janvier@hotmail.fr",
+    maintainer="Jianbo Qi",
+    maintainer_email="jianboqi@126.com",
     license="Apache-2.0",
     keywords="LiDAR DTM DSM Classification",
     description="CSF: Ground Filtering based on Cloth Simulation",
