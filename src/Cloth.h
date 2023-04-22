@@ -46,7 +46,9 @@
 #include <math.h>
 #include <vector>
 #include <iostream>
+#ifdef CSF_USE_OPENMP
 #include <omp.h>
+#endif
 #include <sstream>
 #include <list>
 #include <cmath>
@@ -153,6 +155,8 @@ public:
                                       std::vector<std::vector<int> > neibors);
 
     void saveToFile(std::string path = "");
+
+    std::vector<double> toVector();
 
     void saveMovableToFile(std::string path = "");
 };

@@ -20,7 +20,6 @@
 #include "CSF.h"
 #include "XYZReader.h"
 #include "Vec3.h"
-#include "Cloth.h"
 #include "Rasterization.h"
 #include "c2cdist.h"
 #include <fstream>
@@ -54,7 +53,9 @@ void CSF::setPointCloud(std::vector<csf::Point> points) {
     point_cloud.resize(points.size());
 
     int pointCount = static_cast<int>(points.size());
+    #ifdef CSF_USE_OPENMP
     #pragma omp parallel for
+    #endif
     for (int i = 0; i < pointCount; i++) {
         csf::Point las;
         las.x          = points[i].x;
@@ -79,7 +80,9 @@ void CSF::setPointCloud(double *points, int rows) {
 void CSF::setPointCloud(csf::PointCloud& pc) {
     point_cloud.resize(pc.size());
     int pointCount = static_cast<int>(pc.size());
+    #ifdef CSF_USE_OPENMP
     #pragma omp parallel for
+    #endif
     for (int i = 0; i < pointCount; i++) {
         csf::Point las;
         las.x          = pc[i].x;
@@ -92,7 +95,9 @@ void CSF::setPointCloud(csf::PointCloud& pc) {
 void CSF::setPointCloud(std::vector<std::vector<float> > points) {
     point_cloud.resize(points.size());
     int pointCount = static_cast<int>(points.size());
+    #ifdef CSF_USE_OPENMP
     #pragma omp parallel for
+    #endif
     for (int i = 0; i < pointCount; i++) {
         csf::Point las;
         las.x          = points[i][0];
@@ -108,9 +113,7 @@ void CSF::readPointsFromFile(std::string filename) {
 }
 
 
-void CSF::do_filtering(std::vector<int>& groundIndexes,
-                       std::vector<int>& offGroundIndexes,
-                       bool              exportCloth) {
+Cloth CSF::do_cloth() {
     // Terrain
     std::cout << "[" << this->index << "] Configuring terrain..." << std::endl;
     csf::Point bbMin, bbMax;
@@ -175,12 +178,24 @@ void CSF::do_filtering(std::vector<int>& groundIndexes,
         cloth.movableFilter();
     }
 
+    return cloth;
+}
+
+std::vector<double> CSF::do_cloth_export() {
+    auto cloth = do_cloth();
+    return cloth.toVector();
+}
+
+void CSF::do_filtering(std::vector<int>& groundIndexes,
+                      std::vector<int>& offGroundIndexes,
+                      bool exportCloth) {
+    auto cloth = do_cloth();
     if (exportCloth)
         cloth.saveToFile();
-
     c2cdist c2c(params.class_threshold);
     c2c.calCloud2CloudDist(cloth, point_cloud, groundIndexes, offGroundIndexes);
 }
+
 
 void CSF::savePoints(std::vector<int> grp, std::string path) {
     if (path == "") {
