@@ -58,10 +58,9 @@ csf.savePoints(ground,"ground.txt")
 ```
 
 ### How to use CSF in Python
-Download the source code. under python folder:
+You can install CSF from pip as:
 ```python
-python setup.py build
-python setup.py install 
+pip install cloth-simulation-filter
 ```
 
 ### How to use CSF in Matlab
