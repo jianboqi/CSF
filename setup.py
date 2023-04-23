@@ -40,7 +40,7 @@ csf_module = Extension(
 )
 
 setup(
-    name="CSF",
+    name="cloth_simulation_filter",
     version="1.1.4",
     author="Jianbo Qi",
     url="http://ramm.bnu.edu.cn/projects/CSF/",
