@@ -139,9 +139,15 @@ void Rasterization::RasterTerrian(Cloth& cloth, csf::PointCloud& pc, std::vector
   }
   heightVal.resize(cloth.getSize());
 
-  // #pragma omp parallel for
+  int current = 0;
+#pragma omp parallel for schedule(dynamic)
   for (int i = 0; i < cloth.getSize(); i++)
   {
+    #pragma omp critical(crit_cout)
+    {
+        std::cout << "Progress " << current++ << "/" << cloth.getSize() << "\r" << std::flush;
+    }
+
     Particle* pcur = cloth.getParticle1d(i);
     double nearestHeight = pcur->nearestPointHeight;
 
@@ -154,4 +160,5 @@ void Rasterization::RasterTerrian(Cloth& cloth, csf::PointCloud& pc, std::vector
       heightVal[i] = findHeightValByScanline(pcur, cloth);
     }
   }
+  std::cout << "Progress " << current++ << "/" << cloth.getSize() << std::endl;
 }

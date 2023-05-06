@@ -117,6 +117,13 @@ void CSFGroundSeg::paramInitialize(const std::string& config_file)
   }
 }
 
+void CSFGroundSeg::paramInitialize(const CSFSegParams& params)
+{
+  std::cout << "Set CSFGroundSeg params" << std::endl;
+  params_ = params;
+
+}
+
 void CSFGroundSeg::setPointCloud(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr& input_cloud)
 {
   // Clear the point cloud
@@ -237,8 +244,11 @@ void CSFGroundSeg::doFiltering(std::vector<int>& groundIndexes, std::vector<int>
   cloth.addForce(Vec3(0, -gravity, 0) * time_step2);
 
   // boost::progress_display pd(params_.iteration);
+  int current =0;
   for (int i = 0; i < params_.iterations; i++)
   {
+    std::cout << "Progress " << current++ << "/" << params_.iterations << "\r" << std::flush;
+
     double maxDiff = cloth.timeStep();
     cloth.terrCollision();
     // params_.class_threshold / 100
@@ -249,6 +259,7 @@ void CSFGroundSeg::doFiltering(std::vector<int>& groundIndexes, std::vector<int>
     }
     // pd++;
   }
+    std::cout << "Progress " << current++ << "/" << params_.iterations << std::endl;
 
   if (params_.slope_smooth)
   {

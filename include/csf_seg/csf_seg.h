@@ -74,6 +74,7 @@ public:
                      pcl::PointCloud<pcl::PointXYZI>& out_ground_points);
   void getGroundSurface(pcl::PointCloud<pcl::PointXYZ>& ground_surface);
   void paramInitialize(const std::string& config_file);
+  void paramInitialize(const CSFSegParams& params);
 
 private:
   csf::PointCloud point_cloud;
