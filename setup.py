@@ -3,7 +3,7 @@ from setuptools import setup, Extension
 import numpy
 
 if platform.system() == "Windows":
-    openmp_args = ["/openmp"]
+    openmp_args = ["/openmp", "/std:c++11"]
     openmp_linking_args = []
     openmp_macro = [("CSF_USE_OPENMP", None)]
 elif platform.system() == "Linux":
