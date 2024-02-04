@@ -7,11 +7,11 @@ if platform.system() == "Windows":
     openmp_linking_args = []
     openmp_macro = [("CSF_USE_OPENMP", None)]
 elif platform.system() == "Linux":
-    openmp_args = ["-fopenmp"]
+    openmp_args = ["-fopenmp", "-std=c++11"]
     openmp_linking_args = ["-fopenmp"]
     openmp_macro = [("CSF_USE_OPENMP", None)]
 else:  # macOS, macOS clang won't come with openmp
-    openmp_args = []
+    openmp_args = ["-std=c++11"]
     openmp_linking_args = []
     openmp_macro = []
 
