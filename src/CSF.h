@@ -74,10 +74,8 @@ public:
     // set pointcloud from vector
     void setPointCloud(std::vector<csf::Point> points);
     // set point cloud from a one-dimentional array. it defines a N*3 point cloud by the given rows.
-    void setPointCloud(double *points, int rows);
+    void setPointCloud(double *points, int rows, int cols);
 
-    // set point cloud for python
-    void setPointCloud(std::vector<std::vector<float> > points);
 
     // read pointcloud from txt file: (X Y Z) for each line
     void readPointsFromFile(std::string filename);
