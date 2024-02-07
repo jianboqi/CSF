@@ -7,6 +7,13 @@ W. Zhang, J. Qi*, P. Wan, H. Wang, D. Xie, X. Wang, and G. Yan, “An Easy-to-Us
 (http://www.mdpi.com/2072-4292/8/6/501/htm)
 
 
+**This is a modified version of the Original Code for 3DFin purposes**
+
+List of changes:
+
+- Better handling of numpy arrays in the python bindings (avoid expensive copies)
+
+
 **New feature has been implemented:**
 
 Now, We has wrapped a Python interface for CSF with swig. It is simpler to use now. This new feature can make CSF easier to be embeded into a large project. For example, it can work with Laspy (https://github.com/laspy/laspy). What you do is just read a point cloud into a python 2D list, and pass it to CSF.
