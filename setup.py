@@ -32,7 +32,7 @@ sources = [
 include_dirs = ["src/", numpy.get_include()]
 
 csf_module = Extension(
-    name="_CSF",
+    name="_CSF_3DFin",
     sources=sources,
     include_dirs=include_dirs,
     extra_compile_args=openmp_args,
@@ -41,18 +41,19 @@ csf_module = Extension(
 )
 
 setup(
-    name="cloth_simulation_filter",
+    name="CSF_3DFin",
     version="1.1.5",
     author="Jianbo Qi",
     url="http://ramm.bnu.edu.cn/projects/CSF/",
     long_description=readme_content,
     long_description_content_type='text/markdown',
-    maintainer="Jianbo Qi",
-    maintainer_email="jianboqi@126.com",
+    maintainer="Romain Janvier",
+    maintainer_email="romain.janvier@hotmail.fr",
+    website="https://github.com/3DFin/CSF-3DFIN",
     license="Apache-2.0",
     keywords="LiDAR DTM DSM Classification",
     description="CSF: Ground Filtering based on Cloth Simulation",
     package_dir={"": "python/CSF"},
     ext_modules=[csf_module],
-    py_modules=["CSF"],
+    py_modules=["CSF_3DFin"],
 )
