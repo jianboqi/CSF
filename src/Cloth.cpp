@@ -52,7 +52,7 @@ Cloth::Cloth(const Vec3& _origin_pos,
                      origin_pos.f[2] + j *step_y);
 
             // insert particle in column i at j'th row
-            particles[j * num_particles_width + i]       = Particle(pos, time_step2);
+            particles[j * num_particles_width + i]       = Particle(pos /*, time_step2*/); // time_step2 is unused
             particles[j * num_particles_width + i].pos_x = i;
             particles[j * num_particles_width + i].pos_y = j;
         }

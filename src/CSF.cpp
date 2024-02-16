@@ -153,7 +153,7 @@ Cloth CSF::do_cloth() {
     double gravity    = 0.2;
 
     std::cout << "[" << this->index << "] Simulating..." << std::endl;
-    cloth.addForce(Vec3(0, -gravity, 0) * time_step2);
+    cloth.addForce(Vec3(0, -gravity, 0) * time_step2); // pre multiply the force by the time step to speed up the simulation
 
     // boost::progress_display pd(params.interations);
     for (int i = 0; i < params.interations; i++) {

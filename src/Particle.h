@@ -81,12 +81,12 @@ public:
 
 public:
 
-    Particle(Vec3 pos, double time_step) :
+    Particle(Vec3 pos/*, double time_step*/): 
         movable(true),
         //mass(1),
         acceleration(Vec3(0, 0, 0)),
         accumulated_normal(Vec3(0, 0, 0)),
-        time_step2(time_step),
+        // time_step2(time_step), already used into the call of Cloth::addForce(), at initialization
         pos(pos),
         old_pos(pos) {
         isVisited          = false;
@@ -120,7 +120,7 @@ public:
     }
 
     void addForce(Vec3 f) {
-        acceleration += f // / mass; mass is here for corect always 1 in this example;
+        acceleration += f; // mass was here for correctness. it's always 1 in this example;
     }
 
     /* This is one of the important methods, where the time is
