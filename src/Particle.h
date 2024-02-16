@@ -101,7 +101,7 @@ public:
     Particle() :
       movable(true),
       //mass(1),
-      acceleration(Vec3(0, 0, 0)),
+      // acceleration(Vec3(0, 0, 0)),
       accumulated_normal(Vec3(0, 0, 0)),
       pos(Vec3(0, 0, 0)),
       old_pos(Vec3(0, 0, 0)) {
@@ -119,8 +119,10 @@ public:
         return movable;
     }
 
+    //TODO: acceleration is a constant and should be either initialized by a const ref in the constructor
+    // or by addind a ref to the Cloth object and using it to get the acceleration.
     void addForce(Vec3 f) {
-        acceleration += f; // mass was here for correctness. it's always 1 in this example;
+        acceleration = f; // mass was here for correctness. it's always 1 in this example;  
     }
 
     /* This is one of the important methods, where the time is
@@ -134,10 +136,6 @@ public:
 
     Vec3 getPosCopy() {
         return pos;
-    }
-
-    void resetAcceleration() {
-        acceleration = Vec3(0, 0, 0);
     }
 
     void offsetPos(const Vec3 v) {
