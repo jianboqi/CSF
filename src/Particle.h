@@ -52,7 +52,7 @@ class Particle {
 private:
 
     bool movable;            // can the particle move or not ? used to pin parts of the cloth
-    double mass;             // the mass of the particle (is always 1 in this example)
+    //double mass;             // the mass of the particle (is always 1 in this example)
     Vec3 acceleration;       // a vector representing the current acceleration of the particle
     Vec3 accumulated_normal; // an accumulated normal (i.e. non normalized), used for OpenGL soft shading
     double time_step2;
@@ -83,7 +83,7 @@ public:
 
     Particle(Vec3 pos, double time_step) :
         movable(true),
-        mass(1),
+        //mass(1),
         acceleration(Vec3(0, 0, 0)),
         accumulated_normal(Vec3(0, 0, 0)),
         time_step2(time_step),
@@ -100,7 +100,7 @@ public:
 
     Particle() :
       movable(true),
-      mass(1),
+      //mass(1),
       acceleration(Vec3(0, 0, 0)),
       accumulated_normal(Vec3(0, 0, 0)),
       pos(Vec3(0, 0, 0)),
@@ -120,7 +120,7 @@ public:
     }
 
     void addForce(Vec3 f) {
-        acceleration += f / mass;
+        acceleration += f // / mass; mass is here for corect always 1 in this example;
     }
 
     /* This is one of the important methods, where the time is
