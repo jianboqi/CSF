@@ -104,7 +104,7 @@ double Cloth::timeStep() {
     }
 
     #ifdef CSF_USE_OPENMP
-    #pragma omp parallel for
+    //#pragma omp parallel for => This is not thread safe due to call to offsetPos on neighbors
     #endif
     for (int j = 0; j < particleCount; j++) {
         particles[j].satisfyConstraintSelf(constraint_iterations);
