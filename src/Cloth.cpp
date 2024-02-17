@@ -52,7 +52,7 @@ Cloth::Cloth(const Vec3& _origin_pos,
                      origin_pos.f[2] + j *step_y);
 
             // insert particle in column i at j'th row
-            particles[j * num_particles_width + i]       = Particle(pos, time_step2);
+            particles[j * num_particles_width + i]       = Particle(pos /*, time_step2*/); // time_step2 is unused
             particles[j * num_particles_width + i].pos_x = i;
             particles[j * num_particles_width + i].pos_y = j;
         }
@@ -104,7 +104,7 @@ double Cloth::timeStep() {
     }
 
     #ifdef CSF_USE_OPENMP
-    #pragma omp parallel for
+    //#pragma omp parallel for => This is not thread safe due to call to offsetPos on neighbors
     #endif
     for (int j = 0; j < particleCount; j++) {
         particles[j].satisfyConstraintSelf(constraint_iterations);

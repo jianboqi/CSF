@@ -42,7 +42,7 @@ csf_module = Extension(
 
 setup(
     name="CSF_3DFin",
-    version="1.1.5",
+    version="1.2.0",
     author="Jianbo Qi",
     url="http://ramm.bnu.edu.cn/projects/CSF/",
     long_description=readme_content,

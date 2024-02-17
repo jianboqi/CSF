@@ -24,7 +24,7 @@
 void Particle::timeStep() {
     if (movable) {
         Vec3 temp = pos;
-        pos = pos + (pos - old_pos) * (1.0 - DAMPING) + acceleration * time_step2;
+        pos = pos + (pos - old_pos) * (1.0 - DAMPING) + acceleration; /*acceleration is pre multiplied by time_step2*/;
         old_pos = temp;
     }
 }
