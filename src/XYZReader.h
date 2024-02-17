@@ -1,6 +1,7 @@
 // ======================================================================================
-// Copyright 2017 State Key Laboratory of Remote Sensing Science, 
-// Institute of Remote Sensing Science and Engineering, Beijing Normal University
+// Copyright 2017 State Key Laboratory of Remote Sensing Science,
+// Institute of Remote Sensing Science and Engineering, Beijing Normal
+// University
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,17 +16,12 @@
 // limitations under the License.
 // ======================================================================================
 
-#ifndef XYZ_READER_H_
-#define XYZ_READER_H_
-
+#pragma once
 
 #include <string>
 #include <vector>
 
-
 #include "point_cloud.h"
 
-void read_xyz(std::string fname, csf::PointCloud& pointcloud);
+void read_xyz(std::string fname, csf::PointCloud &pointcloud);
 
-
-#endif // ifndef XYZ_READER_H_

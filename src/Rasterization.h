@@ -1,6 +1,7 @@
 // ======================================================================================
-// Copyright 2017 State Key Laboratory of Remote Sensing Science, 
-// Institute of Remote Sensing Science and Engineering, Beijing Normal University
+// Copyright 2017 State Key Laboratory of Remote Sensing Science,
+// Institute of Remote Sensing Science and Engineering, Beijing Normal
+// University
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,30 +16,24 @@
 // limitations under the License.
 // ======================================================================================
 
-#ifndef _KNN_H_
-#define _KNN_H_
+#pragma once
 
-#include "point_cloud.h"
 #include "Cloth.h"
+#include "point_cloud.h"
 
-#define SQUARE_DIST(x1, y1, x2, y2) \
-    (((x1) - (x2)) * ((x1) - (x2)) + ((y1) - (y2)) * ((y1) - (y2)))
-
+#define SQUARE_DIST(x1, y1, x2, y2)                                            \
+  (((x1) - (x2)) * ((x1) - (x2)) + ((y1) - (y2)) * ((y1) - (y2)))
 
 class Rasterization {
 public:
+  Rasterization() {}
+  ~Rasterization() {}
 
-    Rasterization() {}
-    ~Rasterization() {}
+  // for a cloth particle, if no corresponding lidar point are found.
+  // the heightval are set as its neighbor's
+  double static findHeightValByNeighbor(Particle *p);
+  double static findHeightValByScanline(Particle *p, Cloth &cloth);
 
-    // for a cloth particle, if no corresponding lidar point are found.
-    // the heightval are set as its neighbor's
-    double static findHeightValByNeighbor(Particle *p);
-    double static findHeightValByScanline(Particle *p, Cloth& cloth);
-
-    void static   RasterTerrian(Cloth          & cloth,
-                                csf::PointCloud& pc,
-                                std::vector<double> & heightVal);
+  void static Rasterize(Cloth &cloth, csf::PointCloud &pc,
+                        std::vector<double> &heightVal);
 };
-
-#endif // ifndef _KNN_H_
