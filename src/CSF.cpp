@@ -25,17 +25,6 @@
 #include "c2cdist.h"
 #include <fstream>
 
-CSF::CSF(int index) {
-  params.bSloopSmooth = true;
-  params.time_step = 0.65;
-  params.class_threshold = 0.5;
-  params.cloth_resolution = 1;
-  params.rigidness = 3;
-  params.interations = 500;
-
-  this->index = index;
-}
-
 CSF::CSF() {
   params.bSloopSmooth = true;
   params.time_step = 0.65;
@@ -43,7 +32,6 @@ CSF::CSF() {
   params.cloth_resolution = 1;
   params.rigidness = 3;
   params.interations = 500;
-  this->index = 0;
 }
 
 CSF::~CSF() {}
@@ -102,13 +90,13 @@ void CSF::readPointsFromFile(std::string filename) {
 
 Cloth CSF::do_cloth() {
   // Terrain
-  std::cout << "[" << this->index << "] Configuring terrain..." << std::endl;
+  std::cout << "Configuring terrain..." << std::endl;
   csf::Point bbMin, bbMax;
   point_cloud.computeBoundingBox(bbMin, bbMax);
-  std::cout << "[" << this->index << "]  - bbMin: " << bbMin.x << " " << bbMin.y
-            << " " << bbMin.z << std::endl;
-  std::cout << "[" << this->index << "]  - bbMax: " << bbMax.x << " " << bbMax.y
-            << " " << bbMax.z << std::endl;
+  std::cout << " - bbMin: " << bbMin.x << " " << bbMin.y << " " << bbMin.z
+            << std::endl;
+  std::cout << " - bbMax: " << bbMax.x << " " << bbMax.y << " " << bbMax.z
+            << std::endl;
 
   double cloth_y_height = 0.05;
 
@@ -125,24 +113,24 @@ Cloth CSF::do_cloth() {
                                                params.cloth_resolution)) +
                    2 * clothbuffer_d;
 
-  std::cout << "[" << this->index << "] Configuring cloth..." << std::endl;
-  std::cout << "[" << this->index << "]  - width: " << width_num << " "
+  std::cout << "Configuring cloth..." << std::endl;
+  std::cout << " - width: " << width_num << " "
             << "height: " << height_num << std::endl;
 
   Cloth cloth(origin_pos, width_num, height_num, params.cloth_resolution,
               params.cloth_resolution, 0.3, 9999, params.rigidness,
               params.time_step);
 
-  std::cout << "[" << this->index << "] Rasterizing..." << std::endl;
-  Rasterization::Rasterize(cloth, point_cloud, cloth.getHeightvals());
-
   double time_step2 = params.time_step * params.time_step;
   double gravity = 0.2;
-
-  std::cout << "[" << this->index << "] Simulating..." << std::endl;
   cloth.addForce(Vec3(0, -gravity, 0) *
                  time_step2); // pre multiply the force by the time step to
                               // speed up the simulation
+
+  std::cout << "Rasterizing..." << std::endl;
+  Rasterization::Rasterize(cloth, point_cloud, cloth.getHeightvals());
+
+  std::cout << "Simulating..." << std::endl;
 
   for (int i = 0; i < params.interations; i++) {
     double maxDiff = cloth.timeStep();
@@ -155,7 +143,7 @@ Cloth CSF::do_cloth() {
   }
 
   if (params.bSloopSmooth) {
-    std::cout << "[" << this->index << "]  - post handle..." << std::endl;
+    std::cout << " - post handle..." << std::endl;
     cloth.movableFilter();
   }
 

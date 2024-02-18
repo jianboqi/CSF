@@ -14289,28 +14289,8 @@ SWIGINTERN PyObject *Params_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   return SWIG_Python_InitShadowInstance(args);
 }
 
-SWIGINTERN PyObject *_wrap_new_CSF__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  int arg1 ;
-  int val1 ;
-  int ecode1 = 0 ;
-  CSF *result = 0 ;
-  
-  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
-  ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
-  if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_CSF" "', argument " "1"" of type '" "int""'");
-  } 
-  arg1 = static_cast< int >(val1);
-  result = (CSF *)new CSF(arg1);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_CSF, SWIG_POINTER_NEW |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
 
-
-SWIGINTERN PyObject *_wrap_new_CSF__SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
+SWIGINTERN PyObject *_wrap_new_CSF__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   CSF *result = 0 ;
   
@@ -14332,19 +14312,8 @@ SWIGINTERN PyObject *_wrap_new_CSF(PyObject *self, PyObject *args) {
   if (!(argc = SWIG_Python_UnpackTuple(args, "new_CSF", 0, 1, argv))) SWIG_fail;
   --argc;
   if (argc == 0) {
-    return _wrap_new_CSF__SWIG_1(self, argc, argv);
+    return _wrap_new_CSF__SWIG_0(self, argc, argv);
   }
-  if (argc == 1) {
-    int _v;
-    {
-      int res = SWIG_AsVal_int(argv[0], NULL);
-      _v = SWIG_CheckState(res);
-    }
-    if (_v) {
-      return _wrap_new_CSF__SWIG_0(self, argc, argv);
-    }
-  }
-  
 fail:
   SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'new_CSF'.\n"
     "  Possible C/C++ prototypes are:\n"

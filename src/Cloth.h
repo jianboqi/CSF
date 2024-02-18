@@ -84,7 +84,7 @@ private:
 public:
   Vec3 origin_pos;
   double step_x, step_y;
-  std::vector<double> heightvals; // height values
+  std::vector<double> height_values; // height values
   int num_particles_width;        // number of particles in width direction
   int num_particles_height;       // number of particles in height direction
 
@@ -102,7 +102,7 @@ public:
 
   std::size_t get1DIndex(int x, int y) { return y * num_particles_width + x; }
 
-  inline std::vector<double> &getHeightvals() { return heightvals; }
+  inline std::vector<double> &getHeightvals() { return height_values; }
 
   Particle *getParticle1d(int index) { return &particles[index]; }
 

@@ -26,7 +26,6 @@
 // 2009zwm@gmail.com; wpqjbzwm@126.com                # # #
 // #######################################################################################
 
-
 // cloth simulation filter for airborne lidar filtering
 #pragma once
 
@@ -35,7 +34,7 @@
 #include <string>
 #include <vector>
 
-    struct Params {
+struct Params {
   // refer to the website:http://ramm.bnu.edu.cn/projects/CSF/ for the setting
   // of these paramters
   bool bSloopSmooth;
@@ -61,7 +60,6 @@ class CSF
 #endif // ifdef _CSF_DLL_EXPORT_
 {
 public:
-  CSF(int index);
   CSF();
   ~CSF();
 
