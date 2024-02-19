@@ -38,6 +38,7 @@
 #pragma once
 
 #ifdef _WIN32
+#define NOMINMAX
 #include <windows.h>
 #endif // ifdef _WIN32
 #include <iostream>
