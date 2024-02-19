@@ -28,25 +28,25 @@ Cloth::Cloth(const Vec3 &_origin_pos, int _num_particles_width,
       origin_pos(_origin_pos), step_x(_step_x), step_y(_step_y),
       num_particles_width(_num_particles_width),
       num_particles_height(_num_particles_height) {
-  // I am essentially using this vector as an array with room for
+
+  constexpr double gravity = 0.2; // TODO: make it a parameter
+  double time_step2 = time_step * time_step;
+
+  velocity = Vec3(0, -gravity, 0) * time_step2;
+
+  // We are essentially using this vector as an array with room for
   // num_particles_width*num_particles_height particles
-  particles.resize(num_particles_width * num_particles_height);
+  particles.reserve(num_particles_width * num_particles_height);
+  // creating particles in a grid of particles from (0,0,0) to
+  // (width,-height,0) creating particles in a grid
 
-// double time_step2 = time_step * time_step;
-
-// creating particles in a grid of particles from (0,0,0) to
-// (width,-height,0) creating particles in a grid
-#ifdef CSF_USE_OPENMP
-#pragma omp parallel for
-#endif
-  for (int i = 0; i < num_particles_width; i++) {
-    for (int j = 0; j < num_particles_height; j++) {
+  for (int i = 0; i < num_particles_height; i++) { // arrange in Row Major order
+    for (int j = 0; j < num_particles_width; j++) {
       // insert particle in column i at j'th row
-      particles[j * num_particles_width + i] =
-          Vec3(origin_pos.f[0] + i * step_x, origin_pos.f[1],
-               origin_pos.f[2] + j * step_y);
-      particles[j * num_particles_width + i].pos_x = i;
-      particles[j * num_particles_width + i].pos_y = j;
+
+      particles.emplace_back(Vec3(origin_pos.f[0] + j * step_x, origin_pos.f[1],
+                                  origin_pos.f[2] + i * step_y),
+                             velocity, j, i);
     }
   }
 
@@ -112,20 +112,14 @@ double Cloth::timeStep() {
   return max_diff;
 }
 
-void Cloth::addForce(const Vec3 direction) {
-  for (std::size_t i = 0; i < particles.size(); i++) {
-    particles[i].addForce(direction);
-  }
-}
-
 void Cloth::terrCollision() {
-  int particleCount = static_cast<int>(particles.size());
+  const int particleCount = static_cast<int>(particles.size());
 
 #ifdef CSF_USE_OPENMP
 #pragma omp parallel for
 #endif
   for (int i = 0; i < particleCount; i++) {
-    Vec3 v = particles[i].getPos();
+    const Vec3 v = particles[i].getPos();
 
     if (v.f[1] < height_values[i]) {
       particles[i].offsetPos(Vec3(0, height_values[i] - v.f[1], 0));
@@ -140,7 +134,7 @@ void Cloth::movableFilter() {
     for (int y = 0; y < num_particles_height; y++) {
       Particle *ptc = getParticle(x, y);
 
-      if (ptc->isMovable() && !ptc->isVisited) {
+      if (ptc->isMovable() && !ptc->is_visited) {
         std::queue<int> queue;
         std::vector<XY> connected; // store the connected component
         std::vector<std::vector<int>> neighbors;
@@ -149,7 +143,7 @@ void Cloth::movableFilter() {
 
         // visit the init node
         connected.push_back(XY(x, y));
-        particles[index].isVisited = true;
+        particles[index].is_visited = true;
 
         // enqueue the init node
         queue.push(index);
@@ -165,9 +159,9 @@ void Cloth::movableFilter() {
             Particle *ptc_left = getParticle(cur_x - 1, cur_y);
 
             if (ptc_left->isMovable()) {
-              if (!ptc_left->isVisited) {
+              if (!ptc_left->is_visited) {
                 sum++;
-                ptc_left->isVisited = true;
+                ptc_left->is_visited = true;
                 connected.push_back(XY(cur_x - 1, cur_y));
                 queue.push(num_particles_width * cur_y + cur_x - 1);
                 neighbor.push_back(sum - 1);
@@ -182,9 +176,9 @@ void Cloth::movableFilter() {
             Particle *ptc_right = getParticle(cur_x + 1, cur_y);
 
             if (ptc_right->isMovable()) {
-              if (!ptc_right->isVisited) {
+              if (!ptc_right->is_visited) {
                 sum++;
-                ptc_right->isVisited = true;
+                ptc_right->is_visited = true;
                 connected.push_back(XY(cur_x + 1, cur_y));
                 queue.push(num_particles_width * cur_y + cur_x + 1);
                 neighbor.push_back(sum - 1);
@@ -199,9 +193,9 @@ void Cloth::movableFilter() {
             Particle *ptc_bottom = getParticle(cur_x, cur_y - 1);
 
             if (ptc_bottom->isMovable()) {
-              if (!ptc_bottom->isVisited) {
+              if (!ptc_bottom->is_visited) {
                 sum++;
-                ptc_bottom->isVisited = true;
+                ptc_bottom->is_visited = true;
                 connected.push_back(XY(cur_x, cur_y - 1));
                 queue.push(num_particles_width * (cur_y - 1) + cur_x);
                 neighbor.push_back(sum - 1);
@@ -216,9 +210,9 @@ void Cloth::movableFilter() {
             Particle *ptc_top = getParticle(cur_x, cur_y + 1);
 
             if (ptc_top->isMovable()) {
-              if (!ptc_top->isVisited) {
+              if (!ptc_top->is_visited) {
                 sum++;
-                ptc_top->isVisited = true;
+                ptc_top->is_visited = true;
                 connected.push_back(XY(cur_x, cur_y + 1));
                 queue.push(num_particles_width * (cur_y + 1) + cur_x);
                 neighbor.push_back(sum - 1);
@@ -231,7 +225,7 @@ void Cloth::movableFilter() {
           neighbors.push_back(neighbor);
         }
 
-        if (sum > MAX_PARTICLE_FOR_POSTPROCESSIN) {
+        if (sum > max_particle_for_post_processing) {
           std::vector<int> edgePoints = findUnmovablePoint(connected);
           handle_slop_connected(edgePoints, connected, neighbors);
         }

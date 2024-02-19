@@ -24,10 +24,9 @@
  *  the next position is found through verlet integration*/
 void Particle::timeStep() {
   if (movable) {
-    Vec3 temp = pos;
-    pos = pos + (pos - old_pos) * (1.0 - DAMPING) +
-          acceleration; /*acceleration is pre multiplied by time_step2*/
-    ;
+    const Vec3 temp = pos;
+    pos = pos + (pos - old_pos) * one_minus_damping +
+          velocity; // TODO: acceleration is pre multiplied by time_step2*/
     old_pos = temp;
   }
 }

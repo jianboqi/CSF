@@ -98,20 +98,20 @@ Cloth CSF::do_cloth() {
   std::cout << " - bbMax: " << bbMax.x << " " << bbMax.y << " " << bbMax.z
             << std::endl;
 
-  double cloth_y_height = 0.05;
+  const double cloth_y_height = 0.05;
+  const int clothbuffer_d = 2;
 
-  int clothbuffer_d = 2;
-  Vec3 origin_pos(bbMin.x - clothbuffer_d * params.cloth_resolution,
-                  bbMax.y + cloth_y_height,
-                  bbMin.z - clothbuffer_d * params.cloth_resolution);
+  const Vec3 origin_pos(bbMin.x - clothbuffer_d * params.cloth_resolution,
+                        bbMax.y + cloth_y_height,
+                        bbMin.z - clothbuffer_d * params.cloth_resolution);
 
-  int width_num = static_cast<int>(std::floor((bbMax.x - bbMin.x) /
-                                              params.cloth_resolution)) +
-                  2 * clothbuffer_d;
+  const int width_num = static_cast<int>(std::floor((bbMax.x - bbMin.x) /
+                                                    params.cloth_resolution)) +
+                        2 * clothbuffer_d;
 
-  int height_num = static_cast<int>(std::floor((bbMax.z - bbMin.z) /
-                                               params.cloth_resolution)) +
-                   2 * clothbuffer_d;
+  const int height_num = static_cast<int>(std::floor((bbMax.z - bbMin.z) /
+                                                     params.cloth_resolution)) +
+                         2 * clothbuffer_d;
 
   std::cout << "Configuring cloth..." << std::endl;
   std::cout << " - width: " << width_num << " "
@@ -121,22 +121,16 @@ Cloth CSF::do_cloth() {
               params.cloth_resolution, 0.3, 9999, params.rigidness,
               params.time_step);
 
-  double time_step2 = params.time_step * params.time_step;
-  double gravity = 0.2;
-  cloth.addForce(Vec3(0, -gravity, 0) *
-                 time_step2); // pre multiply the force by the time step to
-                              // speed up the simulation
-
   std::cout << "Rasterizing..." << std::endl;
   Rasterization::Rasterize(cloth, point_cloud, cloth.getHeightvals());
 
   std::cout << "Simulating..." << std::endl;
 
   for (int i = 0; i < params.interations; i++) {
-    double maxDiff = cloth.timeStep();
+    double max_diff = cloth.timeStep();
     cloth.terrCollision();
     // params.class_threshold / 100
-    if ((maxDiff != 0) && (maxDiff < 0.005)) {
+    if ((max_diff != 0) && (max_diff < 0.005)) {
       // early stop
       break;
     }

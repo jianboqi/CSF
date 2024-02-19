@@ -19,33 +19,34 @@
 #include "Rasterization.h"
 #include <queue>
 
+// find height by scanning the nearest particles in the same row and column
 double Rasterization::findHeightValByScanline(Particle *p, Cloth &cloth) {
   int xpos = p->pos_x;
   int ypos = p->pos_y;
 
   for (int i = xpos + 1; i < cloth.num_particles_width; i++) {
-    double crresHeight = cloth.getParticle(i, ypos)->nearestPointHeight;
+    double crresHeight = cloth.getParticle(i, ypos)->nearest_point_height;
 
     if (crresHeight > MIN_INF)
       return crresHeight;
   }
 
   for (int i = xpos - 1; i >= 0; i--) {
-    double crresHeight = cloth.getParticle(i, ypos)->nearestPointHeight;
+    double crresHeight = cloth.getParticle(i, ypos)->nearest_point_height;
 
     if (crresHeight > MIN_INF)
       return crresHeight;
   }
 
   for (int j = ypos - 1; j >= 0; j--) {
-    double crresHeight = cloth.getParticle(xpos, j)->nearestPointHeight;
+    double crresHeight = cloth.getParticle(xpos, j)->nearest_point_height;
 
     if (crresHeight > MIN_INF)
       return crresHeight;
   }
 
   for (int j = ypos + 1; j < cloth.num_particles_height; j++) {
-    double crresHeight = cloth.getParticle(xpos, j)->nearestPointHeight;
+    double crresHeight = cloth.getParticle(xpos, j)->nearest_point_height;
 
     if (crresHeight > MIN_INF)
       return crresHeight;
@@ -54,41 +55,52 @@ double Rasterization::findHeightValByScanline(Particle *p, Cloth &cloth) {
   return findHeightValByNeighbor(p);
 }
 
+// find height by Region growing around the current particle
 double Rasterization::findHeightValByNeighbor(Particle *p) {
   std::queue<Particle *> nqueue;
   std::vector<Particle *> pbacklist;
-  int neiborsize = p->neighborsList.size();
+  int neighbor_size = p->neighborsList.size();
 
-  for (int i = 0; i < neiborsize; i++) {
-    p->isVisited = true;
+  // TODO RJ: this algorithm left the visited flag of some particles to "true"
+  // it should be reseted to "false" after the algorithm is done because this
+  // flag is reused in the cloth simultation. This is a bug with minor
+  // consequences it seems to apply only to particles with id 0,1,
+  // particle_number-1 and particle_number-2
+
+  // initialize the queue with the neighbors of the current particle
+  for (int i = 0; i < neighbor_size; i++) {
+    p->is_visited = true;
     nqueue.push(p->neighborsList[i]);
   }
 
-  // iterate over the nqueue
+  // iterate over a queue of particle
   while (!nqueue.empty()) {
     Particle *pneighbor = nqueue.front();
     nqueue.pop();
     pbacklist.push_back(pneighbor);
 
-    if (pneighbor->nearestPointHeight > MIN_INF) {
-      for (std::size_t i = 0; i < pbacklist.size(); i++)
-        pbacklist[i]->isVisited = false;
+    // if the current enqueued particle has a height defined, we return it
+    if (pneighbor->nearest_point_height > MIN_INF) {
 
+      // reset the visited flag for all the particles in the backlist
+      for(auto p : pbacklist) {
+        p->is_visited = false;
+      };
+
+      // reset the visited flag for all the particles in the queue
       while (!nqueue.empty()) {
         Particle *pp = nqueue.front();
-        pp->isVisited = false;
+        pp->is_visited = false;
         nqueue.pop();
       }
 
-      return pneighbor->nearestPointHeight;
-    } else {
-      int nsize = pneighbor->neighborsList.size();
+      // return the height value
+      return pneighbor->nearest_point_height;
 
-      for (int i = 0; i < nsize; i++) {
-        Particle *ptmp = pneighbor->neighborsList[i];
-
-        if (!ptmp->isVisited) {
-          ptmp->isVisited = true;
+    } else { // else we schedule to visit the neighbors of the current neighbor
+      for (auto ptmp : pneighbor->neighborsList) {
+        if (!ptmp->is_visited) {
+          ptmp->is_visited = true;
           nqueue.push(ptmp);
         }
       }
@@ -102,37 +114,36 @@ void Rasterization::Rasterize(Cloth &cloth, csf::PointCloud &pc,
                               std::vector<double> &heightVal) {
 
   for (std::size_t i = 0; i < pc.size(); i++) {
-    double pc_x = pc[i].x;
-    double pc_z = pc[i].z;
+    const double pc_x = pc[i].x;
+    const double pc_z = pc[i].z;
 
-    double deltaX = pc_x - cloth.origin_pos.f[0];
-    double deltaZ = pc_z - cloth.origin_pos.f[2];
-    int col = int(deltaX / cloth.step_x + 0.5);
-    int row = int(deltaZ / cloth.step_y + 0.5);
+    const double deltaX = pc_x - cloth.origin_pos.f[0];
+    const double deltaZ = pc_z - cloth.origin_pos.f[2];
+    const int col = int(deltaX / cloth.step_x + 0.5);
+    const int row = int(deltaZ / cloth.step_y + 0.5);
 
     if ((col >= 0) && (row >= 0)) {
       Particle *pt = cloth.getParticle(col, row);
-      pt->correspondingLidarPointList.push_back(i);
-      double pc2particleDist =
+      const double pc2particleDist =
           SQUARE_DIST(pc_x, pc_z, pt->getPos().f[0], pt->getPos().f[2]);
 
-      if (pc2particleDist < pt->tmpDist) {
-        pt->tmpDist = pc2particleDist;
-        pt->nearestPointHeight = pc[i].y;
-        pt->nearestPointIndex = i;
+      if (pc2particleDist < pt->tmp_dist) {
+        pt->tmp_dist = pc2particleDist;
+        pt->nearest_point_height = pc[i].y;
       }
     }
   }
-  heightVal.resize(cloth.getSize());
 
+  heightVal.resize(cloth.getSize());
   for (int i = 0; i < cloth.getSize(); i++) {
     Particle *pcur = cloth.getParticle1d(i);
-    double nearestHeight = pcur->nearestPointHeight;
+    const double nearestHeight = pcur->nearest_point_height;
 
     if (nearestHeight > MIN_INF) {
       heightVal[i] = nearestHeight;
     } else {
       heightVal[i] = findHeightValByScanline(pcur, cloth);
     }
+
   }
 }
