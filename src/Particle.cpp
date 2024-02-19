@@ -25,8 +25,8 @@
 void Particle::timeStep() {
   if (movable) {
     const Vec3 temp = pos;
-    pos.f[1] = pos.f[1] + (pos.f[1] - old_pos.f[1]) * one_minus_damping +
-          displacement; 
+    pos.f[1] =
+        pos.f[1] + (pos.f[1] - old_pos.f[1]) * one_minus_damping + displacement;
     old_pos = temp;
   }
 }
@@ -40,18 +40,18 @@ void Particle::satisfyConstraintSelf(int constraintTimes) {
 
     if (p1->isMovable() && p2->isMovable()) {
       // Lets make it half that length, so that we can move BOTH p1 and p2.
-      double correction_factor_half =
+      const double correction_factor_half =
           correction_factor *
           (constraintTimes > 14 ? 0.5 : doubleMove1[constraintTimes]);
       p1->offsetPos(correction_factor_half);
       p2->offsetPos(-correction_factor_half);
     } else if (p1->isMovable() && !p2->isMovable()) {
-      double correction_factor_half =
+      const double correction_factor_half =
           correction_factor *
           (constraintTimes > 14 ? 1 : singleMove1[constraintTimes]);
       p1->offsetPos(correction_factor_half);
     } else if (!p1->isMovable() && p2->isMovable()) {
-      double correction_factor_half =
+      const double correction_factor_half =
           correction_factor *
           (constraintTimes > 14 ? 1 : singleMove1[constraintTimes]);
       p2->offsetPos(-correction_factor_half);

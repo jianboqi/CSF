@@ -78,7 +78,7 @@ public:
   double tmp_dist;
   int pos_x; // position in the cloth grid
   int pos_y;
-  int c_pos;
+  int c_pos; // position in a connected component
 
   std::vector<Particle *> neighborsList;
   double nearest_point_height;

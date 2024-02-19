@@ -101,6 +101,7 @@ Cloth CSF::do_cloth() {
   const double cloth_y_height = 0.05;
   const int clothbuffer_d = 2;
 
+  // origin is shifted by clothbuffer_d * params.cloth_resolution
   const Vec3 origin_pos(bbMin.x - clothbuffer_d * params.cloth_resolution,
                         bbMax.y + cloth_y_height,
                         bbMin.z - clothbuffer_d * params.cloth_resolution);

@@ -55,7 +55,6 @@
 #include "Particle.h"
 #include "Vec3.h"
 
-// post processing is only for connected component which is large than 50
 
 struct XY {
   XY(int x1, int y1) {
@@ -69,8 +68,9 @@ struct XY {
 
 class Cloth {
 private:
+  // post processing is only for connected component which is large than 50
+  
   static constexpr int max_particle_for_post_processing = 50;
-  // total number of particles is num_particles_width * num_particles_height
   int constraint_iterations;
 
   int rigidness;
@@ -103,7 +103,7 @@ public:
 public:
   int getSize() { return num_particles_width * num_particles_height; }
 
-  size_t get1DIndex(int x, int y) { return y * num_particles_width + x; }
+  //size_t get1DIndex(int x, int y) { return y * num_particles_width + x; }
 
   inline std::vector<double> &getHeightvals() { return height_values; }
 
@@ -123,10 +123,6 @@ public:
    * timeStep() for all particles
    */
   double timeStep();
-
-  /* used to add gravity (or any other arbitrary vector) to all
-   * particles */
-  void addForce(const Vec3 direction);
 
   void terrCollision();
 
