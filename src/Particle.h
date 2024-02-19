@@ -64,8 +64,8 @@ class Particle {
 
 private:
   bool movable; // can the particle move or not ? used to pin parts of the cloth
-  const Vec3
-      &velocity; // a vector representing the current velocity of the particle
+  const double displacement; // the displacement of the particle in z(y) direction at each step
+  // it's g*dt^2, where g is the gravity, dt is the time step
 
 public:
   // These two memebers are used in the process of edge smoothing after
@@ -85,9 +85,9 @@ public:
   void satisfyConstraintSelf(int constraintTimes);
 
 public:
-  Particle(const Vec3 &pos, const Vec3 &velocity, const int pos_x,
+  Particle(const Vec3 &pos, const double displacement, const int pos_x,
            const int pos_y)
-      : movable(true), velocity(velocity), pos(pos), old_pos(pos), pos_x(pos_x),
+      : movable(true), displacement(displacement), pos(pos), old_pos(pos), pos_x(pos_x),
         pos_y(pos_y) {
     is_visited = false;
     c_pos = 0;
@@ -104,11 +104,9 @@ public:
 
   Vec3 &getPos() { return pos; }
 
-  Vec3 getPosCopy() { return pos; }
-
-  void offsetPos(const Vec3 &v) {
+  void offsetPos(double offset) {
     if (movable)
-      pos += v;
+      pos.f[1] += offset;
   }
 
   void makeUnmovable() { movable = false; }

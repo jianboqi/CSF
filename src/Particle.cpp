@@ -25,8 +25,8 @@
 void Particle::timeStep() {
   if (movable) {
     const Vec3 temp = pos;
-    pos = pos + (pos - old_pos) * one_minus_damping +
-          velocity; // TODO: acceleration is pre multiplied by time_step2*/
+    pos.f[1] = pos.f[1] + (pos.f[1] - old_pos.f[1]) * one_minus_damping +
+          displacement; 
     old_pos = temp;
   }
 }
@@ -36,25 +36,25 @@ void Particle::satisfyConstraintSelf(int constraintTimes) {
 
   for (std::size_t i = 0; i < neighborsList.size(); i++) {
     Particle *p2 = neighborsList[i];
-    Vec3 correctionVector(0, p2->pos.f[1] - p1->pos.f[1], 0);
+    const double correction_factor = p2->pos.f[1] - p1->pos.f[1];
 
     if (p1->isMovable() && p2->isMovable()) {
       // Lets make it half that length, so that we can move BOTH p1 and p2.
-      Vec3 correctionVectorHalf =
-          correctionVector *
+      double correction_factor_half =
+          correction_factor *
           (constraintTimes > 14 ? 0.5 : doubleMove1[constraintTimes]);
-      p1->offsetPos(correctionVectorHalf);
-      p2->offsetPos(-correctionVectorHalf);
+      p1->offsetPos(correction_factor_half);
+      p2->offsetPos(-correction_factor_half);
     } else if (p1->isMovable() && !p2->isMovable()) {
-      Vec3 correctionVectorHalf =
-          correctionVector *
+      double correction_factor_half =
+          correction_factor *
           (constraintTimes > 14 ? 1 : singleMove1[constraintTimes]);
-      p1->offsetPos(correctionVectorHalf);
+      p1->offsetPos(correction_factor_half);
     } else if (!p1->isMovable() && p2->isMovable()) {
-      Vec3 correctionVectorHalf =
-          correctionVector *
+      double correction_factor_half =
+          correction_factor *
           (constraintTimes > 14 ? 1 : singleMove1[constraintTimes]);
-      p2->offsetPos(-correctionVectorHalf);
+      p2->offsetPos(-correction_factor_half);
     }
   }
 }

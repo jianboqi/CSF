@@ -104,7 +104,7 @@ public:
 public:
   int getSize() { return num_particles_width * num_particles_height; }
 
-  std::size_t get1DIndex(int x, int y) { return y * num_particles_width + x; }
+  size_t get1DIndex(int x, int y) { return y * num_particles_width + x; }
 
   inline std::vector<double> &getHeightvals() { return height_values; }
 

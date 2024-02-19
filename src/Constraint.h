@@ -43,5 +43,5 @@ public:
   /* This is one of the important methods, where a single constraint
    * between two particles p1 and p2 is solved the method is called
    * by Cloth.time_step() many times per frame*/
-  void satisfyConstraint(int constraintTimes);
+  void satisfyConstraint(int constraint_times);
 };

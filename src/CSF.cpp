@@ -127,7 +127,7 @@ Cloth CSF::do_cloth() {
   std::cout << "Simulating..." << std::endl;
 
   for (int i = 0; i < params.interations; i++) {
-    double max_diff = cloth.timeStep();
+    const double max_diff = cloth.timeStep();
     cloth.terrCollision();
     // params.class_threshold / 100
     if ((max_diff != 0) && (max_diff < 0.005)) {
