@@ -140,7 +140,7 @@ void Cloth::movableFilter() {
         int index = y * num_particles_width + x;
 
         // visit the init node
-        connected.push_back(XY(x, y));
+        connected.emplace_back(x, y);
         particles[index].is_visited = true;
 
         // enqueue the init node
@@ -158,12 +158,11 @@ void Cloth::movableFilter() {
 
             if (ptc_left->isMovable()) {
               if (!ptc_left->is_visited) {
-                sum++;
                 ptc_left->is_visited = true;
-                connected.push_back(XY(cur_x - 1, cur_y));
+                connected.emplace_back(cur_x - 1, cur_y);
                 queue.push(num_particles_width * cur_y + cur_x - 1);
-                neighbor.push_back(sum - 1);
-                ptc_left->c_pos = sum - 1;
+                neighbor.push_back(sum);
+                ptc_left->c_pos = sum++;
               } else {
                 neighbor.push_back(ptc_left->c_pos);
               }
@@ -175,12 +174,11 @@ void Cloth::movableFilter() {
 
             if (ptc_right->isMovable()) {
               if (!ptc_right->is_visited) {
-                sum++;
                 ptc_right->is_visited = true;
-                connected.push_back(XY(cur_x + 1, cur_y));
+                connected.emplace_back(cur_x + 1, cur_y);
                 queue.push(num_particles_width * cur_y + cur_x + 1);
-                neighbor.push_back(sum - 1);
-                ptc_right->c_pos = sum - 1;
+                neighbor.push_back(sum);
+                ptc_right->c_pos = sum++;
               } else {
                 neighbor.push_back(ptc_right->c_pos);
               }
@@ -192,12 +190,11 @@ void Cloth::movableFilter() {
 
             if (ptc_bottom->isMovable()) {
               if (!ptc_bottom->is_visited) {
-                sum++;
                 ptc_bottom->is_visited = true;
-                connected.push_back(XY(cur_x, cur_y - 1));
+                connected.emplace_back(cur_x, cur_y - 1);
                 queue.push(num_particles_width * (cur_y - 1) + cur_x);
-                neighbor.push_back(sum - 1);
-                ptc_bottom->c_pos = sum - 1;
+                neighbor.push_back(sum);
+                ptc_bottom->c_pos = sum++;
               } else {
                 neighbor.push_back(ptc_bottom->c_pos);
               }
@@ -209,12 +206,11 @@ void Cloth::movableFilter() {
 
             if (ptc_top->isMovable()) {
               if (!ptc_top->is_visited) {
-                sum++;
                 ptc_top->is_visited = true;
-                connected.push_back(XY(cur_x, cur_y + 1));
+                connected.emplace_back(cur_x, cur_y + 1);
                 queue.push(num_particles_width * (cur_y + 1) + cur_x);
-                neighbor.push_back(sum - 1);
-                ptc_top->c_pos = sum - 1;
+                neighbor.push_back(sum);
+                ptc_top->c_pos = sum++;
               } else {
                 neighbor.push_back(ptc_top->c_pos);
               }
