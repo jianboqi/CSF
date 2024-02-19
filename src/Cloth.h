@@ -57,7 +57,6 @@
 
 // post processing is only for connected component which is large than 50
 
-
 struct XY {
   XY(int x1, int y1) {
     x = x1;
@@ -89,8 +88,8 @@ public:
   Vec3 origin_pos;
   double step_x, step_y;
   std::vector<double> height_values; // height values
-  int num_particles_width;        // number of particles in width direction
-  int num_particles_height;       // number of particles in height direction
+  int num_particles_width;           // number of particles in width direction
+  int num_particles_height;          // number of particles in height direction
 
   Particle *getParticle(int x, int y) {
     return &particles[y * num_particles_width + x];
@@ -133,11 +132,11 @@ public:
 
   void movableFilter();
 
-  std::vector<int> findUnmovablePoint(std::vector<XY> connected);
+  std::vector<int> findUnmovablePoint(const std::vector<XY> & connected);
 
-  void handle_slop_connected(std::vector<int> edgePoints,
-                             std::vector<XY> connected,
-                             std::vector<std::vector<int>> neibors);
+  void handle_slop_connected(const std::vector<int> &edgePoints,
+                             const std::vector<XY> &connected,
+                             const std::vector<std::vector<int>> &neighbors);
 
   void saveToFile(std::string path = "");
 

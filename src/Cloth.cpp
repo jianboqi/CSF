@@ -228,7 +228,7 @@ void Cloth::movableFilter() {
   }
 }
 
-std::vector<int> Cloth::findUnmovablePoint(std::vector<XY> connected) {
+std::vector<int> Cloth::findUnmovablePoint(const std::vector<XY> & connected) {
   std::vector<int> edgePoints;
 
   for (size_t i = 0; i < connected.size(); i++) {
@@ -309,44 +309,45 @@ std::vector<int> Cloth::findUnmovablePoint(std::vector<XY> connected) {
   return edgePoints;
 }
 
-void Cloth::handle_slop_connected(std::vector<int> edgePoints,
-                                  std::vector<XY> connected,
-                                  std::vector<std::vector<int>> neibors) {
+void Cloth::handle_slop_connected(
+    const std::vector<int> &edgePoints, const std::vector<XY> &connected,
+    const std::vector<std::vector<int>> &neighbors) {
   std::vector<bool> visited;
 
   for (std::size_t i = 0; i < connected.size(); i++)
     visited.push_back(false);
 
-  std::queue<int> que;
+  std::queue<int> queue;
 
   for (size_t i = 0; i < edgePoints.size(); i++) {
-    que.push(edgePoints[i]);
+    queue.push(edgePoints[i]);
     visited[edgePoints[i]] = true;
   }
 
-  while (!que.empty()) {
-    int index = que.front();
-    que.pop();
+  while (!queue.empty()) {
+    int index = queue.front();
+    queue.pop();
 
     int index_center =
         connected[index].y * num_particles_width + connected[index].x;
 
-    for (size_t i = 0; i < neibors[index].size(); i++) {
-      int index_neibor = connected[neibors[index][i]].y * num_particles_width +
-                         connected[neibors[index][i]].x;
+    for (size_t i = 0; i < neighbors[index].size(); i++) {
+      int index_neighbor =
+          connected[neighbors[index][i]].y * num_particles_width +
+          connected[neighbors[index][i]].x;
 
-      if ((fabs(height_values[index_center] - height_values[index_neibor]) <
+      if ((fabs(height_values[index_center] - height_values[index_neighbor]) <
            smoothThreshold) &&
-          (fabs(particles[index_neibor].getPos().f[1] -
-                height_values[index_neibor]) < heightThreshold)) {
-        particles[index_neibor].offsetPos(
-            height_values[index_neibor] -
-            particles[index_neibor].getPos().f[1]);
-        particles[index_neibor].makeUnmovable();
+          (fabs(particles[index_neighbor].getPos().f[1] -
+                height_values[index_neighbor]) < heightThreshold)) {
+        particles[index_neighbor].offsetPos(
+            height_values[index_neighbor] -
+            particles[index_neighbor].getPos().f[1]);
+        particles[index_neighbor].makeUnmovable();
 
-        if (visited[neibors[index][i]] == false) {
-          que.push(neibors[index][i]);
-          visited[neibors[index][i]] = true;
+        if (visited[neighbors[index][i]] == false) {
+          queue.push(neighbors[index][i]);
+          visited[neighbors[index][i]] = true;
         }
       }
     }
