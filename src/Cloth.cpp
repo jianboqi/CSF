@@ -103,7 +103,7 @@ double Cloth::timeStep() {
     if (particles[i].isMovable()) {
 
       max_diff = std::max(
-          max_diff, fabs(particles[i].old_pos.f[1] - particles[i].pos.f[1]));
+          max_diff, fabs(particles[i].previous_height - particles[i].height));
     }
   }
 
@@ -117,10 +117,10 @@ void Cloth::terrCollision() {
 #pragma omp parallel for
 #endif
   for (int i = 0; i < particleCount; i++) {
-    const Vec3 v = particles[i].getPos();
+    const double displacement = particles[i].height;
 
-    if (v.f[1] < height_values[i]) {
-      particles[i].offsetPos(height_values[i] - v.f[1]);
+    if (displacement < height_values[i]) {
+      particles[i].offsetPos(height_values[i] - displacement);
       particles[i].makeUnmovable();
     }
   }
@@ -245,8 +245,8 @@ std::vector<int> Cloth::findUnmovablePoint(const std::vector<XY> & connected) {
 
         if ((fabs(height_values[index] - height_values[index_ref]) <
              smoothThreshold) &&
-            (ptc->getPos().f[1] - height_values[index] < heightThreshold)) {
-          particles[index].offsetPos(height_values[index] - ptc->getPos().f[1]);
+            (ptc->height - height_values[index] < heightThreshold)) {
+          particles[index].offsetPos(height_values[index] - ptc->height);
           ptc->makeUnmovable();
           edgePoints.push_back(i);
           continue;
@@ -262,8 +262,8 @@ std::vector<int> Cloth::findUnmovablePoint(const std::vector<XY> & connected) {
 
         if ((fabs(height_values[index] - height_values[index_ref]) <
              smoothThreshold) &&
-            (ptc->getPos().f[1] - height_values[index] < heightThreshold)) {
-          particles[index].offsetPos(height_values[index] - ptc->getPos().f[1]);
+            (ptc->height - height_values[index] < heightThreshold)) {
+          particles[index].offsetPos(height_values[index] - ptc->height);
           ptc->makeUnmovable();
           edgePoints.push_back(i);
           continue;
@@ -279,8 +279,8 @@ std::vector<int> Cloth::findUnmovablePoint(const std::vector<XY> & connected) {
 
         if ((fabs(height_values[index] - height_values[index_ref]) <
              smoothThreshold) &&
-            (ptc->getPos().f[1] - height_values[index] < heightThreshold)) {
-          particles[index].offsetPos(height_values[index] - ptc->getPos().f[1]);
+            (ptc->height- height_values[index] < heightThreshold)) {
+          particles[index].offsetPos(height_values[index] - ptc->height);
           ptc->makeUnmovable();
           edgePoints.push_back(i);
           continue;
@@ -296,8 +296,8 @@ std::vector<int> Cloth::findUnmovablePoint(const std::vector<XY> & connected) {
 
         if ((fabs(height_values[index] - height_values[index_ref]) <
              smoothThreshold) &&
-            (ptc->getPos().f[1] - height_values[index] < heightThreshold)) {
-          particles[index].offsetPos(height_values[index] - ptc->getPos().f[1]);
+            (ptc->height - height_values[index] < heightThreshold)) {
+          particles[index].offsetPos(height_values[index] - ptc->height);
           ptc->makeUnmovable();
           edgePoints.push_back(i);
           continue;
@@ -338,11 +338,11 @@ void Cloth::handle_slop_connected(
 
       if ((fabs(height_values[index_center] - height_values[index_neighbor]) <
            smoothThreshold) &&
-          (fabs(particles[index_neighbor].getPos().f[1] -
+          (fabs(particles[index_neighbor].height -
                 height_values[index_neighbor]) < heightThreshold)) {
         particles[index_neighbor].offsetPos(
             height_values[index_neighbor] -
-            particles[index_neighbor].getPos().f[1]);
+            particles[index_neighbor].height);
         particles[index_neighbor].makeUnmovable();
 
         if (visited[neighbors[index][i]] == false) {
@@ -358,9 +358,9 @@ std::vector<double> Cloth::toVector() {
   std::vector<double> clothCoordinates;
   clothCoordinates.reserve(particles.size() * 3);
   for (auto &particle : particles) {
-    clothCoordinates.push_back(particle.getPos().f[0]);
-    clothCoordinates.push_back(particle.getPos().f[2]);
-    clothCoordinates.push_back(-particle.getPos().f[1]);
+    clothCoordinates.push_back(particle.initial_pos.f[0]);
+    clothCoordinates.push_back(particle.initial_pos.f[2]);
+    clothCoordinates.push_back(-particle.height);
   }
   return clothCoordinates;
 }
@@ -380,9 +380,9 @@ void Cloth::saveToFile(std::string path) {
     return;
 
   for (std::size_t i = 0; i < particles.size(); i++) {
-    f1 << std::fixed << std::setprecision(8) << particles[i].getPos().f[0]
-       << "	" << particles[i].getPos().f[2] << "	"
-       << -particles[i].getPos().f[1] << std::endl;
+    f1 << std::fixed << std::setprecision(8) << particles[i].initial_pos.f[0]
+       << "	" << particles[i].initial_pos.f[2] << "	"
+       << -particles[i].height << std::endl;
   }
 
   f1.close();
@@ -404,9 +404,9 @@ void Cloth::saveMovableToFile(std::string path) {
 
   for (std::size_t i = 0; i < particles.size(); i++) {
     if (particles[i].isMovable()) {
-      f1 << std::fixed << std::setprecision(8) << particles[i].getPos().f[0]
-         << "	" << particles[i].getPos().f[2] << "	"
-         << -particles[i].getPos().f[1] << std::endl;
+      f1 << std::fixed << std::setprecision(8) << particles[i].initial_pos.f[0]
+         << "	" << particles[i].initial_pos.f[2] << "	"
+         << -particles[i].height << std::endl;
     }
   }
 

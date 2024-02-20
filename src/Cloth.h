@@ -82,9 +82,6 @@ private:
   double smoothThreshold;
   double heightThreshold;
 
-  // Velocity of the particles int the cloth g * time_step2
-  Vec3 velocity;
-
 public:
   Vec3 origin_pos;
   double step_x, step_y;

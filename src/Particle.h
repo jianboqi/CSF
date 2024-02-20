@@ -27,12 +27,12 @@
 
 /* The particle class represents a particle of mass that can move
  * around in 3D space*/
-  static constexpr double singleMove1[15] = {
-      0,       0.3,     0.51,    0.657,   0.7599,  0.83193, 0.88235, 0.91765,
-      0.94235, 0.95965, 0.97175, 0.98023, 0.98616, 0.99031, 0.99322};
-  static constexpr double doubleMove1[15] = {
-      0,      0.3,    0.42,   0.468, 0.4872, 0.4949, 0.498, 0.4992,
-      0.4997, 0.4999, 0.4999, 0.5,   0.5,    0.5,    0.5};
+static constexpr double singleMove1[15] = {
+    0,       0.3,     0.51,    0.657,   0.7599,  0.83193, 0.88235, 0.91765,
+    0.94235, 0.95965, 0.97175, 0.98023, 0.98616, 0.99031, 0.99322};
+static constexpr double doubleMove1[15] = {
+    0,      0.3,    0.42,   0.468, 0.4872, 0.4949, 0.498, 0.4992,
+    0.4997, 0.4999, 0.4999, 0.5,   0.5,    0.5,    0.5};
 
 class Particle {
 
@@ -57,42 +57,59 @@ class Particle {
   ...
   */
 
-
   static constexpr double damping =
       0.01; // how much to damp the cloth simulation each frame
   static constexpr double one_minus_damping = 1.0 - damping;
 
 private:
   bool movable; // can the particle move or not ? used to pin parts of the cloth
-  const double displacement; // the displacement of the particle in z(y) direction at each step
+  const double displacement; // the displacement of the particle in z(y)
+                             // direction at each step
   // it's g*dt^2, where g is the gravity, dt is the time step
 
 public:
   // These two memebers are used in the process of edge smoothing after
   // the cloth simulation step.
-  Vec3 pos; // the current position of the particle in 3D space
-  // the position of the particle in the previous time step, used as
-  // part of the verlet numerical integration scheme
-  Vec3 old_pos;
-  bool is_visited;
-  double tmp_dist;
+
+  // The initial position of the particle in the cloth
+  // this is basically only use at export time and it could
+  // simply be genrated on the fly given the particle position
+  // on the grid
+  const Vec3 initial_pos;
+
   int pos_x; // position in the cloth grid
   int pos_y;
-  int c_pos; // position in a connected component
+
+  bool is_visited;
+  double tmp_dist;
+
+  // position in a connected component
+  int c_pos;
 
   std::vector<Particle *> neighborsList;
+  // store height of the particle at previous time step
+  double previous_height;
+  // store height of the particle
+  double height;
+
+  // store the height of the nearest point in the point cloud
+  // this is used in the process of rasterization init the height_values
+  // array
   double nearest_point_height;
+
   void satisfyConstraintSelf(int constraintTimes);
 
 public:
   Particle(const Vec3 &pos, const double displacement, const int pos_x,
            const int pos_y)
-      : movable(true), displacement(displacement), pos(pos), old_pos(pos), pos_x(pos_x),
-        pos_y(pos_y) {
+      : movable(true), displacement(displacement), initial_pos(pos),
+        pos_x(pos_x), pos_y(pos_y) {
     is_visited = false;
     c_pos = 0;
     tmp_dist = MAX_INF;
+    height = initial_pos.f[1];
     nearest_point_height = MIN_INF;
+    previous_height = initial_pos.f[1];
   }
 
   bool isMovable() { return movable; }
@@ -102,17 +119,15 @@ public:
    * called by Cloth.time_step()*/
   void timeStep();
 
-  Vec3 &getPos() { return pos; }
-
   void offsetPos(double offset) {
     if (movable)
-      pos.f[1] += offset;
+      height += offset;
   }
 
   void makeUnmovable() { movable = false; }
 
   void printself(std::string s = "") {
-    std::cout << s << ": " << this->getPos().f[0]
-              << " movable:  " << this->movable << std::endl;
+    std::cout << s << ": " << initial_pos.f[0] << " movable:  " << this->movable
+              << std::endl;
   }
 };

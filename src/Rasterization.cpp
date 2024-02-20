@@ -122,7 +122,7 @@ void Rasterization::Rasterize(Cloth &cloth, const csf::PointCloud &pc,
     if ((col >= 0) && (row >= 0)) {
       Particle *particle = cloth.getParticle(col, row);
       const double point_to_particle_dist = SQUARE_DIST(
-          point.x, point.z, particle->getPos().f[0], particle->getPos().f[2]);
+          point.x, point.z, particle->initial_pos.f[0], particle->initial_pos.f[2]);
 
       if (point_to_particle_dist < particle->tmp_dist) {
         particle->tmp_dist = point_to_particle_dist;

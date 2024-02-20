@@ -24,10 +24,10 @@
  *  the next position is found through verlet integration*/
 void Particle::timeStep() {
   if (movable) {
-    const Vec3 temp = pos;
-    pos.f[1] =
-        pos.f[1] + (pos.f[1] - old_pos.f[1]) * one_minus_damping + displacement;
-    old_pos = temp;
+    const double temp_height = height;
+    height =
+        height + (height - previous_height) * one_minus_damping + displacement;
+    previous_height = temp_height;
   }
 }
 
@@ -36,7 +36,7 @@ void Particle::satisfyConstraintSelf(int constraintTimes) {
 
   for (std::size_t i = 0; i < neighborsList.size(); i++) {
     Particle *p2 = neighborsList[i];
-    const double correction_factor = p2->pos.f[1] - p1->pos.f[1];
+    const double correction_factor = p2->height - p1->height;
 
     if (p1->isMovable() && p2->isMovable()) {
       // Lets make it half that length, so that we can move BOTH p1 and p2.

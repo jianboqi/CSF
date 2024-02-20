@@ -45,11 +45,11 @@ void c2cdist::calCloud2CloudDist(Cloth &cloth, csf::PointCloud &pc,
     double subdeltaZ = (deltaZ - row0 * cloth.step_y) / cloth.step_y;
 
     double fxy =
-        cloth.getParticle(col0, row0)->pos.f[1] * (1 - subdeltaX) *
+        cloth.getParticle(col0, row0)->height * (1 - subdeltaX) *
             (1 - subdeltaZ) +
-        cloth.getParticle(col3, row3)->pos.f[1] * (1 - subdeltaX) * subdeltaZ +
-        cloth.getParticle(col2, row2)->pos.f[1] * subdeltaX * subdeltaZ +
-        cloth.getParticle(col1, row1)->pos.f[1] * subdeltaX * (1 - subdeltaZ);
+        cloth.getParticle(col3, row3)->height * (1 - subdeltaX) * subdeltaZ +
+        cloth.getParticle(col2, row2)->height * subdeltaX * subdeltaZ +
+        cloth.getParticle(col1, row1)->height * subdeltaX * (1 - subdeltaZ);
     double height_var = fxy - pc[i].y;
 
     if (std::fabs(height_var) < class_treshold) {

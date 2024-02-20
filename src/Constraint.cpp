@@ -19,13 +19,13 @@
 #include "Constraint.h"
 
 void Constraint::satisfyConstraint(int constraint_times) {
-  double correction_factor = p2->pos.f[1] - p1->pos.f[1];
+  double correction_factor = p2->height - p1->height;
 
   if (p1->isMovable() && p2->isMovable()) {
     // Lets make it half that length, so that we can move BOTH p1 and p2.
     double correction_factor_half =
-        p2->pos.f[1] -
-        p1->pos.f[1] *
+        p2->height -
+        p1->height *
             (constraint_times > 14 ? 0.5 : doubleMove[constraint_times - 1]);
     p1->offsetPos(correction_factor_half);
     p2->offsetPos(-correction_factor_half);
