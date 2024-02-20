@@ -7,12 +7,16 @@ W. Zhang, J. Qi*, P. Wan, H. Wang, D. Xie, X. Wang, and G. Yan, “An Easy-to-Us
 (http://www.mdpi.com/2072-4292/8/6/501/htm)
 
 
-**This is a modified version of the Original Code for 3DFin purposes**
+**This is a modified version of the original Code for 3DFin purposes**
+
+For now this is only intended to be used inside [3DFin](https://github.com/3DFin/3Dfin)/[dendromatics](https://github.com/3DFin/dendromatics). 
+But this repository also serve as a playground to bootstrap a planned full rewrite of CSF.
 
 List of changes:
 
 - Better handling of numpy arrays in the python bindings (avoid expensive copies)
-
+- Bug fixes and improvement (mostly backport from CloudCompare version of CSF and original ones)
+- Better (but yet to be improved) documentation and code structure.
 
 **New feature has been implemented:**
 

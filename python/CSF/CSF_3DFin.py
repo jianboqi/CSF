@@ -567,8 +567,8 @@ class CSF(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, *args):
-        _CSF_3DFin.CSF_swiginit(self, _CSF_3DFin.new_CSF(*args))
+    def __init__(self):
+        _CSF_3DFin.CSF_swiginit(self, _CSF_3DFin.new_CSF())
     __swig_destroy__ = _CSF_3DFin.delete_CSF
 
     def readPointsFromFile(self, filename):
