@@ -1,1 +1,2 @@
 include src/*.h
+include CSFDemo/*.png
