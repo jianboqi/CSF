@@ -65,15 +65,21 @@ void CSF::setPointCloud(std::vector<csf::Point> points) {
     }
 }
 
-void CSF::setPointCloud(double *points, int rows) {
-	#define A(i, j) points[i + j * rows]
-
+void CSF::setPointCloud(double *points, int rows, int cols) {
+	point_cloud.resize(rows);
+    #define A(i, j) points[i * cols + j]
     for (int i = 0; i < rows; i++) {
-        csf::Point p;
-        p.x = A(i, 0);
-        p.y = -A(i, 2);
-        p.z = A(i, 1);
-        point_cloud.push_back(p);
+        point_cloud[i] = {A(i, 0), -A(i, 2) , A(i, 1)};
+    }
+}
+
+
+
+void CSF::setPointCloud(double *points, int rows) {
+	#define Mat(i, j) points[i + j * rows]
+	point_cloud.resize(rows);
+    for (int i = 0; i < rows; i++) {
+        point_cloud[i] = {Mat(i, 0), -Mat(i, 2) , Mat(i, 1)};
     }
 }
 
@@ -92,20 +98,6 @@ void CSF::setPointCloud(csf::PointCloud& pc) {
     }
 }
 
-void CSF::setPointCloud(std::vector<std::vector<float> > points) {
-    point_cloud.resize(points.size());
-    int pointCount = static_cast<int>(points.size());
-    #ifdef CSF_USE_OPENMP
-    #pragma omp parallel for
-    #endif
-    for (int i = 0; i < pointCount; i++) {
-        csf::Point las;
-        las.x          = points[i][0];
-        las.y          = -points[i][2];
-        las.z          = points[i][1];
-        point_cloud[i] = las;
-    }
-}
 
 void CSF::readPointsFromFile(std::string filename) {
     this->point_cloud.resize(0);
@@ -118,10 +110,12 @@ Cloth CSF::do_cloth() {
     std::cout << "[" << this->index << "] Configuring terrain..." << std::endl;
     csf::Point bbMin, bbMax;
     point_cloud.computeBoundingBox(bbMin, bbMax);
+    std::cout << "[" << this->index << "]  - bbMin: " << bbMin.x << " " << bbMin.y << " " << bbMin.z << std::endl;
+    std::cout << "[" << this->index << "]  - bbMax: " << bbMax.x << " " << bbMax.y << " " << bbMax.z << std::endl;
 
     double cloth_y_height = 0.05;
 
-    int  clothbuffer_d = 2;
+    int clothbuffer_d = 2;
     Vec3 origin_pos(
         bbMin.x - clothbuffer_d *params.cloth_resolution,
         bbMax.y + cloth_y_height,

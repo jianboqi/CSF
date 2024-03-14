@@ -7,6 +7,11 @@
 
 %include "std_string.i"
 %include "std_vector.i"
+%include "numpy.i"
+
+%init %{
+import_array();
+%}
 
 namespace std
 {
@@ -16,4 +21,5 @@ namespace std
     %template(VecDouble) vector<double>;
 }
 
+%apply (double* IN_ARRAY2, int DIM1, int DIM2) {(double *points, int rows, int cols)};
 %include "../src/CSF.h"

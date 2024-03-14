@@ -1,3 +1,6 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["wheel","setuptools", "oldest-supported-numpy"]
 build-backend = "setuptools.build_meta"
+
+[tool.cibuildwheel]
+build = "cp3{8,9,10,11,12}-*" 

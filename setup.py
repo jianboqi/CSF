@@ -1,16 +1,17 @@
 import platform
 from setuptools import setup, Extension
+import numpy
 
 if platform.system() == "Windows":
-    openmp_args = ["/openmp"]
+    openmp_args = ["/openmp", "/std:c++11"]
     openmp_linking_args = []
     openmp_macro = [("CSF_USE_OPENMP", None)]
 elif platform.system() == "Linux":
-    openmp_args = ["-fopenmp"]
+    openmp_args = ["-fopenmp", "-std=c++11"]
     openmp_linking_args = ["-fopenmp"]
     openmp_macro = [("CSF_USE_OPENMP", None)]
 else:  # macOS, macOS clang won't come with openmp
-    openmp_args = []
+    openmp_args = ["-std=c++11"]
     openmp_linking_args = []
     openmp_macro = []
 
@@ -28,7 +29,7 @@ sources = [
     "src/XYZReader.cpp",
 ]
 
-include_dirs = ["src/"]
+include_dirs = ["src/", numpy.get_include()]
 
 csf_module = Extension(
     name="_CSF",
@@ -41,7 +42,7 @@ csf_module = Extension(
 
 setup(
     name="cloth_simulation_filter",
-    version="1.1.4",
+    version="1.1.5",
     author="Jianbo Qi",
     url="http://ramm.bnu.edu.cn/projects/CSF/",
     long_description=readme_content,
