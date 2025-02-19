@@ -32,6 +32,7 @@ CSF::CSF(int index) {
     params.cloth_resolution = 1;
     params.rigidness        = 3;
     params.interations      = 500;
+    params.height_diff_threshold = 0.3;
 
     this->index = index;
 }
@@ -43,7 +44,8 @@ CSF::CSF() {
 	params.cloth_resolution = 1;
 	params.rigidness = 3;
 	params.interations = 500;
-	this->index = 0;
+    params.height_diff_threshold = 0.3;
+    this->index = 0;
 }
 
 CSF::~CSF()
@@ -140,7 +142,7 @@ Cloth CSF::do_cloth() {
         height_num,
         params.cloth_resolution,
         params.cloth_resolution,
-        0.3,
+        params.height_diff_threshold,
         9999,
         params.rigidness,
         params.time_step

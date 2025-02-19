@@ -555,6 +555,7 @@ class Params(object):
     cloth_resolution = property(_CSF.Params_cloth_resolution_get, _CSF.Params_cloth_resolution_set)
     rigidness = property(_CSF.Params_rigidness_get, _CSF.Params_rigidness_set)
     interations = property(_CSF.Params_interations_get, _CSF.Params_interations_set)
+    height_diff_threshold = property(_CSF.Params_height_diff_threshold_get, _CSF.Params_height_diff_threshold_set)
 
     def __init__(self):
         _CSF.Params_swiginit(self, _CSF.new_Params())

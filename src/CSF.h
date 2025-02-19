@@ -49,6 +49,7 @@ struct Params {
     double cloth_resolution;
     int rigidness;
     int interations;
+    double height_diff_threshold;
 };
 
 #ifdef _CSF_DLL_EXPORT_
