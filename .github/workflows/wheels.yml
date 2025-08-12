@@ -30,7 +30,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: wheels
+          name: wheels-${{ matrix.os}}
           path: ./wheelhouse/*.whl
 
   publish:
@@ -46,8 +46,11 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: wheels
+         # name: wheels
           path: wheelhouse
+          pattern: wheels-*
+          merge-multiple: true
+          overwrite: true
 
       - name: Publish to PyPI
         env:
