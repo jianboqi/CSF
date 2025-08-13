@@ -60,6 +60,8 @@ int main(int argc,char* argv[])
 	cfg.readConfigFile("params.cfg", "time_step", time_step);
 	std::string terr_pointClouds_filepath;
 	cfg.readConfigFile("params.cfg", "terr_pointClouds_filepath", terr_pointClouds_filepath);
+	std::string height_diff_threshold;
+	cfg.readConfigFile("params.cfg", "height_diff_threshold", height_diff_threshold);
 
 	CSF csf;
 	//step 1 Input the point cloud
@@ -78,6 +80,7 @@ int main(int argc,char* argv[])
 	csf.params.interations = atoi(iterations.c_str());
 	csf.params.rigidness = atoi(rigidness.c_str());
 	csf.params.time_step = atof(time_step.c_str());
+	csf.params.height_diff_threshold = atof(height_diff_threshold.c_str());
 
 	//step3 do filtering
 	std::vector<int> groundIndexes, offGroundIndexes;

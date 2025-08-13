@@ -5614,7 +5614,7 @@ SWIG_AsVal_bool (PyObject *obj, bool *val)
     return success;
   }
 
-  /* Require the given PyArrayObject to to be Fortran ordered.  If the
+  /* Require the given PyArrayObject to be Fortran ordered.  If the
    * the PyArrayObject is already Fortran ordered, do nothing.  Else,
    * set the Fortran ordering flag and recompute the strides.
    */
@@ -14242,6 +14242,58 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Params_height_diff_threshold_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Params *arg1 = (Params *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!SWIG_Python_UnpackTuple(args, "Params_height_diff_threshold_set", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_Params, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Params_height_diff_threshold_set" "', argument " "1"" of type '" "Params *""'"); 
+  }
+  arg1 = reinterpret_cast< Params * >(argp1);
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Params_height_diff_threshold_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->height_diff_threshold = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Params_height_diff_threshold_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Params *arg1 = (Params *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  double result;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_Params, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Params_height_diff_threshold_get" "', argument " "1"" of type '" "Params *""'"); 
+  }
+  arg1 = reinterpret_cast< Params * >(argp1);
+  result = (double) ((arg1)->height_diff_threshold);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_new_Params(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Params *result = 0 ;
@@ -15194,6 +15246,8 @@ static PyMethodDef SwigMethods[] = {
 	 { "Params_rigidness_get", _wrap_Params_rigidness_get, METH_O, NULL},
 	 { "Params_interations_set", _wrap_Params_interations_set, METH_VARARGS, NULL},
 	 { "Params_interations_get", _wrap_Params_interations_get, METH_O, NULL},
+	 { "Params_height_diff_threshold_set", _wrap_Params_height_diff_threshold_set, METH_VARARGS, NULL},
+	 { "Params_height_diff_threshold_get", _wrap_Params_height_diff_threshold_get, METH_O, NULL},
 	 { "new_Params", _wrap_new_Params, METH_NOARGS, NULL},
 	 { "delete_Params", _wrap_delete_Params, METH_O, NULL},
 	 { "Params_swigregister", Params_swigregister, METH_O, NULL},
