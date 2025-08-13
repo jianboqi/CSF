@@ -4,4 +4,4 @@ dependencies = ["oldest-supported-numpy"]
 build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel]
-build = "cp3{9,10,11,12,13}-*" 
+build = "cp3{9}-*" 
