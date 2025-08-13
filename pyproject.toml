@@ -1,6 +1,5 @@
 [build-system]
 requires = ["wheel","setuptools", "numpy>=2.0.0rc1"]
-dependencies = ["oldest-supported-numpy"]
 build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel]
