@@ -1,8 +1,7 @@
 // ======================================================================================
-// PCDReader - Lightweight ASCII PCD file reader for CSF
+// PCDReader - Lightweight PCD file reader for CSF
 //
-// Reads Point Cloud Data (PCD) files in ASCII format and converts them
-// to csf::PointCloud for use with the Cloth Simulation Filter.
+// Supports both ASCII and binary PCD formats (no PCL dependency).
 //
 // Coordinate convention matches XYZReader:
 //   point.x = PCD x,  point.y = -PCD z,  point.z = PCD y
@@ -14,7 +13,7 @@
 #include <string>
 #include "point_cloud.h"
 
-/// Read an ASCII PCD file and populate a csf::PointCloud.
+/// Read an ASCII or binary PCD file and populate a csf::PointCloud.
 /// Returns true on success, false on failure.
 bool read_pcd(const std::string& fname, csf::PointCloud& pointcloud);
 
