@@ -160,3 +160,14 @@ cython_debug/
 #.idea/
 
 .vscode
+
+# Compiled binaries
+*.exe
+*.out
+*.app
+
+# Build output artifacts
+ground.txt
+non-ground.txt
+*.las
+*_runtime.json

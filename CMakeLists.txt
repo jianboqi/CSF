@@ -9,8 +9,13 @@ endif()
 add_subdirectory(src)
 
 option(BUILD_DEMO "Build csfdemo executable" OFF)
+option(BUILD_CLI "Build csf_cli executable" OFF)
 set(BUILD_SHARED_LIBS "Build as shared library" OFF)
 
 if(BUILD_DEMO)
   add_subdirectory(CSFDemo)
+endif()
+
+if(BUILD_CLI)
+  add_subdirectory(CSFCLI)
 endif()
