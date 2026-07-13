@@ -150,14 +150,13 @@ static bool find_xyz_indices(const std::vector<std::string>& fields,
 
 // --- coordinate transform (matches XYZReader convention) ---
 
-// PCD convention: X=右, Y=下(重力), Z=前
-// CSF internal:      X=右, Y=前,    Z=上(-重力)
-// Map: CSF.x = PCD.x,  CSF.y = PCD.z,  CSF.z = -PCD.y
+// PCD convention: Z+ = up (standard). CSF internal: Z+ = gravity.
+// Identity mapping — no axis swap needed.
 static csf::Point make_point(double px, double py, double pz) {
     csf::Point pt;
     pt.x = px;
-    pt.y = pz;    // PCD forward → CSF horizontal
-    pt.z = -py;   // PCD down (gravity) → CSF up (-gravity)
+    pt.y = py;
+    pt.z = pz;
     return pt;
 }
 

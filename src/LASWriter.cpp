@@ -120,11 +120,8 @@ bool write_las(const std::string& fname,
             classification[idx] = 1; // unclassified
     }
 
-    // Reverse PCDReader transform:
-    //   CSF: X=右, Y=前, Z=上
-    //   PCD: X=右, Y=下(重力), Z=前
-    //   Forward (PCD→CSF):  CSF.x = PCD.x,  CSF.y = PCD.z,  CSF.z = -PCD.y
-    //   Reverse (CSF→PCD):  PCD.x = CSF.x,  PCD.y = -CSF.z,  PCD.z = CSF.y
+    // PCD and LAS both use Z+ = up. CSF internal also Z+ = up.
+    // Identity transform — no reverse mapping needed.
     double minX =  std::numeric_limits<double>::max();
     double maxX = -std::numeric_limits<double>::max();
     double minY =  std::numeric_limits<double>::max();
@@ -134,8 +131,8 @@ bool write_las(const std::string& fname,
 
     for (const auto& pt : points) {
         double ox = pt.x;
-        double oy = -pt.z;   // CSF up → PCD down
-        double oz = pt.y;    // CSF forward → PCD forward
+        double oy = pt.y;
+        double oz = pt.z;
 
         if (ox < minX) minX = ox;
         if (ox > maxX) maxX = ox;
@@ -203,8 +200,8 @@ bool write_las(const std::string& fname,
     // --- Write point records ---
     for (int i = 0; i < n; ++i) {
         double ox = points[i].x;
-        double oy = -points[i].z;  // CSF up → PCD down
-        double oz = points[i].y;   // CSF forward → PCD forward
+        double oy = points[i].y;
+        double oz = points[i].z;
 
         LASPointRecord0 rec;
         std::memset(&rec, 0, sizeof(rec));
